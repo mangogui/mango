@@ -17,4 +17,10 @@ set(HEADER_FILES
         Size.h CocoaWindowInterface.cpp CocoaWindowInterface.h)
 
 add_library(Mango SHARED ${HEADER_FILES} ${SOURCE_FILES})
+
 target_link_libraries(Mango "-framework Cocoa" ${PYTHON_LIBRARIES})
+
+link_libraries(Mango)
+
+add_executable(main main.cpp)
+
