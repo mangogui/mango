@@ -22,6 +22,9 @@ namespace GUI {
 
         Size size() const;
 
+        void maximize();
+        void fullscreen();
+
     private:
         CocoaWindowWrapper *wrapper;
     };

@@ -107,5 +107,17 @@ namespace GUI {
         }
     }
 
+    void CocoaWindow::maximize() {
+        @autoreleasepool {
+            [wrapper->wrapped setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
+        }
+    }
+
+    void CocoaWindow::fullscreen() {
+        @autoreleasepool {
+            [wrapper->wrapped setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
+            [wrapper->wrapped toggleFullScreen:wrapper->wrapped];
+        }
+    }
 
 }

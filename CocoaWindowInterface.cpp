@@ -26,5 +26,13 @@ namespace GUI {
     extern "C" void CocoaWindow_resize(CCocoaWindow* self, int width, int height) {
         return reinterpret_cast<CocoaWindow*>(self)->resize(width, height);
     }
+
+    extern "C" void CocoaWindow_maximize(CCocoaWindow* self) {
+        return reinterpret_cast<CocoaWindow*>(self)->maximize();
+    }
+
+    extern "C" void CocoaWindow_fullscreen(CCocoaWindow* self) {
+        return reinterpret_cast<CocoaWindow*>(self)->fullscreen();
+    }
 }
 

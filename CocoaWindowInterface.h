@@ -15,6 +15,7 @@ namespace GUI {
 // Setters
     extern "C" void CocoaWindow_setWindowTitle(CCocoaWindow* self, char *title);
     extern "C" void CocoaWindow_resize(CCocoaWindow* self, int width, int height);
+    extern "C" void CocoaWindow_maximize(CCocoaWindow*);
 }
 
 
