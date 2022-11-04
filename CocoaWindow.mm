@@ -85,8 +85,7 @@ namespace GUI {
 
     void CocoaWindow::setWindowTitle(const char *title) {
         @autoreleasepool {
-            NSString *newTitle = @(title);
-            [wrapper->wrapped setTitle:newTitle];
+            [wrapper->wrapped setTitle:@(title)];
         }
     }
 
