@@ -47,8 +47,7 @@ namespace GUI {
             [wrapper->wrapped setDelegate:windowDelegate];
             [wrapper->wrapped setShowsResizeIndicator:YES];
             [wrapper->wrapped setAcceptsMouseMovedEvents:YES];
-            [wrapper->wrapped makeMainWindow];
-            [wrapper->wrapped setLevel:NSMainMenuWindowLevel];
+            [wrapper->wrapped setLevel:NSNormalWindowLevel];
             [wrapper->wrapped setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary |
                                                     NSWindowCollectionBehaviorManaged];
             [wrapper->wrapped setTitle:@"MainWindow"];
