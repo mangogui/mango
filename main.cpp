@@ -1,15 +1,14 @@
-#include "CocoaWindow.h"
-#include "CocoaApplication.h"
+#include "Win32Window.h"
+#include "Win32Application.h"
 
-int main(int argc, const char * argv[]) {
 
-    GUI::CocoaApplication application;
+int main() {
 
-    GUI::CocoaWindow window;
-    window.center();
-    window.display();
-
-    application.run();
+    Win32Application win32Application;
+    win32Application.run();
+    Window window = Window();
+    window.set_window_title("GUI test");
+    window.show();
 
     return 0;
 }
