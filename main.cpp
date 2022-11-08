@@ -1,14 +1,13 @@
-#include "Win32Window.h"
-#include "Win32Application.h"
 
+#include "platforms/platform.h"
 
 int main() {
 
-    Win32Application win32Application;
-    win32Application.run();
-    Window window = Window();
-    window.set_window_title("GUI test");
-    window.show();
+    GUI::Application application;
+    GUI::Window window;
+    window.center();
+    window.display();
+    application.run();
 
     return 0;
 }

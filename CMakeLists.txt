@@ -6,20 +6,20 @@ set(CMAKE_CXX_STANDARD 14)
 
 if (APPLE)
     set(SOURCE_FILES
-            CocoaWindow.mm
-            CocoaApplication.mm
+            platforms/cocoa/CocoaWindow.mm
+            platforms/cocoa/CocoaApplication.mm
             Size.cpp)
     set(HEADER_FILES
-            CocoaWindow.h
-            CocoaApplication.h
-            Size.h CocoaWindowInterface.cpp CocoaWindowInterface.h)
+            platforms/cocoa/CocoaWindow.h
+            platforms/cocoa/CocoaApplication.h
+            Size.h platforms/cocoa/CocoaWindowInterface.cpp platforms/cocoa/CocoaWindowInterface.h)
 elseif (WIN32)
     set(SOURCE_FILES
-            Win32Window.cpp
+            platforms/win32/Win32Window.cpp
             Size.cpp)
     set(HEADER_FILES
-            Win32Window.h
-            Size.h Win32Application.cpp Win32Application.h)
+            platforms/win32/Win32Window.h
+            Size.h platforms/win32/Win32Application.cpp platforms/win32/Win32Application.h platforms/Window.cpp platforms/Window.h platforms/Application.cpp platforms/Application.h platforms/platform.h)
 endif()
 
 add_library(Mango SHARED ${HEADER_FILES} ${SOURCE_FILES})
