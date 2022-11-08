@@ -6,26 +6,38 @@
 #include <cassert>
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM uParam, LPARAM lParam);
+namespace GUI {
 
-class Window
-{
-public:
-	Window();
-	Window& operator=(const Window&) = delete;
-	~Window();
+    class Win32Window {
+    public:
+        Win32Window();
 
-	static bool ProcessMessages();
+        Win32Window &operator=(const Win32Window &) = delete;
 
-	void set_window_title(std::string title);
-	const std::string get_window_title() const;
-	int get_x() const noexcept;
-	int get_y() const noexcept;
-	void show() const;
-private:
-	HINSTANCE m_hInstance;
-	HWND m_hWnd;
-	HDC hdc;
-	std::string window_title;
-	DWORD style;
-	void createWindow();
-};
+        ~Win32Window();
+
+        static bool ProcessMessages();
+
+        void set_window_title(std::string title);
+
+        const std::string get_window_title() const;
+
+        int get_x() const noexcept;
+
+        int get_y() const noexcept;
+
+        void center();
+
+        void display();
+
+    private:
+        HINSTANCE m_hInstance;
+        HWND m_hWnd;
+        HDC hdc;
+        std::string window_title;
+        DWORD style;
+
+        void createWindow();
+    };
+
+}

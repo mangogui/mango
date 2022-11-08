@@ -4,7 +4,7 @@
 int main() {
 
     GUI::Application application;
-    GUI::Window window;
+    GUI::Win32Window window;
     window.center();
     window.display();
     application.run();
