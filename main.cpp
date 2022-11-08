@@ -1,14 +1,12 @@
-#include "CocoaWindow.h"
-#include "CocoaApplication.h"
 
-int main(int argc, const char * argv[]) {
+#include "platforms/platform.h"
 
-    GUI::CocoaApplication application;
+int main() {
 
-    GUI::CocoaWindow window;
+    GUI::Application application;
+    GUI::Window window;
     window.center();
     window.display();
-
     application.run();
 
     return 0;
