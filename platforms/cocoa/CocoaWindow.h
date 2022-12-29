@@ -25,6 +25,8 @@ namespace GUI {
         void maximize();
         void fullscreen();
 
+        void initMTKView();
+
     private:
         CocoaWindowWrapper *wrapper;
     };
