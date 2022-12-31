@@ -27,6 +27,8 @@ namespace GUI {
 
         void initMTKView();
 
+        void paintEvent();
+
     private:
         CocoaWindowWrapper *wrapper;
     };

@@ -2,7 +2,7 @@
 See LICENSE folder for this sample’s licensing information.
 
 Abstract:
-Header containing types and enum constants shared between Metal shaders and C/ObjC source
+Header containing types and enum constants shared between Metal shaders and C/ObjC rect_source
 */
 
 #ifndef ShaderTypes_h
@@ -24,14 +24,36 @@ typedef struct
 typedef struct
 {
     vector_float2 origin_position;
+    vector_float2 viewport_size;
     float width;
     float height;
-} VertexUniforms;
+} RectVertexUniforms;
 
 typedef struct
 {
+    vector_float2 origin_position;
+    float width;
+    float height;
     float border_width;
     vector_float4 background_color;
-} FragmentUniforms;
+} RectFragmentUniforms;
+
+typedef struct
+{
+    vector_float2 origin_position;
+    vector_float2 viewport_size;
+    float width;
+    float height;
+} EllipseVertexUniforms;
+
+typedef struct
+{
+    vector_float2 origin_position;
+    vector_float2 viewport_size;
+    float width;
+    float height;
+    float border_width;
+    vector_float4 background_color;
+} EllipseFragmentUniforms;
 
 #endif /* ShaderTypes_h */
