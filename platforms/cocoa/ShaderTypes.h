@@ -49,7 +49,6 @@ typedef struct
 typedef struct
 {
     vector_float2 origin_position;
-    vector_float2 viewport_size;
     float width;
     float height;
     float border_width;
