@@ -12,9 +12,9 @@ if (APPLE)
             platforms/cocoa/CocoaWindow.mm
             platforms/cocoa/CocoaApplication.mm
             platforms/cocoa/CocoaWindowInterface.cpp
-            platforms/cocoa/Painter.cpp platforms/cocoa/Painter.h
+            platforms/cocoa/Painter.mm platforms/cocoa/Painter.h
             Color.cpp
-            platforms/cocoa/Renderer.mm)
+            )
     set(HEADER_FILES
             Size.h
             Rect.h
@@ -22,16 +22,16 @@ if (APPLE)
             platforms/cocoa/CocoaWindow.h
             platforms/cocoa/CocoaApplication.h
             platforms/cocoa/CocoaWindowInterface.h
-            platforms/cocoa/Painter.cpp platforms/cocoa/Painter.h
+            platforms/cocoa/Painter.mm platforms/cocoa/Painter.h
             Color.cpp
-            platforms/cocoa/Renderer.h)
+            )
 elseif (WIN32)
     set(SOURCE_FILES
             platforms/win32/Win32Window.cpp
             Size.cpp Rect.cpp Rect.h Point.cpp Point.h Color.cpp Color.h)
     set(HEADER_FILES
             platforms/win32/Win32Window.h
-            Size.h platforms/win32/Win32Application.cpp platforms/win32/Win32Application.h platforms/Window.cpp platforms/Window.h platforms/Application.cpp platforms/Application.h platforms/platform.h Rect.cpp Rect.h Point.cpp Point.h platforms/cocoa/Painter.cpp platforms/cocoa/Painter.h Color.cpp Color.h)
+            Size.h platforms/win32/Win32Application.cpp platforms/win32/Win32Application.h platforms/Window.cpp platforms/Window.h platforms/Application.cpp platforms/Application.h platforms/platform.h Rect.cpp Rect.h Point.cpp Point.h platforms/cocoa/Painter.mm platforms/cocoa/Painter.h Color.cpp Color.h)
 endif()
 
 add_library(Mango SHARED ${HEADER_FILES} ${SOURCE_FILES})

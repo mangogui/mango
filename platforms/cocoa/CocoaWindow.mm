@@ -1,11 +1,6 @@
 #import "CocoaWindow.h"
 #import "Cocoa/Cocoa.h"
-#import "MetalKit/MTKView.h"
-#include <simd/simd.h>
-#include "ShaderTypes.h"
-#include "../../Rect.h"
-#include <iostream>
-#include "Renderer.h"
+#include "Painter.h"
 
 
 @interface WindowDelegate : NSObject<NSWindowDelegate>
@@ -20,6 +15,22 @@
 }
 - (void)windowDidEndLiveResize:(NSNotification *)notification {
 
+}
+@end
+
+@interface View: NSView
+@property (readwrite) GUI::CocoaWindow* _Nullable window;
+@end
+
+@implementation View
+
+- (BOOL)isFlipped {
+    return YES;
+}
+
+- (void)drawRect:(NSRect)rect
+{
+    self.window->paintEvent();
 }
 @end
 
@@ -98,10 +109,10 @@ namespace GUI {
 
     void CocoaWindow::resize(int width, int height) {
         @autoreleasepool {
-            NSRect frame = [wrapper->wrapped frame];
-            frame.size.width = width;
-            frame.size.height = height;
-            [wrapper->wrapped setFrame:frame display:YES];
+            NSSize size;
+            size.width = width;
+            size.height = height;
+            [wrapper->wrapped setContentSize:size];
         }
     }
 
@@ -128,19 +139,15 @@ namespace GUI {
 
     void CocoaWindow::initMTKView() {
         @autoreleasepool {
-            MTKView *mtkView = [[MTKView alloc] init];
-            mtkView.enableSetNeedsDisplay = YES;
-            mtkView.device = MTLCreateSystemDefaultDevice();
-            mtkView.clearColor = MTLClearColorMake(0.2, 0.2, 0.2, 1.0);
-            Renderer *renderer = [[Renderer alloc] initWithMetalKitView:mtkView];
-            renderer.window = this;
-            [mtkView setDelegate:renderer];
-            [wrapper->wrapped setContentView:mtkView];
-            [wrapper->wrapped makeFirstResponder:mtkView];
+            View *view = [[View alloc] init];
+            [wrapper->wrapped setContentView:view];
+            [wrapper->wrapped makeFirstResponder:view];
         }
     }
 
     void CocoaWindow::paintEvent() {
-        // std::cout << "paintEvent" << std::endl;
+        Painter painter;
+        painter.setColor(Color(102, 255, 102, 255));
+        painter.drawRoundedRectangle(Rect(100, 100, 100, 100), 10, 10);
     }
 }

@@ -1,4 +1,5 @@
 #include "../../Size.h"
+#include "../../Rect.h"
 
 namespace GUI {
 
@@ -26,6 +27,8 @@ namespace GUI {
         void fullscreen();
 
         void initMTKView();
+
+        void drawRectangle(const Rect& rect);
 
         void paintEvent();
 
