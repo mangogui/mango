@@ -1,6 +1,5 @@
 #import "CocoaWindow.h"
 #import "Cocoa/Cocoa.h"
-#include "Painter.h"
 
 
 @interface WindowDelegate : NSObject<NSWindowDelegate>
@@ -19,20 +18,42 @@
 @end
 
 @interface View: NSView
-@property (readwrite) GUI::CocoaWindow* _Nullable window;
+- (View*)initWithWindow:(GUI::CocoaWindow*)_window;
 @end
 
-@implementation View
+@implementation View {
+    GUI::CocoaWindow* window;
+}
+
+- (View*)initWithWindow:(GUI::CocoaWindow*)_window {
+    self = [super init];
+
+    window = _window;
+
+    return self;
+}
+
+- (void)mouseDown:(NSEvent *)event {
+    if ([event type] == NSEventTypeLeftMouseDown) {
+        window->mousePressEvent();
+    }
+}
 
 - (BOOL)isFlipped {
     return YES;
 }
 
+- (void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+}
+
 - (void)drawRect:(NSRect)rect
 {
-    self.window->paintEvent();
+    window->paintEvent();
 }
 @end
+
 
 @interface CocoaWindowObjC : NSWindow
 @end
@@ -51,74 +72,109 @@ namespace GUI {
         CocoaWindowObjC *wrapped;
     };
 
-    CocoaWindow::CocoaWindow() : wrapper(new CocoaWindowWrapper()) {
+    struct CocoaViewWrapper {
+        NSView *wrapped;
+    };
+
+    void* CocoaWindow::getWindow() {
+        return window_wrapper->wrapped;
+    }
+
+    void* CocoaWindow::getView() {
+        return view_wrapper->wrapped;
+    }
+
+    CocoaWindow::CocoaWindow(CocoaWindow *parent): window_wrapper(new CocoaWindowWrapper()) {
         @autoreleasepool {
             NSRect rect = NSMakeRect(0, 0, 400, 400);
             NSWindowStyleMask styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskMiniaturizable
-                    | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable;
-            wrapper->wrapped = [[CocoaWindowObjC alloc] initWithContentRect:rect
-                                                                  styleMask:styleMask
-                                                                    backing:NSBackingStoreBuffered
-                                                                      defer:NO];
+                                          | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable;
+            window_wrapper->wrapped = [[CocoaWindowObjC alloc] initWithContentRect:rect
+                                                                         styleMask:styleMask
+                                                                           backing:NSBackingStoreBuffered
+                                                                             defer:NO];
             WindowDelegate *windowDelegate = [[WindowDelegate alloc] init];
-            [wrapper->wrapped setDelegate:windowDelegate];
-            [wrapper->wrapped setShowsResizeIndicator:YES];
-            [wrapper->wrapped setAcceptsMouseMovedEvents:YES];
-            [wrapper->wrapped setLevel:NSNormalWindowLevel];
-            [wrapper->wrapped setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary |
-                                                    NSWindowCollectionBehaviorManaged];
-            [wrapper->wrapped setTitle:@"MainWindow"];
+            [window_wrapper->wrapped setDelegate:windowDelegate];
+            [window_wrapper->wrapped setShowsResizeIndicator:YES];
+            [window_wrapper->wrapped setAcceptsMouseMovedEvents:YES];
+            [window_wrapper->wrapped setLevel:NSNormalWindowLevel];
+            [window_wrapper->wrapped setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary |
+                                                           NSWindowCollectionBehaviorManaged];
+            [window_wrapper->wrapped setTitle:@"MainWindow"];
 
-            initMTKView();
+            View *view = [[View alloc] initWithWindow:this];
+            [window_wrapper->wrapped setContentView:view];
+            [window_wrapper->wrapped makeFirstResponder:view];
+
+            if (parent != nullptr) {
+                [parent->window_wrapper->wrapped.contentView addSubview:view];
+                view_wrapper->wrapped = view;
+                embedded = true;
+            }
+            else {
+                embedded = false;
+            }
+
         }
     }
 
     CocoaWindow::~CocoaWindow() {
         @autoreleasepool {
-            if (wrapper)
-                [wrapper->wrapped release];
-            delete wrapper;
+            if (window_wrapper)
+                [window_wrapper->wrapped release];
+            delete window_wrapper;
         }
     }
 
     void CocoaWindow::center() {
         @autoreleasepool {
-            [wrapper->wrapped center];
+            [window_wrapper->wrapped center];
         }
     }
 
     void CocoaWindow::display() {
         @autoreleasepool {
-            [wrapper->wrapped display];
-            [wrapper->wrapped orderFrontRegardless];
+            [window_wrapper->wrapped display];
+            [window_wrapper->wrapped orderFrontRegardless];
         }
     }
 
     const char *CocoaWindow::windowTitle() const {
         @autoreleasepool {
-            const char *title = [[wrapper->wrapped title] UTF8String];
+            const char *title = [[window_wrapper->wrapped title] UTF8String];
             return title;
         }
     }
 
     void CocoaWindow::setWindowTitle(const char *title) {
         @autoreleasepool {
-            [wrapper->wrapped setTitle:@(title)];
+            [window_wrapper->wrapped setTitle:@(title)];
         }
     }
 
     void CocoaWindow::resize(int width, int height) {
         @autoreleasepool {
-            NSSize size;
-            size.width = width;
-            size.height = height;
-            [wrapper->wrapped setContentSize:size];
+            NSSize _size = NSMakeSize(width, height);
+            if (embedded)
+                [view_wrapper->wrapped setFrameSize:_size];
+            else [window_wrapper->wrapped setContentSize:_size];
         }
+    }
+
+    void CocoaWindow::move(int x, int y) {
+        if (embedded) {
+            [view_wrapper->wrapped setFrameOrigin:NSMakePoint(x, y)];}
+        else
+            [window_wrapper->wrapped setFrameOrigin:NSMakePoint(x, y)];
     }
 
     Size CocoaWindow::size() const {
         @autoreleasepool {
-            NSRect frame = [wrapper->wrapped frame];
+            NSRect frame;
+            if (embedded)
+                frame = [view_wrapper->wrapped frame];
+            else
+                frame = [window_wrapper->wrapped frame];
             Size _size = Size(frame.size.width, frame.size.height);
             return _size;
         }
@@ -126,28 +182,30 @@ namespace GUI {
 
     void CocoaWindow::maximize() {
         @autoreleasepool {
-            [wrapper->wrapped setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
+            [window_wrapper->wrapped setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
         }
     }
 
     void CocoaWindow::fullscreen() {
         @autoreleasepool {
-            [wrapper->wrapped setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
-            [wrapper->wrapped toggleFullScreen:wrapper->wrapped];
-        }
-    }
-
-    void CocoaWindow::initMTKView() {
-        @autoreleasepool {
-            View *view = [[View alloc] init];
-            [wrapper->wrapped setContentView:view];
-            [wrapper->wrapped makeFirstResponder:view];
+            [window_wrapper->wrapped setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
+            [window_wrapper->wrapped toggleFullScreen:window_wrapper->wrapped];
         }
     }
 
     void CocoaWindow::paintEvent() {
-        Painter painter;
-        painter.setColor(Color(102, 255, 102, 255));
-        painter.drawRoundedRectangle(Rect(100, 100, 100, 100), 10, 10);
+
+    }
+
+    void CocoaWindow::resizeEvent() {
+
+    }
+
+    void CocoaWindow::mousePressEvent() {
+        std::cout << "mouse press event" << std::endl;
+    }
+
+    void CocoaWindow::update() {
+        [view_wrapper->wrapped setNeedsDisplay:YES];
     }
 }

@@ -14,7 +14,7 @@ if (APPLE)
             platforms/cocoa/CocoaWindowInterface.cpp
             platforms/cocoa/Painter.mm platforms/cocoa/Painter.h
             Color.cpp
-            )
+            platforms/cocoa/ToggleButton.mm platforms/cocoa/ToggleButton.h platforms/cocoa/Timer.mm platforms/cocoa/Timer.h)
     set(HEADER_FILES
             Size.h
             Rect.h
@@ -24,7 +24,7 @@ if (APPLE)
             platforms/cocoa/CocoaWindowInterface.h
             platforms/cocoa/Painter.mm platforms/cocoa/Painter.h
             Color.cpp
-            )
+            platforms/cocoa/ToggleButton.mm platforms/cocoa/ToggleButton.h platforms/cocoa/Timer.mm platforms/cocoa/Timer.h)
 elseif (WIN32)
     set(SOURCE_FILES
             platforms/win32/Win32Window.cpp
@@ -37,7 +37,7 @@ endif()
 add_library(Mango SHARED ${HEADER_FILES} ${SOURCE_FILES})
 
 if (APPLE)
-    target_link_libraries(Mango "-framework Cocoa" "-framework Metal"
+    target_link_libraries(Mango "-framework Cocoa" "-framework Metal" "-framework QuartzCore"
             "-framework MetalKit" ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 elseif (WIN32)
     find_package(OpenGL REQUIRED)

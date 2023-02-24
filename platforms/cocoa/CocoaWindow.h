@@ -1,15 +1,19 @@
+#ifndef MANGO_COCOAWINDOW_H
+#define MANGO_COCOAWINDOW_H
+
 #include "../../Size.h"
 #include "../../Rect.h"
 
 namespace GUI {
 
     struct CocoaWindowWrapper;
+    struct CocoaViewWrapper;
 
     class CocoaWindow {
     public:
-        CocoaWindow();
+        explicit CocoaWindow(CocoaWindow *parent = nullptr);
 
-        ~CocoaWindow();
+        virtual ~CocoaWindow();
 
         void center();
 
@@ -24,17 +28,26 @@ namespace GUI {
         Size size() const;
 
         void maximize();
+        void move(int x, int y);
         void fullscreen();
 
-        void initMTKView();
+        virtual void paintEvent();
+        virtual void mousePressEvent();
+        virtual void resizeEvent();
+        void update();
 
-        void drawRectangle(const Rect& rect);
+        CocoaWindowWrapper* getWrapper() { return window_wrapper; }
 
-        void paintEvent();
+    protected:
+        CocoaWindowWrapper *window_wrapper;
+        CocoaViewWrapper *view_wrapper;
+        bool embedded;
 
-    private:
-        CocoaWindowWrapper *wrapper;
+        void* getWindow();
+
+        void* getView();
     };
 
-
 }
+
+#endif
