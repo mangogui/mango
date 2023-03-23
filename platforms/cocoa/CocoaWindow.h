@@ -1,4 +1,9 @@
+#pragma once
+
 #include "../../Size.h"
+#include "PainterPath.h"
+#include <map>
+#include "../../Color.h"
 
 namespace GUI {
 
@@ -6,6 +11,10 @@ namespace GUI {
 
     class CocoaWindow {
     public:
+        struct State {
+            Color color;
+        };
+
         CocoaWindow();
 
         ~CocoaWindow();
@@ -27,10 +36,18 @@ namespace GUI {
 
         void initMTKView();
 
-        void paintEvent();
+        virtual void paintEvent();
 
-    private:
+        PainterPath& painterPath() { return  _painterPath; }
+
+        std::map<int, State>& states() { return _states; }
+
+        const Color& fillColorAtIndex(int index) { return states().at(index).color; }
+
+    protected:
         CocoaWindowWrapper *wrapper;
+        PainterPath _painterPath;
+        std::map<int, State> _states;
     };
 
 

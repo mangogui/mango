@@ -1,16 +1,23 @@
-//
-// Created by Parham Oyan on 29/12/2022.
-//
-
 #ifndef MANGO_PAINTER_H
 #define MANGO_PAINTER_H
 
 #include "../../Rect.h"
-
+#include "CocoaWindow.h"
+#include "../../Color.h"
+#include <map>
 
 namespace GUI {
     class Painter {
+    public:
+        explicit Painter(CocoaWindow* window): _window(window) {}
         void drawRectangle(const Rect& rect);
+        void drawEllipse(const Rect& rect);
+        void setFillColor(const Color color) {
+            int index = _window->painterPath().elementCount();
+            _window->states()[index] = {color};
+        }
+    private:
+        CocoaWindow* _window;
     };
 }
 

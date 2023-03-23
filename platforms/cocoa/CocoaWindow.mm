@@ -1,10 +1,7 @@
 #import "CocoaWindow.h"
 #import "Cocoa/Cocoa.h"
 #import "MetalKit/MTKView.h"
-#include <simd/simd.h>
-#include "ShaderTypes.h"
-#include "../../Rect.h"
-#include <iostream>
+#include "Painter.h"
 #include "Renderer.h"
 
 
@@ -98,10 +95,8 @@ namespace GUI {
 
     void CocoaWindow::resize(int width, int height) {
         @autoreleasepool {
-            NSRect frame = [wrapper->wrapped frame];
-            frame.size.width = width;
-            frame.size.height = height;
-            [wrapper->wrapped setFrame:frame display:YES];
+            NSSize size = CGSizeMake(width, height);
+            [wrapper->wrapped setContentSize:size];
         }
     }
 
@@ -141,6 +136,5 @@ namespace GUI {
     }
 
     void CocoaWindow::paintEvent() {
-        // std::cout << "paintEvent" << std::endl;
     }
 }

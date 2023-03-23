@@ -38,7 +38,7 @@ struct RasterizerData
 };
 
 vertex RasterizerData
-vertexShader(uint vertexID [[vertex_id]],
+rectVertexShader(uint vertexID [[vertex_id]],
              constant Vertex *vertices [[buffer(VertexInputIndexVertices)]],
              constant vector_uint2 *viewportSizePointer [[buffer(VertexInputIndexViewportSize)]],
              constant RectVertexUniforms &uniforms [[buffer(2)]])
@@ -53,7 +53,7 @@ vertexShader(uint vertexID [[vertex_id]],
     return out;
 }
 
-fragment float4 fragmentShader(RasterizerData in [[stage_in]],
+fragment float4 rectFragmentShader(RasterizerData in [[stage_in]],
                                constant RectFragmentUniforms &uniforms [[buffer(0)]])
 {
     vector_float4 background_color = uniforms.background_color;
