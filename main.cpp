@@ -2,11 +2,11 @@
 #include "Mango.h"
 #include "CustomWindow.h"
 
-int main() {
 
-    GUI::Application application;
-    GUI::CustomWindow window;
-    window.resize(600, 600);
+int main() {
+    Application application;
+    CustomWindow window;
+    window.resize(1400, 1000);
     window.center();
     window.display();
     application.run();

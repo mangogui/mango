@@ -8,4 +8,8 @@ namespace GUI {
     void Painter::drawEllipse(const Rect& rect) {
         _window->painterPath().addEllipse(rect);
     }
+
+    void Painter::drawRoundedRect(const Rect& rect, float border_radius) {
+        _window->painterPath().addRoundedRect(rect, border_radius);
+    }
 }

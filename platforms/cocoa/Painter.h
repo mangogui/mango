@@ -12,6 +12,7 @@ namespace GUI {
         explicit Painter(CocoaWindow* window): _window(window) {}
         void drawRectangle(const Rect& rect);
         void drawEllipse(const Rect& rect);
+        void drawRoundedRect(const Rect& rect, float border_radius);
         void setFillColor(const Color color) {
             int index = _window->painterPath().elementCount();
             _window->states()[index] = {color};

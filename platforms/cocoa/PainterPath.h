@@ -10,7 +10,12 @@ namespace GUI {
         enum ElementType {
             MoveTo,
             LineTo,
-            CurveTo
+            CurveTo,
+            QuadTo
+        };
+
+        struct CubicBezierCurve {
+            Point controlPoints[4];
         };
 
         class Element {
@@ -27,6 +32,9 @@ namespace GUI {
 
         void addEllipse(const Rect &boundingRect);
         void addRect(const Rect &boundingRect);
+        void addRoundedRect(const Rect &boundingRect, float radius);
+
+        void approximateCubicBezierCurve(const CubicBezierCurve& curve);
 
         int elementCount() const { return elements.size(); }
 

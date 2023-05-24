@@ -25,15 +25,11 @@ typedef struct
 {
     vector_float2 origin_position;
     vector_float2 viewport_size;
-    float width;
-    float height;
 } RectVertexUniforms;
 
 typedef struct
 {
     vector_float2 origin_position;
-    float width;
-    float height;
     float border_width;
     vector_float4 background_color;
 } RectFragmentUniforms;

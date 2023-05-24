@@ -136,5 +136,6 @@ namespace GUI {
     }
 
     void CocoaWindow::paintEvent() {
+
     }
 }

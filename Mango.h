@@ -9,3 +9,5 @@
 #include "Rect.h"
 #include "Size.h"
 #include "Color.h"
+
+using namespace GUI;
