@@ -43,14 +43,8 @@ rectVertexShader(uint vertexID [[vertex_id]],
 
     float2 pixelSpacePosition = vertices[vertexID].position.xy + uniforms.origin_position;
 
-    float2 pixelSize = 1.0 / uniforms.viewport_size;
-    float2 screenSize = float2(viewportSizePointer[0].x, viewportSizePointer[0].y);
-
-    // Adjust pixelSpacePosition based on DPI
-    pixelSpacePosition *= screenSize * pixelSize;
-
-    // Convert pixelSpacePosition to normalized device coordinates
-    out.position = float4(pixelSpacePosition * 2.0 - 1.0, 0.0, 1.0);
+    out.position = vector_float4(0, 0, 0.0, 1.0);
+    out.position.xy = pixelSpacePosition / uniforms.viewport_size * float2(2.0, -2.0) + float2(-1.0, 1);
 
     return out;
 }
