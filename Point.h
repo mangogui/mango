@@ -1,7 +1,3 @@
-//
-// Created by Parham Oyan on 29/12/2022.
-//
-
 #ifndef MANGO_POINT_H
 #define MANGO_POINT_H
 

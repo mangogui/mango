@@ -1,8 +1,10 @@
-#ifndef MANGO_COCOAWINDOW_H
-#define MANGO_COCOAWINDOW_H
+#pragma once
 
 #include "../../Size.h"
-#include "../../Rect.h"
+#include "PainterPath.h"
+#include <map>
+#include "../../Color.h"
+#include "Screen.h"
 
 namespace GUI {
 
@@ -11,7 +13,11 @@ namespace GUI {
 
     class CocoaWindow {
     public:
-        explicit CocoaWindow(CocoaWindow *parent = nullptr);
+        struct State {
+            Color color;
+        };
+
+        CocoaWindow();
 
         virtual ~CocoaWindow();
 
@@ -36,16 +42,20 @@ namespace GUI {
         virtual void resizeEvent();
         void update();
 
-        CocoaWindowWrapper* getWrapper() { return window_wrapper; }
+        virtual void paintEvent();
+
+        PainterPath& painterPath() { return  _painterPath; }
+
+        Screen screen();
+
+        std::map<int, State>& states() { return _states; }
+
+        const Color& fillColorAtIndex(int index) { return states().at(index).color; }
 
     protected:
-        CocoaWindowWrapper *window_wrapper;
-        CocoaViewWrapper *view_wrapper;
-        bool embedded;
-
-        void* getWindow();
-
-        void* getView();
+        CocoaWindowWrapper *wrapper;
+        PainterPath _painterPath;
+        std::map<int, State> _states;
     };
 
 }

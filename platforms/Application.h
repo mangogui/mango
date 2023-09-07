@@ -1,7 +1,3 @@
-//
-// Created by Parham Oyan on 08/11/2022.
-//
-
 #ifndef MANGO_APPLICATION_H
 #define MANGO_APPLICATION_H
 

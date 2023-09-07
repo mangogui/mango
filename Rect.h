@@ -3,6 +3,7 @@
 
 #include "Point.h"
 #include <stdlib.h>
+#include <ostream>
 
 namespace GUI {
     class Rect {
@@ -26,6 +27,11 @@ namespace GUI {
         inline float width() const noexcept;
 
         inline float height() const noexcept;
+
+        friend std::ostream& operator<<(std::ostream& os, const Rect& rect) {
+            os << "Rect(x=" << rect.x() << ", y=" << rect.y() << ", width=" << rect.width() << ", height=" << rect.height() << ")";
+            return os;
+        }
 
     private:
         Point p1, p2;

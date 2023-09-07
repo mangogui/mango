@@ -1,5 +1,8 @@
 #import "CocoaWindow.h"
 #import "Cocoa/Cocoa.h"
+#import "MetalKit/MTKView.h"
+#include "Painter.h"
+#include "Renderer.h"
 
 
 @interface WindowDelegate : NSObject<NSWindowDelegate>
@@ -154,10 +157,8 @@ namespace GUI {
 
     void CocoaWindow::resize(int width, int height) {
         @autoreleasepool {
-            NSSize _size = NSMakeSize(width, height);
-            if (embedded)
-                [view_wrapper->wrapped setFrameSize:_size];
-            else [window_wrapper->wrapped setContentSize:_size];
+            NSSize size = CGSizeMake(width, height);
+            [wrapper->wrapped setContentSize:size];
         }
     }
 
@@ -197,15 +198,12 @@ namespace GUI {
 
     }
 
-    void CocoaWindow::resizeEvent() {
-
-    }
-
-    void CocoaWindow::mousePressEvent() {
-        std::cout << "mouse press event" << std::endl;
-    }
-
-    void CocoaWindow::update() {
-        [view_wrapper->wrapped setNeedsDisplay:YES];
+    Screen CocoaWindow::screen() {
+        NSScreen *nsscreen = [wrapper->wrapped screen];
+        NSRect screenFrame = [nsscreen frame];
+        CGSize screenSize = NSMakeSize(screenFrame.size.width, screenFrame.size.height);
+        Screen screen;
+        screen.setSize(Size(screenSize.width, screenSize.height));
+        return screen;
     }
 }

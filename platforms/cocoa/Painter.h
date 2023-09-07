@@ -2,18 +2,23 @@
 #define MANGO_PAINTER_H
 
 #include "../../Rect.h"
+#include "CocoaWindow.h"
 #include "../../Color.h"
+#include <map>
 
 namespace GUI {
     class Painter {
     public:
-        Painter(): color(Color(102, 255, 102, 255)) {}
-        void setColor(const Color &newColor) { color = newColor; };
+        explicit Painter(CocoaWindow* window): _window(window) {}
         void drawRectangle(const Rect& rect);
-        void drawRoundedRectangle(const Rect &rect, int x_radius, int y_radius);
         void drawEllipse(const Rect& rect);
+        void drawRoundedRect(const Rect& rect, float x_radius, float y_radius);
+        void setFillColor(const Color color) {
+            int index = _window->painterPath().elementCount();
+            _window->states()[index] = {color};
+        }
     private:
-        Color color;
+        CocoaWindow* _window;
     };
 }
 
