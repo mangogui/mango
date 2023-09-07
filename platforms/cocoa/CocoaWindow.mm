@@ -138,4 +138,13 @@ namespace GUI {
     void CocoaWindow::paintEvent() {
 
     }
+
+    Screen CocoaWindow::screen() {
+        NSScreen *nsscreen = [wrapper->wrapped screen];
+        NSRect screenFrame = [nsscreen frame];
+        CGSize screenSize = NSMakeSize(screenFrame.size.width, screenFrame.size.height);
+        Screen screen;
+        screen.setSize(Size(screenSize.width, screenSize.height));
+        return screen;
+    }
 }

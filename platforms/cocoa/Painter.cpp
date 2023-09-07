@@ -9,7 +9,7 @@ namespace GUI {
         _window->painterPath().addEllipse(rect);
     }
 
-    void Painter::drawRoundedRect(const Rect& rect, float border_radius) {
-        _window->painterPath().addRoundedRect(rect, border_radius);
+    void Painter::drawRoundedRect(const Rect& rect, float x_radius, float y_radius) {
+        _window->painterPath().addRoundedRect(rect, x_radius, y_radius);
     }
 }

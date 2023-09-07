@@ -14,7 +14,7 @@ if (APPLE)
             platforms/cocoa/CocoaWindowInterface.cpp
             platforms/cocoa/Painter.cpp platforms/cocoa/Painter.h
             Color.cpp
-            platforms/cocoa/Renderer.mm platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWindow.cpp CustomWindow.h Mango.h)
+            platforms/cocoa/Renderer.mm platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWindow.cpp CustomWindow.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h)
     set(HEADER_FILES
             Size.h
             Rect.h
@@ -24,7 +24,7 @@ if (APPLE)
             platforms/cocoa/CocoaWindowInterface.h
             platforms/cocoa/Painter.cpp platforms/cocoa/Painter.h
             Color.cpp
-            platforms/cocoa/Renderer.h platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWindow.cpp CustomWindow.h Mango.h)
+            platforms/cocoa/Renderer.h platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWindow.cpp CustomWindow.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h)
 elseif (WIN32)
     set(SOURCE_FILES
             platforms/win32/Win32Window.cpp

@@ -4,6 +4,7 @@
 #include "PainterPath.h"
 #include <map>
 #include "../../Color.h"
+#include "Screen.h"
 
 namespace GUI {
 
@@ -39,6 +40,8 @@ namespace GUI {
         virtual void paintEvent();
 
         PainterPath& painterPath() { return  _painterPath; }
+
+        Screen screen();
 
         std::map<int, State>& states() { return _states; }
 
