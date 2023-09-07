@@ -9,7 +9,6 @@
 namespace GUI {
 
     struct CocoaWindowWrapper;
-    struct CocoaViewWrapper;
 
     class CocoaWindow {
     public:
@@ -19,7 +18,7 @@ namespace GUI {
 
         CocoaWindow();
 
-        virtual ~CocoaWindow();
+        ~CocoaWindow();
 
         void center();
 
@@ -34,13 +33,9 @@ namespace GUI {
         Size size() const;
 
         void maximize();
-        void move(int x, int y);
         void fullscreen();
 
-        virtual void paintEvent();
-        virtual void mousePressEvent();
-        virtual void resizeEvent();
-        void update();
+        void initMTKView();
 
         virtual void paintEvent();
 
@@ -58,6 +53,5 @@ namespace GUI {
         std::map<int, State> _states;
     };
 
-}
 
-#endif
+}
