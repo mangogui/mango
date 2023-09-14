@@ -3,8 +3,8 @@
 
 
 #if __APPLE__
-#include "cocoa/CocoaWindow.h"
-typedef GUI::CocoaWindow NativeWindow;
+#include "cocoa/Widget.h"
+typedef GUI::Widget NativeWindow;
 #elif _WIN32
 #include "win32/Win32Window.h"
 typedef GUI::Win32Window NativeWindow;

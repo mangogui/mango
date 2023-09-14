@@ -5,20 +5,23 @@
 #include <map>
 #include "../../Color.h"
 #include "Screen.h"
+#include "../PaintEvent.h"
+
 
 namespace GUI {
 
     struct CocoaWindowWrapper;
+    struct MTKViewWrapper;
 
-    class CocoaWindow {
+    class Widget {
     public:
         struct State {
             Color color;
         };
 
-        CocoaWindow();
+        explicit Widget(Widget *parent = nullptr);
 
-        ~CocoaWindow();
+        ~Widget();
 
         void center();
 
@@ -30,14 +33,21 @@ namespace GUI {
 
         void resize(int width, int height);
 
+        virtual void mousePressEvent();
+        virtual void resizeEvent();
+
+        void move(int x, int y);
+
         Size size() const;
 
         void maximize();
         void fullscreen();
 
-        void initMTKView();
+        void init_mtk_view();
 
-        virtual void paintEvent();
+        virtual void paintEvent(const PaintEvent& event);
+
+        void update();
 
         PainterPath& painterPath() { return  _painterPath; }
 
@@ -46,11 +56,22 @@ namespace GUI {
         std::map<int, State>& states() { return _states; }
 
         const Color& fillColorAtIndex(int index) { return states().at(index).color; }
+        void setObjectName(std::string obj_name) {
+            this->object_name = obj_name;
+        }
+
+        std::string objectName() {
+            return object_name;
+        }
 
     protected:
-        CocoaWindowWrapper *wrapper;
+        CocoaWindowWrapper *window_wrapper;
+        MTKViewWrapper *view_wrapper;
         PainterPath _painterPath;
         std::map<int, State> _states;
+        Widget *parent;
+    private:
+        std::string object_name;
     };
 
 

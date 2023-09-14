@@ -2,6 +2,8 @@
 #include "PainterPath.h"
 #include <stdio.h>
 #include <iostream>
+#include "../PaintEvent.h"
+
 
 // Main class performing the rendering
 @implementation Renderer
@@ -22,7 +24,6 @@
 
     MTLRenderPipelineDescriptor *pipelineStateDescriptor;
 
-    matrix_float4x4 _projectionMatrix;
     id<MTLLibrary> library;
 }
 
@@ -171,7 +172,10 @@
 }
 
 - (void)drawInMTKView:(nonnull MTKView *)view {
-    _window->paintEvent();
+    GUI::PaintEvent event;
+    event.setRect(GUI::Rect(0, 0, _viewportSize.x, _viewportSize.y));
+    _window->paintEvent(event);
+
     GUI::PainterPath &path = _window->painterPath();
     GUI::PainterPath new_path;
 
@@ -248,10 +252,8 @@
     }
     path.clear();
     new_path.clear();
+    _window->states().clear();
 
-//    std::map<int, GUI::Color> colors;
-//    colors[0] = GUI::Color(100, 100, 102);
-//    colors[1] = GUI::Color(200, 100, 102);
     [self drawPolygonInMTKView:view withPolygons:polygons andColors:colors];
 }
 

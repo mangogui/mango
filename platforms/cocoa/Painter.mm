@@ -1,7 +1,7 @@
 #include "Painter.h"
 
 namespace GUI {
-    void Painter::drawRectangle(const Rect &rect) {
+    void Painter::drawRect(const Rect &rect) {
         _window->painterPath().addRect(rect);
     }
 

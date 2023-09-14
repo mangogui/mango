@@ -9,29 +9,27 @@ if (APPLE)
             Size.cpp
             Rect.cpp
             Point.cpp
-            platforms/cocoa/CocoaWindow.mm
+            platforms/cocoa/Widget.mm
             platforms/cocoa/CocoaApplication.mm
-            platforms/cocoa/CocoaWindowInterface.cpp
             platforms/cocoa/Painter.mm platforms/cocoa/Painter.h
             Color.cpp
-            platforms/cocoa/Renderer.mm platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWindow.cpp CustomWindow.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h)
+            platforms/cocoa/Renderer.mm platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWidget.cpp CustomWidget.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h platforms/PaintEvent.cpp platforms/PaintEvent.h TestWidget.cpp TestWidget.h Widgets/ToggleButton.cpp Widgets/ToggleButton.h)
     set(HEADER_FILES
             Size.h
             Rect.h
             Point.h
-            platforms/cocoa/CocoaWindow.h
+            platforms/cocoa/Widget.h
             platforms/cocoa/CocoaApplication.h
-            platforms/cocoa/CocoaWindowInterface.h
             platforms/cocoa/Painter.mm platforms/cocoa/Painter.h
             Color.cpp
-            platforms/cocoa/Renderer.h platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWindow.cpp CustomWindow.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h)
+            platforms/cocoa/Renderer.h platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWidget.cpp CustomWidget.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h platforms/PaintEvent.cpp platforms/PaintEvent.h TestWidget.cpp TestWidget.h Widgets/ToggleButton.cpp Widgets/ToggleButton.h)
 elseif (WIN32)
     set(SOURCE_FILES
             platforms/win32/Win32Window.cpp
             Size.cpp Rect.cpp Rect.h Point.cpp Point.h Color.cpp Color.h)
     set(HEADER_FILES
             platforms/win32/Win32Window.h
-            Size.h platforms/win32/Win32Application.cpp platforms/win32/Win32Application.h platforms/Window.cpp platforms/Window.h platforms/Application.cpp platforms/Application.h platforms/platform.h Rect.cpp Rect.h Point.cpp Point.h platforms/cocoa/Painter.cpp platforms/cocoa/Painter.h Color.cpp Color.h platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h)
+            Size.h platforms/win32/Win32Application.cpp platforms/win32/Win32Application.h platforms/Window.cpp platforms/Window.h platforms/Application.cpp platforms/Application.h platforms/platform.h Rect.cpp Rect.h Point.cpp Point.h platforms/cocoa/Painter.cpp platforms/cocoa/Painter.h Color.cpp Color.h platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/PaintEvent.cpp platforms/PaintEvent.h)
 endif()
 
 set(METAL_SHADERS
