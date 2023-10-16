@@ -1,5 +1,4 @@
-#ifndef MANGO_PAINTERPATH_H
-#define MANGO_PAINTERPATH_H
+#pragma once
 
 #include "../../Rect.h"
 #include <vector>
@@ -28,6 +27,7 @@ namespace GUI {
             bool isLineTo() const { return type == LineTo; }
             bool isCurveTo() const { return type == CurveTo; }
             bool isCurveToData() const { return type == CurveToData; }
+            Point toPoint() const { return Point(x, y); }
         };
 
         PainterPath() noexcept = default;
@@ -36,27 +36,36 @@ namespace GUI {
         void addRect(const Rect &boundingRect);
         void addRoundedRect(const Rect &boundingRect, float x_radius, float y_radius);
 
-        static void adaptiveApproximateCubicBezier(PainterPath& path, const CubicBezierCurve& curve, float threshold = 1.0);
+        static void adaptiveApproximateCubicBezier(std::vector<GUI::Point>& points, const CubicBezierCurve& curve, float threshold = 1.0);
         static float calculateCurveLength(const CubicBezierCurve& curve);
         static void splitCurve(const CubicBezierCurve& curve, float t, CubicBezierCurve& leftCurve, CubicBezierCurve& rightCurve);
+        static Point evaluateCubicBezier(const CubicBezierCurve &curve, float t);
+        static Point interpolate(const Point &p1, const Point &p2, float t);
+        static Point pointAtBezierCurve(const CubicBezierCurve &curve, float t);
 
         int elementCount() const { return elements.size(); }
 
-        Element elementAt(int index) { return elements.at(index); }
+        Element elementAt(int index) const { return elements.at(index); }
 
         void clear() { elements.clear(); }
 
         void addElement(const Element& e) { elements.push_back(e); }
 
+        void lineTo(int x, int y);
+        void moveTo(int x, int y);
+        void moveTo(const Point& p);
+        void cubicTo(const Point &c1, const Point &c2, const Point &endPoint);
+
+        void lineTo(const Point &point);
+
+        PainterPath& operator<<(const PainterPath::Element& element);
+
     private:
         std::vector<Element> elements;
 
-        static Point evaluateCubicBezier(const CubicBezierCurve &curve, float t);
 
-        static Point interpolate(const Point &p1, const Point &p2, float t);
 
         static float distanceBetweenPoints(const Point &p1, const Point &p2);
+
     };
 }
-
-#endif //MANGO_PAINTERPATH_H

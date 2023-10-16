@@ -177,7 +177,7 @@ namespace GUI {
             [mtkView.window setOpaque:NO];
             mtkView.layer.opaque = NO;
             Renderer *renderer = [[Renderer alloc] initWithMetalKitView:mtkView];
-            renderer.window = this;
+            renderer.widget = this;
             [mtkView setDelegate:renderer];
             view_wrapper->wrapped = mtkView;
         }

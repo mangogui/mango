@@ -12,8 +12,7 @@ namespace GUI {
         float kappa = 0.5522847498f;
 
         // Top right
-        elements.push_back({cx, cy, MoveTo});
-        elements.push_back({cx + rx, cy, LineTo});
+        elements.push_back({cx + rx, cy, MoveTo});
 
         elements.push_back({cx + rx, cy - ry * kappa, CurveTo});
         elements.push_back({cx + rx * kappa, cy - ry, CurveToData});
@@ -56,42 +55,47 @@ namespace GUI {
         float ox = rx * kappa;
         float oy = ry * kappa;
 
-        // Top-right corner
-        elements.push_back({r.x() + r.width(), r.y() + ry, MoveTo});
-        elements.push_back({r.x() + r.width(), r.y() + ry - oy, CurveTo});
-        elements.push_back({r.x() + r.width() - rx + ox, r.y(), CurveToData});
-        elements.push_back({r.x() + r.width() - rx, r.y(), CurveToData});
-
         // Top-left corner
-        elements.push_back({r.x() + rx, r.y(), LineTo});
-        elements.push_back({r.x() + rx - ox, r.y(), CurveTo});
-        elements.push_back({r.x(), r.y() + ry - oy, CurveToData});
-        elements.push_back({r.x(), r.y() + ry, CurveToData});
+        elements.push_back({r.x(), r.y() + ry, MoveTo});
+        elements.push_back({r.x(), r.y() + ry - oy, CurveTo});
+        elements.push_back({r.x() + rx - ox, r.y(), CurveToData});
+        elements.push_back({r.x() + rx, r.y(), CurveToData});
 
-        // Bottom-left corner
-        elements.push_back({r.x(), r.y() + r.height() - ry, LineTo});
-        elements.push_back({r.x(), r.y() + r.height() - ry + oy, CurveTo});
-        elements.push_back({r.x() + rx - ox, r.y() + r.height(), CurveToData});
-        elements.push_back({r.x() + rx, r.y() + r.height(), CurveToData});
+        // Top-right corner
+        elements.push_back({r.x() + r.width() - rx, r.y(), LineTo});
+        elements.push_back({r.x() + r.width() - rx + ox, r.y(), CurveTo});
+        elements.push_back({r.x() + r.width(), r.y() + ry - oy, CurveToData});
+        elements.push_back({r.x() + r.width(), r.y() + ry, CurveToData});
+
 
         // Bottom-right corner
-        elements.push_back({r.x() + r.width() - rx, r.y() + r.height(), LineTo});
-        elements.push_back({r.x() + r.width() - rx + ox, r.y() + r.height(), CurveTo});
-        elements.push_back({r.x() + r.width(), r.y() + r.height() - ry + oy, CurveToData});
-        elements.push_back({r.x() + r.width(), r.y() + r.height() - ry, CurveToData});
+        elements.push_back({r.x() + r.width(), r.y() + r.height() - ry, LineTo});
+        elements.push_back({r.x() + r.width(), r.y() + r.height() - ry + oy, CurveTo});
+        elements.push_back({r.x() + r.width() - rx + ox, r.y() + r.height(), CurveToData});
+        elements.push_back({r.x() + r.width() - rx, r.y() + r.height(), CurveToData});
+
+
+        // Bottom-left corner
+        elements.push_back({r.x() + rx, r.y() + r.height(), LineTo});
+        elements.push_back({r.x() + rx - ox, r.y() + r.height(), CurveTo});
+        elements.push_back({r.x(), r.y() + r.height() - ry + oy, CurveToData});
+        elements.push_back({r.x(), r.y() + r.height() - ry, CurveToData});
+
     }
 
-    void PainterPath::adaptiveApproximateCubicBezier(PainterPath& path, const CubicBezierCurve& curve, float threshold) {
+    void PainterPath::adaptiveApproximateCubicBezier(std::vector<GUI::Point>& points, const CubicBezierCurve& curve, float threshold) {
         float length = calculateCurveLength(curve); // Implement a function to calculate curve length
 
         if (length <= threshold) {
-            path.addElement({curve.controlPoints[0].x(), curve.controlPoints[0].y(), LineTo});
+            if (points.empty() || points.back() != curve.controlPoints[0]) {
+                points.push_back(Point(curve.controlPoints[0].x(), curve.controlPoints[0].y()));
+            }
         } else {
             CubicBezierCurve leftSubCurve, rightSubCurve;
             splitCurve(curve, 0.5f, leftSubCurve, rightSubCurve); // Implement a function to split the curve
 
-            adaptiveApproximateCubicBezier(path, leftSubCurve, threshold);
-            adaptiveApproximateCubicBezier(path, rightSubCurve, threshold);
+            adaptiveApproximateCubicBezier(points, leftSubCurve, threshold);
+            adaptiveApproximateCubicBezier(points, rightSubCurve, threshold);
         }
     }
 
@@ -152,8 +156,8 @@ namespace GUI {
 
     Point PainterPath::interpolate(const Point& p1, const Point& p2, float t) {
         Point result;
-        result.set_x((1.0f - t) * p1.x() + t * p2.x()); // Corrected x-coordinate calculation
-        result.set_y((1.0f - t) * p1.y() + t * p2.y()); // Corrected y-coordinate calculation
+        result.set_x((1.0f - t) * p1.x() + t * p2.x());
+        result.set_y((1.0f - t) * p1.y() + t * p2.y());
         return result;
     }
 
@@ -163,4 +167,43 @@ namespace GUI {
         return std::sqrt(dx * dx + dy * dy);
     }
 
+    void PainterPath::lineTo(int x, int y) {
+        // TODO: fix this casting
+        addElement(PainterPath::Element({static_cast<float>(x), static_cast<float>(y), LineTo}));
+    }
+
+    void PainterPath::moveTo(int x, int y) {
+        // TODO: fix this casting
+        addElement(PainterPath::Element({static_cast<float>(x), static_cast<float>(y), MoveTo}));
+    }
+
+    void PainterPath::moveTo(const Point& p) {
+        // TODO: fix this casting
+        moveTo(p.x(), p.y());
+    }
+
+    void PainterPath::cubicTo(const Point &c1, const Point &c2, const Point &endPoint) {
+        elements.push_back({c1.x(), c1.y(), CurveTo});
+        elements.push_back({c2.x(), c2.y(), CurveToData});
+        elements.push_back({endPoint.x(), endPoint.y(), CurveToData});
+    }
+
+    void PainterPath::lineTo(const Point &p) {
+        lineTo(p.x(), p.y());
+    }
+
+    PainterPath &PainterPath::operator<<(const PainterPath::Element &element) {
+        addElement(element);
+        return *this;
+    }
+
+    Point PainterPath::pointAtBezierCurve(const CubicBezierCurve &curve, float t) {
+        Point p01 = interpolate(curve.controlPoints[0], curve.controlPoints[1], t);
+        Point p12 = interpolate(curve.controlPoints[1], curve.controlPoints[2], t);
+        Point p23 = interpolate(curve.controlPoints[2], curve.controlPoints[3], t);
+        Point p012 = interpolate(p01, p12, t);
+        Point p123 = interpolate(p12, p23, t);
+        Point p0123 = interpolate(p012, p123, t);
+        return p0123;
+    }
 }

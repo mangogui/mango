@@ -1,5 +1,6 @@
-#ifndef MANGO_POINT_H
-#define MANGO_POINT_H
+#pragma once
+
+#include <iostream>
 
 namespace GUI {
     class Point {
@@ -15,6 +16,36 @@ namespace GUI {
         constexpr inline float x() const noexcept;
 
         constexpr inline float y() const noexcept;
+
+        float length() const {
+            return std::sqrt(xp * xp + yp * yp);
+        }
+
+        inline Point normalized() const;
+
+        constexpr inline Point operator*(float factor) const {
+            return Point(xp * factor, yp * factor);
+        }
+
+        constexpr inline Point operator*(double factor) const {
+            return Point(xp * factor, yp * factor);
+        }
+
+        constexpr inline Point operator+(const Point& other) const {
+            return Point(xp + other.xp, yp + other.yp);
+        }
+
+        constexpr inline Point operator-(const Point& other) const {
+            return Point(xp - other.xp, yp - other.yp);
+        }
+
+        constexpr inline bool operator==(const Point& _point) {
+            return _point.x() == this->xp && _point.y() == this->yp;
+        }
+
+        constexpr inline bool operator!=(const Point& _point) {
+            return _point.x() != this->xp || _point.y() != this->yp;
+        }
 
     private:
         float xp, yp;
@@ -39,6 +70,14 @@ namespace GUI {
     constexpr inline void Point::set_y(float y) {
         yp = y;
     }
-}
 
-#endif //MANGO_POINT_H
+    Point Point::normalized() const {
+        float len = length();
+        if (len != 0) {
+            return Point(xp / len, yp / len);
+        } else {
+            // Handle the case of a zero-length vector (to avoid division by zero)
+            return *this; // Return the original vector
+        }
+    }
+}

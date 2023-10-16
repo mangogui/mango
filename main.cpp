@@ -8,13 +8,13 @@
 int main() {
     Application application;
     CustomWidget widget;
-    ToggleButton toggle_button(&widget);
-    toggle_button.setObjectName("TestWidget");
-    widget.resize(1400, 1000);
+//    ToggleButton toggle_button(&widget);
+//    toggle_button.setObjectName("TestWidget");
+    widget.resize(600, 600);
     widget.center();
     widget.display();
-    toggle_button.move(200, 200);
-    toggle_button.resize(200, 100);
+//    toggle_button.move(200, 200);
+//    toggle_button.resize(200, 100);
     application.run();
 
     return 0;

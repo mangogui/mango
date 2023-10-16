@@ -7,7 +7,7 @@
 
 
 @interface Renderer : NSObject<MTKViewDelegate>
-@property (readwrite) GUI::Widget* window;
+@property (readwrite) GUI::Widget* widget;
 - (nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)mtkView;
-- (void)drawPolygonInMTKView:(nonnull MTKView *)view withPolygons:(std::vector<std::vector<GUI::Point>>)polygons andColors:(std::map<int, GUI::Color>)colors;
+- (void)drawPolygonInMTKView:(nonnull MTKView *)view withPoints:(std::vector<GUI::Point>)points andColors:(std::map<int, GUI::Color>)colors;
 @end

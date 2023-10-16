@@ -13,7 +13,7 @@ if (APPLE)
             platforms/cocoa/CocoaApplication.mm
             platforms/cocoa/Painter.mm platforms/cocoa/Painter.h
             Color.cpp
-            platforms/cocoa/Renderer.mm platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWidget.cpp CustomWidget.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h platforms/PaintEvent.cpp platforms/PaintEvent.h TestWidget.cpp TestWidget.h Widgets/ToggleButton.cpp Widgets/ToggleButton.h)
+            platforms/cocoa/Renderer.mm platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWidget.cpp CustomWidget.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h platforms/PaintEvent.cpp platforms/PaintEvent.h TestWidget.cpp TestWidget.h Widgets/ToggleButton.cpp Widgets/ToggleButton.h Bezier.cpp Bezier.h metal_config.h)
     set(HEADER_FILES
             Size.h
             Rect.h
@@ -22,7 +22,7 @@ if (APPLE)
             platforms/cocoa/CocoaApplication.h
             platforms/cocoa/Painter.mm platforms/cocoa/Painter.h
             Color.cpp
-            platforms/cocoa/Renderer.h platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWidget.cpp CustomWidget.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h platforms/PaintEvent.cpp platforms/PaintEvent.h TestWidget.cpp TestWidget.h Widgets/ToggleButton.cpp Widgets/ToggleButton.h)
+            platforms/cocoa/Renderer.h platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWidget.cpp CustomWidget.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h platforms/PaintEvent.cpp platforms/PaintEvent.h TestWidget.cpp TestWidget.h Widgets/ToggleButton.cpp Widgets/ToggleButton.h Bezier.cpp Bezier.h metal_config.h)
 elseif (WIN32)
     set(SOURCE_FILES
             platforms/win32/Win32Window.cpp
