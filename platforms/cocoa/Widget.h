@@ -64,6 +64,8 @@ namespace GUI {
             return object_name;
         }
 
+        float scaleFactor();
+
     protected:
         CocoaWindowWrapper *window_wrapper;
         MTKViewWrapper *view_wrapper;

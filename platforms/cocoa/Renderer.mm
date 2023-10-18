@@ -153,7 +153,7 @@ std::vector<int> EarClipping(const std::vector<GUI::Point>& polygon) {
 }
 
 
-- (void)drawPolygonInMTKView:(nonnull MTKView *)view withPoints:(std::vector<GUI::Point>)points andColors:(std::map<int, GUI::Color>)colors {
+- (void)drawPolygonInMTKView:(nonnull MTKView *)view withPolygons:(std::vector<std::vector<GUI::Point>>)polygons andColors:(std::map<int, GUI::Color>)colors {
     id<MTLFunction> vertexFunction = [library newFunctionWithName:@"rectVertexShader"];
     id<MTLFunction> fragmentFunction = [library newFunctionWithName:@"rectFragmentShader"];
 
@@ -185,77 +185,85 @@ std::vector<int> EarClipping(const std::vector<GUI::Point>& polygon) {
 
         [renderEncoder setRenderPipelineState:_pipelineState];
 
-        GUI::Color current_color;
-        int polygon_index = 0;
+        for (std::vector<GUI::Point>& points: polygons) {
+            GUI::Color current_color;
+            int polygon_index = 0;
 
-        if (colors.find(polygon_index) != colors.end()) {
-            current_color = colors[polygon_index];
+            if (colors.find(polygon_index) != colors.end()) {
+                current_color = colors[polygon_index];
+            }
+            polygon_index += 1;
+
+            // Triangulate the polygon using ear clipping
+            std::vector<int> triangleIndices = EarClipping(points);
+
+            const size_t numPoints = points.size();
+            const size_t numTriangles = triangleIndices.size() / 3;
+
+            Vertex polygonVertices[numPoints];
+            uint16_t polygonIndices[numTriangles * 3];
+
+            for (size_t i = 0; i < numPoints; i++) {
+                const GUI::Point& point = points[i];
+                polygonVertices[i] = {{ point.x(), point.y() }};
+            }
+
+            // Create and set the index buffer
+            for (size_t i = 0; i < numTriangles * 3; i++) {
+                polygonIndices[i] = static_cast<uint16_t>(triangleIndices[i]);
+            }
+
+            // Create and set the index buffer.
+            id<MTLBuffer> indexBuffer = [_device newBufferWithBytes:polygonIndices length:sizeof(polygonIndices) options:MTLResourceStorageModeShared];
+            [renderEncoder setVertexBuffer:indexBuffer offset:0 atIndex:1];
+
+            float scaleFactor = _widget->scaleFactor();
+            id<MTLBuffer> scaleFactorBuffer = [_device newBufferWithBytes:&scaleFactor length:sizeof(float) options:MTLResourceStorageModeShared];
+
+            // Set the scale factor buffer in your Metal render pipeline
+            [renderEncoder setVertexBuffer:scaleFactorBuffer offset:0 atIndex:2];
+            [renderEncoder setVertexBytes:&scaleFactor length:sizeof(float) atIndex:2];
+
+            vertexUniformsBuffer = [_device newBufferWithLength:sizeof(RectFragmentUniforms) options:MTLResourceStorageModeShared];
+            fragmentUniformsBuffer = [_device newBufferWithLength:sizeof(RectFragmentUniforms) options:MTLResourceStorageModeShared];
+            [renderEncoder setFragmentBuffer:fragmentUniformsBuffer offset:0 atIndex:0];
+
+            vertexBuffer = [_device newBufferWithBytes:polygonVertices length:sizeof(polygonVertices) options:MTLResourceStorageModeShared];
+
+            RectFragmentUniforms fragmentUniforms = {
+                    .origin_position = simd_make_float2(0, 0),
+                    .border_width = 0,
+                    .background_color = current_color.toSimdFloat4()
+            };
+
+            RectVertexUniforms vertexUniforms = {
+                    .origin_position = simd_make_float2(0, 0),
+                    .viewport_size = _viewportSize,
+            };
+
+            // Pass in the parameter data.
+            [renderEncoder setVertexBuffer:vertexBuffer offset:0 atIndex:VertexInputIndexVertices];
+
+            [renderEncoder setVertexBytes:&_viewportSize
+                                   length:sizeof(_viewportSize)
+                                  atIndex:VertexInputIndexViewportSize];
+
+            [renderEncoder setVertexBytes:&vertexUniforms
+                                   length:sizeof(vertexUniforms)
+                                  atIndex:3];
+
+            [renderEncoder setFragmentBytes:&fragmentUniforms
+                                     length:sizeof(fragmentUniforms)
+                                    atIndex:0];
+
+            // Draw the polygon using indexed drawing.
+            [renderEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
+                                      indexCount:sizeof(polygonIndices) / sizeof(uint16_t)
+                                       indexType:MTLIndexTypeUInt16
+                                     indexBuffer:indexBuffer
+                               indexBufferOffset:0];
+
         }
-        polygon_index += 1;
-
-        // Triangulate the polygon using ear clipping
-        std::vector<int> triangleIndices = EarClipping(points);
-
-        const size_t numPoints = points.size();
-        const size_t numTriangles = triangleIndices.size() / 3;
-
-        Vertex polygonVertices[numPoints];
-        uint16_t polygonIndices[numTriangles * 3];
-
-        for (size_t i = 0; i < numPoints; i++) {
-            const GUI::Point& point = points[i];
-            polygonVertices[i] = {{ point.x(), point.y() }};
-        }
-
-        // Create and set the index buffer
-        for (size_t i = 0; i < numTriangles * 3; i++) {
-            polygonIndices[i] = static_cast<uint16_t>(triangleIndices[i]);
-        }
-
-        // Create and set the index buffer.
-        id<MTLBuffer> indexBuffer = [_device newBufferWithBytes:polygonIndices length:sizeof(polygonIndices) options:MTLResourceStorageModeShared];
-        [renderEncoder setVertexBuffer:indexBuffer offset:0 atIndex:1];
-
-        vertexUniformsBuffer = [_device newBufferWithLength:sizeof(RectFragmentUniforms) options:MTLResourceStorageModeShared];
-        fragmentUniformsBuffer = [_device newBufferWithLength:sizeof(RectFragmentUniforms) options:MTLResourceStorageModeShared];
-        [renderEncoder setFragmentBuffer:fragmentUniformsBuffer offset:0 atIndex:0];
-
-        vertexBuffer = [_device newBufferWithBytes:polygonVertices length:sizeof(polygonVertices) options:MTLResourceStorageModeShared];
-
-        RectFragmentUniforms fragmentUniforms = {
-                .origin_position = simd_make_float2(0, 0),
-                .border_width = 0,
-                .background_color = current_color.toSimdFloat4()
-        };
-
-        RectVertexUniforms vertexUniforms = {
-                .origin_position = simd_make_float2(0, 0),
-                .viewport_size = _viewportSize,
-        };
-
-        // Pass in the parameter data.
-        [renderEncoder setVertexBuffer:vertexBuffer offset:0 atIndex:VertexInputIndexVertices];
-
-        [renderEncoder setVertexBytes:&_viewportSize
-                               length:sizeof(_viewportSize)
-                              atIndex:VertexInputIndexViewportSize];
-
-        [renderEncoder setVertexBytes:&vertexUniforms
-                               length:sizeof(vertexUniforms)
-                              atIndex:2];
-
-        [renderEncoder setFragmentBytes:&fragmentUniforms
-                                 length:sizeof(fragmentUniforms)
-                                atIndex:0];
-
-        // Draw the polygon using indexed drawing.
-        [renderEncoder drawIndexedPrimitives:MTLPrimitiveTypeLine
-                                  indexCount:sizeof(polygonIndices) / sizeof(uint16_t)
-                                   indexType:MTLIndexTypeUInt16
-                                 indexBuffer:indexBuffer
-                           indexBufferOffset:0];
-
-//        }
 
         [renderEncoder endEncoding];
 
@@ -352,38 +360,43 @@ void addStrokedCurveElement(const GUI::PainterPath& path, std::vector<GUI::Point
 }
 
 
-std::vector<GUI::Point> buildPath(const GUI::PainterPath& path) {
-    std::vector<GUI::Point> points;
-    float l = 50;
+std::vector<std::vector<GUI::Point>> buildPath(const GUI::PainterPath& path) {
+    std::vector<std::vector<GUI::Point>> polygons;
+    std::vector<GUI::Point> currentPolygon;
     int i = 0;
-    GUI::Point lastPoint; // Initialize a variable to keep track of the last point
 
     while (i < path.elementCount()) {
         GUI::PainterPath::Element element = path.elementAt(i);
 
         switch (element.type) {
             case (GUI::PainterPath::LineTo): {
-                if (element.toPoint() != lastPoint) {
-                    points.push_back(element.toPoint());
-                    lastPoint = element.toPoint(); // Update the last point
-                }
-                // Add path stroke
-                // addLineElement(path, points, i, l);
+                currentPolygon.push_back(element.toPoint());
                 i += 1;
                 break;
             }
             case (GUI::PainterPath::CurveTo): {
                 GUI::CubicBezierCurve curve = create_cubic_bezier_curve(path, i); // Initializing the curve's control points
-                GUI::PainterPath::adaptiveApproximateCubicBezier(points, curve);
-                // addStrokedCurveElement(path, points, i, l);
+                GUI::PainterPath::adaptiveApproximateCubicBezier(currentPolygon, curve);
                 i += 3;
                 break;
             }
             case (GUI::PainterPath::MoveTo): {
-                if (element.toPoint() != lastPoint) {
-                    points.push_back(element.toPoint());
-                    lastPoint = element.toPoint(); // Update the last point
+                if (!currentPolygon.empty()) {
+                    // Remove consecutive equal points
+                    std::vector<GUI::Point> filteredPoints;
+                    if (!currentPolygon.empty()) {
+                        filteredPoints.push_back(currentPolygon[0]); // Always add the first point
+
+                        for (size_t j = 1; j < currentPolygon.size(); ++j) {
+                            if (currentPolygon[j] != currentPolygon[j - 1]) {
+                                filteredPoints.push_back(currentPolygon[j]);
+                            }
+                        }
+                    }
+                    polygons.push_back(filteredPoints);
                 }
+                currentPolygon.clear();
+                currentPolygon.push_back(element.toPoint());
                 i += 1;
                 break;
             }
@@ -393,14 +406,24 @@ std::vector<GUI::Point> buildPath(const GUI::PainterPath& path) {
             }
         }
     }
-    return points;
-}
 
-//GUI::PaintEvent create_paint_event_instance() {
-//    GUI::PaintEvent event;
-//    event.setRect(GUI::Rect(0, 0, _viewportSize.x, _viewportSize.y));
-//    return event;
-//}
+    // Add the last polygon if not empty
+    if (!currentPolygon.empty()) {
+        std::vector<GUI::Point> filteredPoints;
+        if (!currentPolygon.empty()) {
+            filteredPoints.push_back(currentPolygon[0]); // Always add the first point
+
+            for (size_t j = 1; j < currentPolygon.size(); ++j) {
+                if (currentPolygon[j] != currentPolygon[j - 1]) {
+                    filteredPoints.push_back(currentPolygon[j]);
+                }
+            }
+        }
+        polygons.push_back(filteredPoints);
+    }
+
+    return polygons;
+}
 
 - (void)drawInMTKView:(nonnull MTKView *)view {
     GUI::PaintEvent event;
@@ -430,37 +453,9 @@ std::vector<GUI::Point> buildPath(const GUI::PainterPath& path) {
         }
     }
 
-    std::vector<GUI::Point> points = buildPath(path);
-    points.pop_back(); // TEMP
-//    std::reverse(points.begin(), points.end());
+    std::vector<std::vector<GUI::Point>> polygons = buildPath(path);
 
-
-//    std::vector<std::vector<GUI::Point>> polygons; // Vector to store separate polygons
-//
-//    i = 0;
-//    while (i < new_path.elementCount()) {
-//        GUI::PainterPath::Element element = new_path.elementAt(i);
-//        if (element.isMoveTo()) {
-//            std::vector<GUI::Point> polygonPoints;
-//            i += 1;
-//            while (i < new_path.elementCount()) {
-//                GUI::PainterPath::Element e = new_path.elementAt(i);
-//                if (e.isLineTo()) {
-//                    polygonPoints.push_back(GUI::Point(e.x, e.y));
-//                    i += 1;
-//                }
-//                else if (e.isMoveTo()) {
-//                    break;
-//                }
-//                else { i += 1; }
-//            }
-//            // Add the completed polygon to the vector
-//            polygons.push_back(polygonPoints);
-//        }
-//        else { i += 1; }
-//    }
-
-    [self drawPolygonInMTKView:view withPoints:points andColors:colors];
+    [self drawPolygonInMTKView:view withPolygons:polygons andColors:colors];
 
     path.clear();
     _widget->states().clear();

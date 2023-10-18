@@ -87,9 +87,7 @@ namespace GUI {
         float length = calculateCurveLength(curve); // Implement a function to calculate curve length
 
         if (length <= threshold) {
-            if (points.empty() || points.back() != curve.controlPoints[0]) {
-                points.push_back(Point(curve.controlPoints[0].x(), curve.controlPoints[0].y()));
-            }
+            points.push_back(Point(curve.controlPoints[0].x(), curve.controlPoints[0].y()));
         } else {
             CubicBezierCurve leftSubCurve, rightSubCurve;
             splitCurve(curve, 0.5f, leftSubCurve, rightSubCurve); // Implement a function to split the curve

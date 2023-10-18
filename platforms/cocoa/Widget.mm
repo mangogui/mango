@@ -221,4 +221,11 @@ namespace GUI {
     void Widget::update() {
         [view_wrapper->wrapped setNeedsDisplay:YES];
     }
+
+    float Widget::scaleFactor() {
+        NSWindow *window = window_wrapper->wrapped;
+        NSScreen *windowScreen = [window screen];
+        CGFloat screenScale = [windowScreen backingScaleFactor];
+        return screenScale;
+    }
 }

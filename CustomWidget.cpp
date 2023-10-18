@@ -8,7 +8,7 @@ namespace GUI {
     void CustomWidget::paintEvent(const PaintEvent& event) {
         Painter painter(this);
         painter.setFillColor(Color(143, 117, 100));
-        painter.drawRoundedRect(Rect(400, 400, 400, 400), 100, 100);
+        painter.drawRoundedRect(Rect(200, 200, 200, 200), 50, 50);
 //        painter.drawEllipse(Rect(800, 400, 400, 400));
 //        painter.drawRect(Rect(400, 400, 400, 400));
 //        painter.moveTo(Point(830, 540));

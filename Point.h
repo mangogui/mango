@@ -39,11 +39,11 @@ namespace GUI {
             return Point(xp - other.xp, yp - other.yp);
         }
 
-        constexpr inline bool operator==(const Point& _point) {
+        constexpr inline bool operator==(const Point& _point) const {
             return _point.x() == this->xp && _point.y() == this->yp;
         }
 
-        constexpr inline bool operator!=(const Point& _point) {
+        constexpr inline bool operator!=(const Point& _point) const {
             return _point.x() != this->xp || _point.y() != this->yp;
         }
 
