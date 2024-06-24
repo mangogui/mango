@@ -1,0 +1,275 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:javaPreCompileDebug
+> Task :app:generateDebugResValues
+> Task :app:checkDebugAarMetadata
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:packageDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:parseDebugLocalResources
+> Task :app:processDebugMainManifest
+> Task :app:mergeDebugResources
+> Task :app:processDebugManifest
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :app:processDebugJavaRes NO-SOURCE
+> Task :app:desugarDebugFileDependencies
+> Task :app:mergeDebugStartupProfile
+> Task :app:checkDebugDuplicateClasses
+> Task :app:mergeDebugJavaResource
+> Task :app:configureCMakeDebug[arm64-v8a]
+> Task :app:mergeLibDexDebug
+
+> Task :app:buildCMakeDebug[arm64-v8a]
+C/C++: ninja: Entering directory `/Users/parhamoyan/Desktop/MangoWidget/android/app/.cxx/Debug/515v2t4l/arm64-v8a'
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:21:20: warning: passing an object of reference type to 'va_start' has undefined behavior [-Wvarargs]
+C/C++:     va_start(args, constructorSig);
+C/C++:                    ^
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:9:71: note: parameter of type 'const std::string &' (aka 'const basic_string<char> &') is declared here
+C/C++: JniObject::JniObject(const std::string& className, const std::string& constructorSig, ...) : m_env(JniEnvironment::getInstance().getEnv()), m_obj(nullptr), m_class(nullptr) {
+C/C++:                                                                       ^
+C/C++: 1 warning generated.
+
+> Task :app:configureCMakeDebug[armeabi-v7a]
+
+> Task :app:buildCMakeDebug[armeabi-v7a]
+C/C++: ninja: Entering directory `/Users/parhamoyan/Desktop/MangoWidget/android/app/.cxx/Debug/515v2t4l/armeabi-v7a'
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:21:20: warning: passing an object of reference type to 'va_start' has undefined behavior [-Wvarargs]
+C/C++:     va_start(args, constructorSig);
+C/C++:                    ^
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:9:71: note: parameter of type 'const std::string &' (aka 'const basic_string<char> &') is declared here
+C/C++: JniObject::JniObject(const std::string& className, const std::string& constructorSig, ...) : m_env(JniEnvironment::getInstance().getEnv()), m_obj(nullptr), m_class(nullptr) {
+C/C++:                                                                       ^
+C/C++: 1 warning generated.
+
+> Task :app:configureCMakeDebug[x86]
+
+> Task :app:buildCMakeDebug[x86]
+C/C++: ninja: Entering directory `/Users/parhamoyan/Desktop/MangoWidget/android/app/.cxx/Debug/515v2t4l/x86'
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:21:20: warning: passing an object of reference type to 'va_start' has undefined behavior [-Wvarargs]
+C/C++:     va_start(args, constructorSig);
+C/C++:                    ^
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:9:71: note: parameter of type 'const std::string &' (aka 'const basic_string<char> &') is declared here
+C/C++: JniObject::JniObject(const std::string& className, const std::string& constructorSig, ...) : m_env(JniEnvironment::getInstance().getEnv()), m_obj(nullptr), m_class(nullptr) {
+C/C++:                                                                       ^
+C/C++: 1 warning generated.
+
+> Task :app:configureCMakeDebug[x86_64]
+
+> Task :app:buildCMakeDebug[x86_64]
+C/C++: ninja: Entering directory `/Users/parhamoyan/Desktop/MangoWidget/android/app/.cxx/Debug/515v2t4l/x86_64'
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:21:20: warning: passing an object of reference type to 'va_start' has undefined behavior [-Wvarargs]
+C/C++:     va_start(args, constructorSig);
+C/C++:                    ^
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:9:71: note: parameter of type 'const std::string &' (aka 'const basic_string<char> &') is declared here
+C/C++: JniObject::JniObject(const std::string& className, const std::string& constructorSig, ...) : m_env(JniEnvironment::getInstance().getEnv()), m_obj(nullptr), m_class(nullptr) {
+C/C++:                                                                       ^
+C/C++: 1 warning generated.
+
+> Task :app:mergeDebugJniLibFolders
+> Task :app:processDebugManifestForPackage
+> Task :app:mergeDebugNativeLibs
+> Task :app:stripDebugDebugSymbols
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:javaPreCompileRelease
+> Task :app:generateReleaseResValues
+> Task :app:checkReleaseAarMetadata
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:generateReleaseResources
+> Task :app:mergeExtDexDebug
+> Task :app:processDebugResources
+> Task :app:mergeReleaseResources
+
+> Task :app:compileDebugJavaWithJavac
+Java compiler version 21 has deprecated support for compiling with source/target version 8.
+Try one of the following options:
+    1. [Recommended] Set a lower Java compiler version (using Java toolchain)
+    2. Set a higher source/target version
+    3. If you don't want to use Java toolchain, try using a lower version of the JDK running the build
+       (e.g., by setting the `JAVA_HOME` environment variable or the `org.gradle.java.home` Gradle property)
+For more details on how to configure these settings, see https://developer.android.com/build/jdks.
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
+
+> Task :app:dexBuilderDebug
+> Task :app:packageReleaseResources
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
+> Task :app:parseReleaseLocalResources
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :app:extractProguardFiles
+> Task :app:mergeProjectDexDebug
+> Task :app:configureCMakeRelWithDebInfo[arm64-v8a]
+
+> Task :app:buildCMakeRelWithDebInfo[arm64-v8a]
+C/C++: ninja: Entering directory `/Users/parhamoyan/Desktop/MangoWidget/android/app/.cxx/RelWithDebInfo/614k1j1h/arm64-v8a'
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:21:20: warning: passing an object of reference type to 'va_start' has undefined behavior [-Wvarargs]
+C/C++:     va_start(args, constructorSig);
+C/C++:                    ^
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:9:71: note: parameter of type 'const std::string &' (aka 'const basic_string<char> &') is declared here
+C/C++: JniObject::JniObject(const std::string& className, const std::string& constructorSig, ...) : m_env(JniEnvironment::getInstance().getEnv()), m_obj(nullptr), m_class(nullptr) {
+C/C++:                                                                       ^
+C/C++: 1 warning generated.
+
+> Task :app:configureCMakeRelWithDebInfo[armeabi-v7a]
+
+> Task :app:buildCMakeRelWithDebInfo[armeabi-v7a]
+C/C++: ninja: Entering directory `/Users/parhamoyan/Desktop/MangoWidget/android/app/.cxx/RelWithDebInfo/614k1j1h/armeabi-v7a'
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:21:20: warning: passing an object of reference type to 'va_start' has undefined behavior [-Wvarargs]
+C/C++:     va_start(args, constructorSig);
+C/C++:                    ^
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:9:71: note: parameter of type 'const std::string &' (aka 'const basic_string<char> &') is declared here
+C/C++: JniObject::JniObject(const std::string& className, const std::string& constructorSig, ...) : m_env(JniEnvironment::getInstance().getEnv()), m_obj(nullptr), m_class(nullptr) {
+C/C++:                                                                       ^
+C/C++: 1 warning generated.
+
+> Task :app:configureCMakeRelWithDebInfo[x86]
+
+> Task :app:buildCMakeRelWithDebInfo[x86]
+C/C++: ninja: Entering directory `/Users/parhamoyan/Desktop/MangoWidget/android/app/.cxx/RelWithDebInfo/614k1j1h/x86'
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:21:20: warning: passing an object of reference type to 'va_start' has undefined behavior [-Wvarargs]
+C/C++:     va_start(args, constructorSig);
+C/C++:                    ^
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:9:71: note: parameter of type 'const std::string &' (aka 'const basic_string<char> &') is declared here
+C/C++: JniObject::JniObject(const std::string& className, const std::string& constructorSig, ...) : m_env(JniEnvironment::getInstance().getEnv()), m_obj(nullptr), m_class(nullptr) {
+C/C++:                                                                       ^
+C/C++: 1 warning generated.
+
+> Task :app:configureCMakeRelWithDebInfo[x86_64]
+
+> Task :app:buildCMakeRelWithDebInfo[x86_64]
+C/C++: ninja: Entering directory `/Users/parhamoyan/Desktop/MangoWidget/android/app/.cxx/RelWithDebInfo/614k1j1h/x86_64'
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:21:20: warning: passing an object of reference type to 'va_start' has undefined behavior [-Wvarargs]
+C/C++:     va_start(args, constructorSig);
+C/C++:                    ^
+C/C++: /Users/parhamoyan/Desktop/MangoWidget/android/app/src/main/cpp/JniObject.cpp:9:71: note: parameter of type 'const std::string &' (aka 'const basic_string<char> &') is declared here
+C/C++: JniObject::JniObject(const std::string& className, const std::string& constructorSig, ...) : m_env(JniEnvironment::getInstance().getEnv()), m_obj(nullptr), m_class(nullptr) {
+C/C++:                                                                       ^
+C/C++: 1 warning generated.
+
+> Task :app:mergeReleaseJniLibFolders
+> Task :app:desugarReleaseFileDependencies
+> Task :app:mergeReleaseStartupProfile
+> Task :app:mergeReleaseNativeLibs
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:processReleaseManifestForPackage
+> Task :app:mergeReleaseArtProfile
+> Task :app:processReleaseResources
+> Task :app:stripReleaseDebugSymbols
+
+> Task :app:compileReleaseJavaWithJavac
+Java compiler version 21 has deprecated support for compiling with source/target version 8.
+Try one of the following options:
+    1. [Recommended] Set a lower Java compiler version (using Java toolchain)
+    2. Set a higher source/target version
+    3. If you don't want to use Java toolchain, try using a lower version of the JDK running the build
+       (e.g., by setting the `JAVA_HOME` environment variable or the `org.gradle.java.home` Gradle property)
+For more details on how to configure these settings, see https://developer.android.com/build/jdks.
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
+
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:mergeExtDexRelease
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+> Task :app:extractReleaseNativeSymbolTables
+> Task :app:dexBuilderRelease
+> Task :app:mergeReleaseNativeDebugMetadata
+> Task :app:mergeReleaseGlobalSynthetics
+> Task :app:mergeReleaseShaders
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:compressReleaseAssets
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:processReleaseJavaRes NO-SOURCE
+> Task :app:collectReleaseDependencies
+> Task :app:sdkReleaseDependencyData
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:optimizeReleaseResources
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:generateDebugLintReportModel
+> Task :app:mergeReleaseJavaResource
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:javaPreCompileDebugUnitTest
+> Task :app:processDebugUnitTestJavaRes NO-SOURCE
+> Task :app:bundleDebugClassesToRuntimeJar
+
+> Task :app:compileDebugUnitTestJavaWithJavac
+Java compiler version 21 has deprecated support for compiling with source/target version 8.
+Try one of the following options:
+    1. [Recommended] Set a lower Java compiler version (using Java toolchain)
+    2. Set a higher source/target version
+    3. If you don't want to use Java toolchain, try using a lower version of the JDK running the build
+       (e.g., by setting the `JAVA_HOME` environment variable or the `org.gradle.java.home` Gradle property)
+For more details on how to configure these settings, see https://developer.android.com/build/jdks.
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
+
+> Task :app:mergeDexRelease
+> Task :app:testDebugUnitTest
+> Task :app:preReleaseUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileReleaseUnitTest
+> Task :app:bundleReleaseClassesToRuntimeJar
+> Task :app:processReleaseUnitTestJavaRes NO-SOURCE
+> Task :app:bundleReleaseClassesToCompileJar
+
+> Task :app:compileReleaseUnitTestJavaWithJavac
+Java compiler version 21 has deprecated support for compiling with source/target version 8.
+Try one of the following options:
+    1. [Recommended] Set a lower Java compiler version (using Java toolchain)
+    2. Set a higher source/target version
+    3. If you don't want to use Java toolchain, try using a lower version of the JDK running the build
+       (e.g., by setting the `JAVA_HOME` environment variable or the `org.gradle.java.home` Gradle property)
+For more details on how to configure these settings, see https://developer.android.com/build/jdks.
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
+
+> Task :app:compileReleaseArtProfile
+> Task :app:testReleaseUnitTest
+> Task :app:test
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:lintVitalAnalyzeRelease
+> Task :app:lintVitalReportRelease SKIPPED
+> Task :app:lintVitalRelease SKIPPED
+> Task :app:assembleRelease
+> Task :app:assemble
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintAnalyzeDebug
+
+> Task :app:lintReportDebug
+Wrote HTML report to file:///Users/parhamoyan/Desktop/MangoWidget/android/app/build/reports/lint-results-debug.html
+
+> Task :app:lintDebug
+> Task :app:lint
+> Task :app:check
+> Task :app:build
+
+BUILD SUCCESSFUL in 45s
+113 actionable tasks: 113 executed

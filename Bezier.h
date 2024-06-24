@@ -1,8 +1,0 @@
-#pragma oce
-
-
-class Bezier {
-
-};
-
-

@@ -1,78 +1,123 @@
-cmake_minimum_required(VERSION 3.23)
-project(Mango)
+cmake_minimum_required(VERSION 3.16)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_C_FLAGS "-Wdeprecated-declarations")
+project(MangoWidget VERSION 1.0.0)
 
-if (APPLE)
-    set(SOURCE_FILES
-            Size.cpp
-            Rect.cpp
-            Point.cpp
-            platforms/cocoa/Widget.mm
-            platforms/cocoa/CocoaApplication.mm
-            platforms/cocoa/Painter.mm platforms/cocoa/Painter.h
-            Color.cpp
-            platforms/cocoa/Renderer.mm platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWidget.cpp CustomWidget.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h platforms/PaintEvent.cpp platforms/PaintEvent.h TestWidget.cpp TestWidget.h Widgets/ToggleButton.cpp Widgets/ToggleButton.h Bezier.cpp Bezier.h metal_config.h)
-    set(HEADER_FILES
-            Size.h
-            Rect.h
-            Point.h
-            platforms/cocoa/Widget.h
-            platforms/cocoa/CocoaApplication.h
-            platforms/cocoa/Painter.mm platforms/cocoa/Painter.h
-            Color.cpp
-            platforms/cocoa/Renderer.h platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/cocoa/Vector.cpp platforms/cocoa/Vector.h CustomWidget.cpp CustomWidget.h Mango.h platforms/cocoa/Screen.cpp platforms/cocoa/Screen.h platforms/PaintEvent.cpp platforms/PaintEvent.h TestWidget.cpp TestWidget.h Widgets/ToggleButton.cpp Widgets/ToggleButton.h Bezier.cpp Bezier.h metal_config.h)
-elseif (WIN32)
-    set(SOURCE_FILES
-            platforms/win32/Win32Window.cpp
-            Size.cpp Rect.cpp Rect.h Point.cpp Point.h Color.cpp Color.h)
-    set(HEADER_FILES
-            platforms/win32/Win32Window.h
-            Size.h platforms/win32/Win32Application.cpp platforms/win32/Win32Application.h platforms/Window.cpp platforms/Window.h platforms/Application.cpp platforms/Application.h platforms/platform.h Rect.cpp Rect.h Point.cpp Point.h platforms/cocoa/Painter.cpp platforms/cocoa/Painter.h Color.cpp Color.h platforms/cocoa/PainterPath.cpp platforms/cocoa/PainterPath.h platforms/PaintEvent.cpp platforms/PaintEvent.h)
+# Set the C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+option(BUILD_ANDROID "Build for Android" OFF)
+option(BUILD_IOS "Build for iOS" OFF)
+option(BUILD_MACOS "Build for macOS" OFF)
+option(BUILD_WINDOWS "Build for Windows" OFF)
+
+if(UNIX)
+    set(USER_HOME_DIR $ENV{HOME})
+elseif(WIN32)
+    set(USER_HOME_DIR $ENV{USERPROFILE})
 endif()
 
-set(METAL_SHADERS
-        platforms/cocoa/shaders/EllipseShaders.metal
-        platforms/cocoa/shaders/RectShaders.metal)
+add_subdirectory(plugins)
 
-# Add a custom command to compile the Metal shaders at build time
-foreach(SHADER_FILE ${METAL_SHADERS})
-    get_filename_component(SHADER_NAME ${SHADER_FILE} NAME_WE)
-    add_custom_command(
-            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/airs/${SHADER_NAME}.air
-            COMMAND xcrun -sdk macosx metal -c ${CMAKE_CURRENT_SOURCE_DIR}/${SHADER_FILE} -o ${CMAKE_CURRENT_BINARY_DIR}/airs/${SHADER_NAME}.air
-            DEPENDS ${SHADER_FILE}
+if(BUILD_ANDROID)
+    message(STATUS "Configuring for Android")
+
+    include_directories(${CMAKE_SOURCE_DIR}/plugins/platforms/android)
+
+    add_subdirectory(android)
+
+    # Set the path to the Android SDK
+    set(ANDROID_SDK_ROOT ${USER_HOME_DIR}/Library/Android/sdk)
+    set(ANDROID_ABI "arm64_v8a")
+
+    # Define the source and destination directories
+    set(ANDROID_DIR ${PROJECT_SOURCE_DIR}/android)
+    set(DEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/android)
+
+    # Create the Mango executable
+    add_library(Mango SHARED main.cpp plugins/platforms/android/Application.h
+        plugins/platforms/android/Application.cpp)
+
+    set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/android/libs/${ANDROID_ABI}")
+
+    # Include directories
+    target_include_directories(Mango PRIVATE ${CMAKE_SOURCE_DIR}/plugins/platforms/android)
+
+    target_include_directories(Mango PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+    target_link_libraries(Mango PUBLIC MangoWidgets)
+
+    # Add a custom target to build the Android project using Gradle
+#    add_custom_target(build_android ALL
+#        COMMAND ./gradlew build
+#        WORKING_DIRECTORY ${DEST_DIR}
+#        COMMENT "Building Android project using Gradle"
+#    )
+elseif (BUILD_MACOS)
+    message(STATUS "Configuring for macOS")
+
+    include_directories(${CMAKE_SOURCE_DIR}/plugins/platforms/macos)
+
+    add_library(Mango main.cpp)
+
+    target_include_directories(Mango PRIVATE ${CMAKE_SOURCE_DIR}/plugins/platforms/macos)
+
+    target_link_libraries(Mango PRIVATE MangoWidgets)
+endif ()
+
+
+if(BUILD_ANDROID)
+    # Set the install prefix for Android
+    set(CMAKE_INSTALL_PREFIX "${USER_HOME_DIR}/Mango/0.0.0/android_${ANDROID_ABI}")
+
+    target_include_directories(Mango PUBLIC
+        ${CMAKE_INSTALL_PREFIX}/include
     )
-    list(APPEND SOURCE_FILES ${CMAKE_CURRENT_BINARY_DIR}/airs/${SHADER_NAME}.air)
-endforeach()
 
-# Compile the Metal shaders to a single metallib file
-add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/shaders_lib/Shaders.metallib
-        COMMAND xcrun -sdk macosx metal -frecord-sources -o ${CMAKE_CURRENT_BINARY_DIR}/Shaders.metallib ${CMAKE_CURRENT_BINARY_DIR}/airs/EllipseShaders.air ${CMAKE_CURRENT_BINARY_DIR}/airs/RectShaders.air
-        DEPENDS ${METAL_SHADERS}
+    install(FILES
+        plugins/platforms/android/Application.h
+        # Add other header files here
+        DESTINATION include/Mango
+    )
+
+    # Install the executable
+    install(TARGETS Mango
+        DESTINATION bin)
+endif()
+
+set(Mango_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
+
+install(TARGETS Mango MangoWidgets EXPORT MangoTargets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include)
+
+export(EXPORT MangoTargets FILE "${CMAKE_CURRENT_BINARY_DIR}/MangoTargets.cmake" NAMESPACE Mango::)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/MangoConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
 )
 
-add_library(Mango SHARED ${HEADER_FILES} ${SOURCE_FILES}
-        ${CMAKE_CURRENT_BINARY_DIR}/shaders_lib/Shaders.metallib)
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/MangoConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/MangoConfig.cmake"
+    PATH_VARS Mango_INCLUDE_DIRS USER_HOME_DIR
+    INSTALL_DESTINATION lib/cmake/Mango
+)
 
+set(Mango_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
 
-if (APPLE)
-    target_link_libraries(Mango "-framework Cocoa" "-framework Metal" "-framework QuartzCore"
-            "-framework MetalKit" ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
-elseif (WIN32)
-    find_package(OpenGL REQUIRED)
-    find_package(GLUT REQUIRED)
-    include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
-    target_link_libraries(Mango ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
-endif()
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/MangoConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/MangoConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/MangoTargets.cmake"
+    DESTINATION lib/cmake/Mango
+)
 
-if (WIN32)
-    set(SUBSYSTEM_LINKER_OPTIONS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
-endif()
-
-
-link_libraries(Mango)
-add_executable(main main.cpp)
-
+set(ANDROID_DIR ${PROJECT_SOURCE_DIR}/android)
+set(INSTALL_DIR "${USER_HOME_DIR}/Mango/0.0.0/android_${ANDROID_ABI}")
+install(DIRECTORY ${ANDROID_DIR} DESTINATION ${INSTALL_DIR})

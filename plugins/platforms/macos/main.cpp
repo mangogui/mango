@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Widget.h"
 
+
 int main() {
     Application application;
 
@@ -9,14 +10,13 @@ int main() {
 
     outerWidget->resize(600, 600);
     outerWidget->move(0, 0);
-    outerWidget->setBackgroundColor("#ffffff");
+    outerWidget->setBackgroundColor("#257E5F");
 
-    subWidget->resize(400, 400);
-    subWidget->move(100, 300);
+    subWidget->resize(200, 200);
+    subWidget->move(0, 0);
     subWidget->setBackgroundColor("#257E5F");
 
     application.run();
 
     return 0;
 }
-

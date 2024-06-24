@@ -34,3 +34,5 @@ cmake-build-debug/
 *.out
 *.app
 .DS_Store
+/cmake-build-android
+/cmake-build-macos
