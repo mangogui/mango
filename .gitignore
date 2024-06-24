@@ -36,3 +36,4 @@ cmake-build-debug/
 .DS_Store
 /cmake-build-android
 /cmake-build-macos
+/build-mango-android-debug
