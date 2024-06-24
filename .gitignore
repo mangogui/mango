@@ -37,3 +37,4 @@ cmake-build-debug/
 /cmake-build-android
 /cmake-build-macos
 /build-mango-android-debug
+/build-mango-macos-debug

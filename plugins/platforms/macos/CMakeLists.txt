@@ -27,3 +27,14 @@ target_link_libraries(MangoWidgets "-framework Cocoa" "-framework Metal" "-frame
 
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/macos/libs")
 
+install(FILES
+    MNSize.h
+    MNRect.h
+    PaintEvent.h
+    MNPoint.h
+    Application.h
+    Color.h
+    Widget.h
+    DESTINATION include/Mango
+)
+

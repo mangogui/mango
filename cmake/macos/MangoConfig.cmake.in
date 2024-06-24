@@ -1,0 +1,10 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+include("${CMAKE_CURRENT_LIST_DIR}/MangoTargets.cmake")
+
+set(Mango_INCLUDE_DIRS "@Mango_INCLUDE_DIRS@")
+
+
+
