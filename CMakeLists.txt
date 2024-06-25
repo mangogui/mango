@@ -53,16 +53,7 @@ if(BUILD_ANDROID)
 #        WORKING_DIRECTORY ${DEST_DIR}
 #        COMMENT "Building Android project using Gradle"
 #    )
-elseif (BUILD_MACOS)
-    message(STATUS "Configuring for macOS")
 
-    include_directories(${CMAKE_SOURCE_DIR}/plugins/platforms/macos)
-
-    add_library(Mango main.cpp)
-
-    target_include_directories(Mango PRIVATE ${CMAKE_SOURCE_DIR}/plugins/platforms/macos)
-
-    target_link_libraries(Mango PRIVATE MangoWidgets)
 endif ()
 
 
@@ -121,45 +112,6 @@ if(BUILD_ANDROID)
     set(INSTALL_DIR "${USER_HOME_DIR}/Mango/0.0.0/android_${ANDROID_ABI}")
     install(DIRECTORY ${ANDROID_DIR} DESTINATION ${INSTALL_DIR})
 
-elseif (BUILD_MACOS)
-    set(CMAKE_INSTALL_PREFIX "${USER_HOME_DIR}/Mango/0.0.0/macos")
-
-    target_include_directories(Mango PUBLIC
-        ${CMAKE_INSTALL_PREFIX}/include
-    )
-
-    set(Mango_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
-
-    install(TARGETS Mango MangoWidgets EXPORT MangoTargets
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        RUNTIME DESTINATION bin
-        INCLUDES DESTINATION include)
-
-    export(EXPORT MangoTargets FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/macos/MangoTargets.cmake" NAMESPACE Mango::)
-
-    include(CMakePackageConfigHelpers)
-    write_basic_package_version_file(
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/macos/MangoConfigVersion.cmake"
-        VERSION ${PROJECT_VERSION}
-        COMPATIBILITY AnyNewerVersion
-    )
-
-    configure_package_config_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/macos/MangoConfig.cmake.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/macos/MangoConfig.cmake"
-        PATH_VARS Mango_INCLUDE_DIRS USER_HOME_DIR
-        INSTALL_DESTINATION lib/cmake/Mango
-    )
-
-    set(Mango_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
-
-    install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/macos/MangoConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/macos/MangoConfigVersion.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/macos/MangoTargets.cmake"
-        DESTINATION lib/cmake/Mango
-    )
 
 endif()
 
