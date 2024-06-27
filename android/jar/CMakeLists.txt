@@ -53,5 +53,5 @@ include_directories(${JNI_INCLUDE_DIRS})
 
 install(FILES
     ${OUTPUT_JAR}
-    DESTINATION jar
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/jar
 )

@@ -17,101 +17,23 @@ elseif(WIN32)
     set(USER_HOME_DIR $ENV{USERPROFILE})
 endif()
 
-add_subdirectory(plugins)
-
 if(BUILD_ANDROID)
-    message(STATUS "Configuring for Android")
-
-    include_directories(${CMAKE_SOURCE_DIR}/plugins/platforms/android)
-
-    add_subdirectory(android)
-
     # Set the path to the Android SDK
     set(ANDROID_SDK_ROOT ${USER_HOME_DIR}/Library/Android/sdk)
-    set(ANDROID_ABI "arm64_v8a")
-
-    # Define the source and destination directories
-    set(ANDROID_DIR ${PROJECT_SOURCE_DIR}/android)
-    set(DEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/android)
-
-    # Create the Mango executable
-    add_library(Mango SHARED main.cpp plugins/platforms/android/Application.h
-        plugins/platforms/android/Application.cpp)
-
-    set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/android/libs/${ANDROID_ABI}")
-
-    # Include directories
-    target_include_directories(Mango PRIVATE ${CMAKE_SOURCE_DIR}/plugins/platforms/android)
-
-    target_include_directories(Mango PRIVATE ${CMAKE_SOURCE_DIR}/include)
-
-    target_link_libraries(Mango PUBLIC MangoWidgets)
-
-    # Add a custom target to build the Android project using Gradle
-#    add_custom_target(build_android ALL
-#        COMMAND ./gradlew build
-#        WORKING_DIRECTORY ${DEST_DIR}
-#        COMMENT "Building Android project using Gradle"
-#    )
-
+    set(ANDROID_ABI_FOLDER_NAME "arm64_v8a")
+    set(ANDROID_ABI "arm64-v8a")
+    set(CMAKE_INSTALL_PREFIX "${USER_HOME_DIR}/Mango/0.0.0/android_${ANDROID_ABI_FOLDER_NAME}")
+elseif (BUILD_MACOS)
+    set(CMAKE_INSTALL_PREFIX "${USER_HOME_DIR}/Mango/0.0.0/macos")
 endif ()
 
 
+add_subdirectory(plugins)
+
 if(BUILD_ANDROID)
-    # Set the install prefix for Android
-    set(CMAKE_INSTALL_PREFIX "${USER_HOME_DIR}/Mango/0.0.0/android_${ANDROID_ABI}")
-
-    target_include_directories(Mango PUBLIC
-        ${CMAKE_INSTALL_PREFIX}/include
-    )
-
-    install(FILES
-        plugins/platforms/android/Application.h
-        # Add other header files here
-        DESTINATION include/Mango
-    )
-
-    # Install the executable
-    install(TARGETS Mango
-        DESTINATION bin)
-
-    set(Mango_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
-
-    install(TARGETS Mango MangoWidgets EXPORT MangoTargets
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        RUNTIME DESTINATION bin
-        INCLUDES DESTINATION include)
-
-    export(EXPORT MangoTargets FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/android/MangoTargets.cmake" NAMESPACE Mango::)
-
-    include(CMakePackageConfigHelpers)
-    write_basic_package_version_file(
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/android/MangoConfigVersion.cmake"
-        VERSION ${PROJECT_VERSION}
-        COMPATIBILITY AnyNewerVersion
-    )
-
-    configure_package_config_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/android/MangoConfig.cmake.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/android/MangoConfig.cmake"
-        PATH_VARS Mango_INCLUDE_DIRS USER_HOME_DIR
-        INSTALL_DESTINATION lib/cmake/Mango
-    )
-
-    set(Mango_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
-
-    install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/android/MangoConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/android/MangoConfigVersion.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/android/MangoTargets.cmake"
-        DESTINATION lib/cmake/Mango
-    )
-
-    set(ANDROID_DIR ${PROJECT_SOURCE_DIR}/android)
-    set(INSTALL_DIR "${USER_HOME_DIR}/Mango/0.0.0/android_${ANDROID_ABI}")
-    install(DIRECTORY ${ANDROID_DIR} DESTINATION ${INSTALL_DIR})
+    add_subdirectory(android)
+endif ()
 
 
-endif()
+
 
