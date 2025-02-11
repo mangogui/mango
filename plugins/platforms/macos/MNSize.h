@@ -1,43 +1,37 @@
-#ifndef SIZE_H
-#define SIZE_H
+#pragma once
 
 #include <iostream>
 
 class MNSize {
 public:
     inline MNSize();
-
     inline MNSize(int w, int h);
 
-    inline void set_width(int w);
+    inline void setWidth(int w);
+    inline void setHeight(int w);
 
-    inline void set_height(int w);
-
-    inline int get_width() const;
-
-    inline int get_height() const;
+    [[nodiscard]] inline int getWidth() const;
+    [[nodiscard]] inline int getHeight() const;
 
     inline friend std::ostream &operator<<(std::ostream &os, const MNSize &size);
 
 private:
-    int width, height;
+    int m_width, m_height;
 };
 
-inline MNSize::MNSize() : width(-1), height(-1) {}
+inline MNSize::MNSize() : m_width(-1), m_height(-1) {}
 
-inline MNSize::MNSize(int w, int h) : width(w), height(h) {}
+inline MNSize::MNSize(int w, int h) : m_width(w), m_height(h) {}
 
-inline void MNSize::set_width(int w) { width = w; }
+inline void MNSize::setWidth(int w) { m_width = w; }
 
-inline void MNSize::set_height(int h) { height = h; }
+inline void MNSize::setHeight(int h) { m_height = h; }
 
-inline int MNSize::get_width() const { return width; }
+inline int MNSize::getWidth() const { return m_width; }
 
-inline int MNSize::get_height() const { return height; }
+inline int MNSize::getHeight() const { return m_height; }
 
 std::ostream &operator<<(std::ostream &os, const MNSize &size) {
-    os << "Size" << '(' << size.width << ", " << size.height << ')';
+    os << "Size" << '(' << size.m_width << ", " << size.m_height << ')';
     return os;
 }
-
-#endif //SIZE_H

@@ -1,19 +1,35 @@
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#pragma once
 
+#include <memory>
+#include <vector>
+#include "VariantAnimation.h"
 
 struct CocoaApplicationWrapper;
+class Widget;
 
 class Application {
 public:
-    Application();
+    static Application& instance();
 
-    ~Application();
+    void addWidget(Widget* widget);
+    void addAnimation(const std::shared_ptr<VariantAnimation>& animation);
+
+    // Prevent copying and assignment
+    Application(const Application&) = delete;
+    Application& operator=(const Application&) = delete;
 
     void run();
 
-private:
-    CocoaApplicationWrapper *wrapper;
-};
+    ~Application();
 
-#endif //APPLICATION_H
+private:
+    Application();
+
+    std::unique_ptr<CocoaApplicationWrapper> wrapper;
+    std::vector<Widget*> widgets;
+    std::vector<std::weak_ptr<VariantAnimation>> animations{};
+    std::chrono::time_point<std::chrono::steady_clock> lastUpdate;
+
+    static void processEvents();
+    void updateAnimations();
+};

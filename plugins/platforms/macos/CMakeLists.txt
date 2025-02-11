@@ -17,6 +17,27 @@ set(SOURCES
     Color.cpp
     Widget.h
     Widget.mm
+    MouseEvent.h
+    MouseEvent.cpp
+    WindowDelegate.h
+    WindowDelegate.mm
+    ViewObjC.h
+    ViewObjC.mm
+    CocoaWindowObjC.h
+    CocoaWindowObjC.mm
+    PainterPath.h
+    PainterPath.cpp
+    Canvas.h
+    Canvas.mm
+    EasingCurve.h
+    EasingCurve.cpp
+    NumberAnimation.h
+    NumberAnimation.cpp
+    ColorAnimation.h
+    ColorAnimation.cpp
+    Variant.h
+    VariantAnimation.h
+    VariantAnimation.cpp
 )
 
 add_library(Widgets SHARED
@@ -32,10 +53,20 @@ install(FILES
     MNSize.h
     MNRect.h
     PaintEvent.h
+    ResizeEvent.h
+    MouseEvent.h
     MNPoint.h
     Application.h
     Color.h
     Widget.h
+    PainterPath.h
+    Point.h
+    Canvas.h
+    EasingCurve.h
+    VariantAnimation.h
+    NumberAnimation.h
+    ColorAnimation.h
+    Variant.h
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Mango
 )
 

@@ -75,7 +75,7 @@ MNPoint MNPoint::normalized() const {
     if (len != 0) {
         return MNPoint(xp / len, yp / len);
     } else {
-        // Handle the case of a zero-length vector (to avoid division by zero)
+        // Handle the case of _a zero-length vector (to avoid division by zero)
         return *this; // Return the original vector
     }
 }

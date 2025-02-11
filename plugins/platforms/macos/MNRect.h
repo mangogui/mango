@@ -1,8 +1,7 @@
-#ifndef MNRect_H
-#define MNRect_H
+#pragma once
 
 #include "MNPoint.h"
-#include <stdlib.h>
+#include <cstdlib>
 #include <ostream>
 
 class MNRect {
@@ -19,16 +18,13 @@ public:
 
     inline void set_height(float h);
 
-    inline float x() const noexcept;
-
-    inline float y() const noexcept;
-
-    inline float width() const noexcept;
-
-    inline float height() const noexcept;
+    [[nodiscard]] inline float x() const noexcept;
+    [[nodiscard]] inline float y() const noexcept;
+    [[nodiscard]] inline float width() const noexcept;
+    [[nodiscard]] inline float height() const noexcept;
 
     friend std::ostream& operator<<(std::ostream& os, const MNRect& rect) {
-        os << "MNRect(x=" << rect.x() << ", y=" << rect.y() << ", width=" << rect.width() << ", height=" << rect.height() << ")";
+        os << "MNRect(x=" << rect.x() << ", y=" << rect.y() << ", m_width=" << rect.width() << ", m_height=" << rect.height() << ")";
         return os;
     }
 
@@ -76,4 +72,4 @@ inline float MNRect::width() const noexcept {
 inline float MNRect::height() const noexcept {
     return abs(p2.y() - p1.y());
 }
-#endif //MNRect_H
+

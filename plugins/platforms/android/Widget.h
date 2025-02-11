@@ -23,7 +23,7 @@ struct MouseEvent {
 
 class Widget {
 public:
-    Widget(Widget* parent = nullptr);
+    explicit Widget(Widget* parent = nullptr);
     ~Widget();
     void handleMouseEvent(const MouseEvent& event);
     void createView();

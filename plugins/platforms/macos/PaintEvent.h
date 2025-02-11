@@ -1,4 +1,5 @@
 #pragma once
+
 #include "MNRect.h"
 
 
@@ -9,7 +10,7 @@ class PaintEvent {
             this->_rect = r;
         }
 
-        const MNRect& rect() const { return _rect; }
+        [[nodiscard]] const MNRect& rect() const { return _rect; }
 
     private:
         MNRect _rect;
