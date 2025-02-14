@@ -13,9 +13,7 @@ set(SOURCES
     MouseEvent.cpp
     PainterPath.cpp
     EasingCurve.cpp
-    NumberAnimation.cpp
-    ColorAnimation.cpp
-    VariantAnimation.cpp
+
     Widget.mm
     CocoaWindowObjC.mm
     WindowDelegate.mm
@@ -41,16 +39,25 @@ set(HEADERS
     PainterPath.h
     Canvas.h
     EasingCurve.h
-    NumberAnimation.h
-    ColorAnimation.h
-    Variant.h
-    VariantAnimation.h
     ResizeEvent.h
     Point.h
 )
 
+set(ANIMATION_SOURCES
+    animations/NumberAnimation.cpp
+    animations/ColorAnimation.cpp
+    animations/VariantAnimation.cpp
+)
+
+set(ANIMATION_HEADERS
+    animations/NumberAnimation.h
+    animations/ColorAnimation.h
+    animations/Variant.h
+    animations/VariantAnimation.h
+)
+
 # Define the shared library
-add_library(Widgets SHARED ${SOURCES} ${HEADERS})
+add_library(Widgets SHARED ${SOURCES} ${ANIMATION_SOURCES}  ${HEADERS}  ${ANIMATION_HEADERS})
 
 # Create an alias for Mango::Widgets
 add_library(Mango::Widgets ALIAS Widgets)
@@ -79,6 +86,11 @@ target_include_directories(Widgets PUBLIC
 # Install headers to Mango subdirectory under include
 install(FILES ${HEADERS}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mango
+)
+
+# Install animation headers to Mango/animations subdirectory under include
+install(FILES ${ANIMATION_HEADERS}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mango/animations
 )
 
 # Install the target and create an export set

@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <vector>
-#include "VariantAnimation.h"
+#include "animations/VariantAnimation.h"
 
 struct CocoaApplicationWrapper;
 
