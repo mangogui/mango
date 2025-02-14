@@ -1,5 +1,5 @@
 #import "Cocoa/Cocoa.h"
 
 
-@interface WindowDelegate : NSObject<NSWindowDelegate>
+@interface WindowDelegate : NSObject <NSWindowDelegate>
 @end

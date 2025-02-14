@@ -1,18 +1,18 @@
 #include "Canvas.h"
 #include <Cocoa/Cocoa.h>
 
-CGColor* createNSColor(const Color& color) {
-    return [[NSColor colorWithCalibratedRed:color.red()/255.0
-                                     green:color.green()/255.0
-                                      blue:color.blue()/255.0
-                                     alpha:color.alpha()/255.0] CGColor];
+CGColor *createNSColor(const Color &color) {
+    return [[NSColor colorWithCalibratedRed:color.red() / 255.0
+                                      green:color.green() / 255.0
+                                       blue:color.blue() / 255.0
+                                      alpha:color.alpha() / 255.0] CGColor];
 }
 
-CGPathRef convertPainterPathToCGPath(const GUI::PainterPath& painterPath) {
+CGPathRef convertPainterPathToCGPath(const GUI::PainterPath &painterPath) {
     CGMutablePathRef cgPath = CGPathCreateMutable();
 
     for (int i = 0; i < painterPath.elementCount(); ++i) {
-        const GUI::PainterPath::Element& element = painterPath.elementAt(i);
+        const GUI::PainterPath::Element &element = painterPath.elementAt(i);
 
         switch (element.type) {
             case GUI::PainterPath::MoveTo:
@@ -44,11 +44,11 @@ CGPathRef convertPainterPathToCGPath(const GUI::PainterPath& painterPath) {
     return cgPath;
 }
 
-Canvas::Canvas(Widget* widget) : _widget(widget), context(nullptr) {
+Canvas::Canvas(Widget *widget) : _widget(widget), context(nullptr) {
     this->fillStyle = std::make_unique<FillStyle>(Color::Gray);
-    NSGraphicsContext* nsContext = [NSGraphicsContext currentContext];
+    NSGraphicsContext *nsContext = [NSGraphicsContext currentContext];
     if (nsContext) {
-        context = (void*) nsContext.CGContext;
+        context = (void *) nsContext.CGContext;
         setClippingRegion();
     }
 }
@@ -60,7 +60,7 @@ void Canvas::setClippingRegion() {
 
     CGContextSaveGState(ctx);  // Save the current state
 
-    NSView* view = static_cast<id>(_widget->getNSViewId());
+    NSView *view = static_cast<id>(_widget->getNSViewId());
     if (!view) return;
 
     NSRect widgetBounds = [view bounds];  // Get widget's local bounds
@@ -74,7 +74,7 @@ void Canvas::setClippingRegion() {
     CGRect effectiveClip = CGContextGetClipBoundingBox(ctx);
 }
 
-void Canvas::drawPath(const GUI::PainterPath& path) {
+void Canvas::drawPath(const GUI::PainterPath &path) {
     if (!context) return;  // Ensure context is valid
 
     auto ctx = static_cast<CGContextRef>(context);
@@ -97,12 +97,12 @@ void Canvas::drawPath(const GUI::PainterPath& path) {
 void Canvas::begin() {
     if (!_widget) return;
 
-    NSView* view = static_cast<id>(_widget->getNSViewId());
+    NSView *view = static_cast<id>(_widget->getNSViewId());
     if (!view) return;
 
-    NSGraphicsContext* nsContext = [NSGraphicsContext currentContext];
+    NSGraphicsContext *nsContext = [NSGraphicsContext currentContext];
     if (nsContext) {
-        context = (void*) nsContext.CGContext;
+        context = (void *) nsContext.CGContext;
     } else {
         context = nullptr;  // Ensure we don't use an invalid context
     }
@@ -126,14 +126,15 @@ void Canvas::drawEllipse(const MNRect &rect) {
     CGContextSaveGState(ctx);  // Save the current state
 
     // Get widget position and size
-    NSView* view = static_cast<id>(_widget->getNSViewId());
+    NSView *view = static_cast<id>(_widget->getNSViewId());
     if (!view) return;
 
     // Set the fill color (green)
     CGContextSetFillColorWithColor(ctx, createNSColor(fillStyle->getColor()));
 
     // Create an ellipse path
-    CGPathRef ellipsePath = CGPathCreateWithEllipseInRect(CGRectMake(rect.x(), rect.y(), rect.width(), rect.height()), nullptr);
+    CGPathRef ellipsePath = CGPathCreateWithEllipseInRect(CGRectMake(rect.x(), rect.y(), rect.width(), rect.height()),
+                                                          nullptr);
 
     // Add the ellipse path to the context and fill it
     CGContextAddPath(ctx, ellipsePath);

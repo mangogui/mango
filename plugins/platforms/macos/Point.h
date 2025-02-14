@@ -14,10 +14,13 @@ namespace GUI {
         constexpr inline void setY(float y);
 
         [[nodiscard]] constexpr inline float x() const noexcept;
+
         [[nodiscard]] constexpr inline float y() const noexcept;
+
         [[nodiscard]] float length() const {
             return std::sqrt(xp * xp + yp * yp);
         }
+
         inline Point normalized() const;
 
         constexpr inline Point operator*(float factor) const {
@@ -28,23 +31,23 @@ namespace GUI {
             return Point(xp * factor, yp * factor);
         }
 
-        constexpr inline Point operator+(const Point& other) const {
+        constexpr inline Point operator+(const Point &other) const {
             return {xp + other.xp, yp + other.yp};
         }
 
-        constexpr inline Point operator-(const Point& other) const {
+        constexpr inline Point operator-(const Point &other) const {
             return {xp - other.xp, yp - other.yp};
         }
 
-        constexpr inline bool operator==(const Point& _point) const {
+        constexpr inline bool operator==(const Point &_point) const {
             return _point.x() == this->xp && _point.y() == this->yp;
         }
 
-        constexpr inline bool operator!=(const Point& _point) const {
+        constexpr inline bool operator!=(const Point &_point) const {
             return _point.x() != this->xp || _point.y() != this->yp;
         }
 
-        friend std::ostream& operator<<(std::ostream& os, const Point& point) {
+        friend std::ostream &operator<<(std::ostream &os, const Point &point) {
             os << "Point(" << point.x() << ", " << point.y() << ")";
             return os;
         }

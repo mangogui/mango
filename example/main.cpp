@@ -4,10 +4,10 @@
 
 
 int main() {
-    Application& application = Application::instance();
+    Application &application = Application::instance();
 
-    auto* outerWidget = new Widget();
-    auto* toggleSwitch = new Switch(outerWidget);
+    auto *outerWidget = new Widget();
+    auto *toggleSwitch = new Switch(outerWidget);
 
     outerWidget->resize(600, 600);
     outerWidget->move(0, 0);

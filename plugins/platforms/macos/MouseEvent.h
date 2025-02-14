@@ -34,6 +34,7 @@ public:
     }
 
     MouseEvent::Type type() { return this->_type; }
+
 private:
     MouseEvent::Type _type;
 };

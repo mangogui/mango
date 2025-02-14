@@ -4,8 +4,12 @@
 __attribute__((weak)) int main();
 
 extern "C" JNIEXPORT void JNICALL
-Java_mangoproject_mango_android_MainActivity_cppMain(JNIEnv *env, jobject mainActivity) {
-    main();
+Java_mangoproject_mango_android_MainActivity_cppMain(JNIEnv
+*env,
+jobject mainActivity
+) {
+main();
+
 }
 
 Application::Application() {

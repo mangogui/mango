@@ -17,8 +17,11 @@ public:
 
     // Constructors
     Variant() : m_value(std::monostate{}), m_type(Type::None) {}
+
     Variant(int value) : m_value(value), m_type(Type::Int) {}
+
     Variant(float value) : m_value(value), m_type(Type::Float) {}
+
     Variant(Color value) : m_value(value), m_type(Type::Color) {}
 
     // Setter

@@ -61,7 +61,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "iOS")
     message("QuartzCore framework found at ${QUARTZCORE_LIBRARY}")
     message("MetalKit framework found at ${METALKIT_LIBRARY}")
     message("UIKit framework found at ${UIKIT_LIBRARY}")
-endif()
+endif ()
 
 install(TARGETS Widgets EXPORT WidgetsTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib

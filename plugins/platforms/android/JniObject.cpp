@@ -2,7 +2,8 @@
 #include "JniEnvironment.h"
 
 
-JniObject::JniObject(const std::string& className, const std::string& constructorSig, ...) : m_env(JniEnvironment::getInstance().getEnv()), m_obj(nullptr), m_class(nullptr) {
+JniObject::JniObject(const std::string &className, const std::string &constructorSig, ...) : m_env(
+        JniEnvironment::getInstance().getEnv()), m_obj(nullptr), m_class(nullptr) {
     m_class = m_env->FindClass(className.c_str());
     if (!m_class) {
         throw std::runtime_error("Class not found: " + className);
@@ -47,7 +48,7 @@ jobject JniObject::getObject() const {
     return m_obj;
 }
 
-bool JniObject::isInstanceOf(const std::string& className) const {
+bool JniObject::isInstanceOf(const std::string &className) const {
     jclass clazz = m_env->FindClass(className.c_str());
     if (!clazz) {
         throw std::runtime_error("Class not found: " + className);
@@ -57,6 +58,6 @@ bool JniObject::isInstanceOf(const std::string& className) const {
     return result;
 }
 
-jstring JniObject::createStringUTF(const std::string& utf8String) {
+jstring JniObject::createStringUTF(const std::string &utf8String) {
     return JniEnvironment::getInstance().getEnv()->NewStringUTF(utf8String.c_str());
 }

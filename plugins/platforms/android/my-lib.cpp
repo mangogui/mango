@@ -8,9 +8,19 @@
 
 
 extern "C" JNIEXPORT void JNICALL
-Java_mangoproject_mango_android_MainActivity_nativeMain(JNIEnv *env, jobject mainActivity) {
-    JniEnvironment::getInstance().initialize(env);
-    AndroidActivity::getInstance().initialize(mainActivity);
+Java_mangoproject_mango_android_MainActivity_nativeMain(JNIEnv
+*env,
+jobject mainActivity
+) {
+JniEnvironment::getInstance()
+
+.
+initialize(env);
+
+AndroidActivity::getInstance()
+
+.
+initialize(mainActivity);
 }
 
 

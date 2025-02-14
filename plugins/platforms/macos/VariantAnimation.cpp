@@ -1,7 +1,8 @@
 #include "VariantAnimation.h"
 #include "Application.h"
 
-VariantAnimation::VariantAnimation(const Variant& start, const Variant& end, int duration, VariantAnimation::Callback updateCallback):
+VariantAnimation::VariantAnimation(const Variant &start, const Variant &end, int duration,
+                                   VariantAnimation::Callback updateCallback) :
         startValue(start),
         endValue(end),
         duration(duration),

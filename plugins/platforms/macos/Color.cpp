@@ -24,7 +24,7 @@ static inline int hex2int(const char *s, int n) {
     return res;
 }
 
-static inline bool fromHex(const char *name, int len, Color& color) {
+static inline bool fromHex(const char *name, int len, Color &color) {
     // Check if the input string starts with '#'
     if (name[0] != '#') return false;
 
@@ -39,8 +39,7 @@ static inline bool fromHex(const char *name, int len, Color& color) {
 
         if (r < 0 || g < 0 || b < 0 || a < 0) return false;
         color.setRGBA(r, g, b, a);
-    }
-    else if (len == 9) {  // RRGGBB (no alpha)
+    } else if (len == 9) {  // RRGGBB (no alpha)
         int r = hex2int(name, 2);
         int g = hex2int(name + 2, 2);
         int b = hex2int(name + 4, 2);
@@ -48,8 +47,7 @@ static inline bool fromHex(const char *name, int len, Color& color) {
         if (r < 0 || g < 0 || b < 0) return false;
         color.setRGB(r, g, b);
         color.setAlpha(255);  // Default alpha to 255
-    }
-    else if (len == 8) {  // ARGB
+    } else if (len == 8) {  // ARGB
         int a = hex2int(name, 2);
         int r = hex2int(name + 2, 2);
         int g = hex2int(name + 4, 2);
@@ -57,8 +55,7 @@ static inline bool fromHex(const char *name, int len, Color& color) {
 
         if (r < 0 || g < 0 || b < 0 || a < 0) return false;
         color.setRGBA(r, g, b, a);
-    }
-    else if (len == 6) {  // RGB
+    } else if (len == 6) {  // RGB
         int r = hex2int(name, 2);
         int g = hex2int(name + 2, 2);
         int b = hex2int(name + 4, 2);
@@ -66,8 +63,7 @@ static inline bool fromHex(const char *name, int len, Color& color) {
         if (r < 0 || g < 0 || b < 0) return false;
         color.setRGB(r, g, b);
         color.setAlpha(255);  // Default alpha to 255
-    }
-    else if (len == 3) {  // Short RGB (#RGB)
+    } else if (len == 3) {  // Short RGB (#RGB)
         int r = hex2int(name, 1);
         int g = hex2int(name + 1, 1);
         int b = hex2int(name + 2, 1);
@@ -75,15 +71,14 @@ static inline bool fromHex(const char *name, int len, Color& color) {
         if (r < 0 || g < 0 || b < 0) return false;
         color.setRGB(r * 17, g * 17, b * 17);  // Expand 4-bit values (0xF -> 0xFF)
         color.setAlpha(255);
-    }
-    else {
+    } else {
         return false;  // Invalid length
     }
 
     return true;
 }
 
-Color::Color(const std::string& hexColor) {
+Color::Color(const std::string &hexColor) {
     // Ensure correct length handling and pass full length (including `#`)
     if (!fromHex(hexColor.c_str(), hexColor.length() - 1, *this)) {
         // Handle invalid input (e.g., default to black)

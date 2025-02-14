@@ -1,22 +1,16 @@
 #pragma once
 
-#include "Mango/Widget.h"
-#include "Mango/NumberAnimation.h"
-#include "Mango/ColorAnimation.h"
+#include <Widget.h>
+#include <NumberAnimation.h>
+#include <ColorAnimation.h>
 
 class Switch : public Widget {
 public:
     explicit Switch(Widget *parent = nullptr);
 
-    void toggle() {
-        m_checked = !m_checked;
-        startAnimation();
-    }
+    void toggle();
 
-    void mousePressEvent(MouseEvent *event) override {
-        toggle();
-        startAnimation();
-    }
+    void mousePressEvent(MouseEvent *event) override;
 
     // Getters
     [[nodiscard]] bool isChecked() const {
@@ -29,7 +23,7 @@ public:
     }
 
 protected:
-    void paintEvent(const PaintEvent& event) override;
+    void paintEvent(const PaintEvent &event) override;
 
 private:
     void startAnimation();

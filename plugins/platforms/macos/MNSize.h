@@ -5,12 +5,15 @@
 class MNSize {
 public:
     inline MNSize();
+
     inline MNSize(int w, int h);
 
     inline void setWidth(int w);
+
     inline void setHeight(int w);
 
     [[nodiscard]] inline int getWidth() const;
+
     [[nodiscard]] inline int getHeight() const;
 
     inline friend std::ostream &operator<<(std::ostream &os, const MNSize &size);

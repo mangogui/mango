@@ -1,107 +1,98 @@
+cmake_minimum_required(VERSION 3.16)
+project(MangoWidgets LANGUAGES C CXX OBJC OBJCXX)
+
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
-    MNSize.h
     MNSize.cpp
-    MNRect.h
     MNRect.cpp
-    PaintEvent.h
     PaintEvent.cpp
-    MNPoint.h
-    MNPoint.cpp
-    Application.h
-    Application.mm
-    Color.h
     Color.cpp
-    Widget.h
-    Widget.mm
-    MouseEvent.h
     MouseEvent.cpp
-    WindowDelegate.h
-    WindowDelegate.mm
-    ViewObjC.h
-    ViewObjC.mm
-    CocoaWindowObjC.h
-    CocoaWindowObjC.mm
-    PainterPath.h
     PainterPath.cpp
-    Canvas.h
-    Canvas.mm
-    EasingCurve.h
     EasingCurve.cpp
-    NumberAnimation.h
     NumberAnimation.cpp
-    ColorAnimation.h
     ColorAnimation.cpp
-    Variant.h
-    VariantAnimation.h
     VariantAnimation.cpp
+    Widget.mm
+    CocoaWindowObjC.mm
+    WindowDelegate.mm
+    ViewObjC.mm
+    Application.mm
+    Canvas.mm
+    Point.cpp
+    ResizeEvent.cpp
+    Point.cpp
 )
 
-add_library(Widgets SHARED
-    ${SOURCES})
-
-target_link_libraries(Widgets "-framework Cocoa" "-framework Metal" "-framework QuartzCore"
-    "-framework MetalKit")
-
-set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/macos/libs")
-set(Widgets_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
-
-install(FILES
+set(HEADERS
     MNSize.h
     MNRect.h
     PaintEvent.h
-    ResizeEvent.h
-    MouseEvent.h
-    MNPoint.h
     Application.h
     Color.h
     Widget.h
+    MouseEvent.h
+    WindowDelegate.h
+    ViewObjC.h
+    CocoaWindowObjC.h
     PainterPath.h
-    Point.h
     Canvas.h
     EasingCurve.h
-    VariantAnimation.h
     NumberAnimation.h
     ColorAnimation.h
     Variant.h
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/include/Mango
+    VariantAnimation.h
+    ResizeEvent.h
+    Point.h
 )
 
+# Define the shared library
+add_library(Widgets SHARED ${SOURCES} ${HEADERS})
 
+# Create an alias for Mango::Widgets
+add_library(Mango::Widgets ALIAS Widgets)
+
+# Set properties for the target
+set_target_properties(Widgets PROPERTIES
+    OUTPUT_NAME "MangoWidgets"
+)
+
+target_link_libraries(Widgets
+    "-framework Cocoa"
+    "-framework Metal"
+    "-framework QuartzCore"
+    "-framework MetalKit"
+)
+
+# Update library output path to use top-level build directory
+set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/libs")
+
+# Correct include directories for both build and install phases
 target_include_directories(Widgets PUBLIC
-    ${CMAKE_INSTALL_PREFIX}/include
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango>
 )
 
-install(TARGETS Widgets EXPORT WidgetsTargets
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-    INCLUDES DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
-
-export(EXPORT WidgetsTargets FILE "${CMAKE_BINARY_DIR}/cmake/macos/WidgetsTargets.cmake" NAMESPACE Mango::)
-
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    "${CMAKE_BINARY_DIR}/cmake/macos/WidgetsConfigVersion.cmake"
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY AnyNewerVersion
+# Install headers to Mango subdirectory under include
+install(FILES ${HEADERS}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mango
 )
 
-configure_package_config_file(
-    "${CMAKE_SOURCE_DIR}/cmake/macos/WidgetsConfig.cmake.in"
-    "${CMAKE_BINARY_DIR}/cmake/macos/WidgetsConfig.cmake"
-    PATH_VARS Widgets_INCLUDE_DIRS USER_HOME_DIR
-    INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/Widgets
+# Install the target and create an export set
+install(TARGETS Widgets
+    EXPORT MangoTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-set(Mango_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
-
-install(FILES
-    "${CMAKE_BINARY_DIR}/cmake/macos/WidgetsConfig.cmake"
-    "${CMAKE_BINARY_DIR}/cmake/macos/WidgetsConfigVersion.cmake"
-    "${CMAKE_BINARY_DIR}/cmake/macos/WidgetsTargets.cmake"
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/Widgets
+# Export the MangoWidgets library for CMake find_package
+install(EXPORT MangoTargets
+    FILE MangoWidgetsConfig.cmake
+    NAMESPACE Mango::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Mango
 )

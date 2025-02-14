@@ -1,7 +1,7 @@
 #import "Application.h"
 #import <UIKit/UIKit.h>
 
-CocoaApplicationWrapper* Application::sharedWrapper = nullptr;
+CocoaApplicationWrapper *Application::sharedWrapper = nullptr;
 
 @interface CocoaApplicationObjC : UIApplication
 @end
@@ -39,7 +39,7 @@ void Application::run() {
     }
 }
 
-Application& Application::instance() {
+Application &Application::instance() {
     static Application singletonInstance;
     return singletonInstance;
 }

@@ -22,11 +22,13 @@ public:
     void resize(int width, int height);
 
     virtual void mousePressEvent();
+
     virtual void resizeEvent();
 
     void move(int x, int y);
 
     void maximize();
+
     void fullscreen();
 
     void init_view();
@@ -51,7 +53,6 @@ protected:
 private:
     std::string object_name;
 };
-
 
 
 #endif //MANGO_WIDGET_H

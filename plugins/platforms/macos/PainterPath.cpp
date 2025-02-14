@@ -37,10 +37,10 @@ namespace GUI {
 
     void PainterPath::addRect(const MNRect &r) {
         elements.push_back({r.x(), r.y(), MoveTo});
-        Element l1 = { r.x() + r.width(), r.y(), LineTo };
-        Element l2 = { r.x() + r.width(), r.y() + r.height(), LineTo };
-        Element l3 = { r.x(), r.y() + r.height(), LineTo };
-        Element l4 = { r.x(), r.y(), LineTo };
+        Element l1 = {r.x() + r.width(), r.y(), LineTo};
+        Element l2 = {r.x() + r.width(), r.y() + r.height(), LineTo};
+        Element l3 = {r.x(), r.y() + r.height(), LineTo};
+        Element l4 = {r.x(), r.y(), LineTo};
         elements.push_back(l1);
         elements.push_back(l2);
         elements.push_back(l3);
@@ -91,7 +91,7 @@ namespace GUI {
         addElement(PainterPath::Element({static_cast<float>(x), static_cast<float>(y), MoveTo}));
     }
 
-    void PainterPath::moveTo(const Point& p) {
+    void PainterPath::moveTo(const Point &p) {
         // TODO: fix this casting
         moveTo(p.x(), p.y());
     }

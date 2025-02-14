@@ -5,7 +5,7 @@
 
 class JniEnvironment {
 public:
-    static JniEnvironment& getInstance() {
+    static JniEnvironment &getInstance() {
         static JniEnvironment instance;
         return instance;
     }
@@ -14,16 +14,18 @@ public:
         m_env = env;
     }
 
-    [[nodiscard]] JNIEnv* getEnv() const {
+    [[nodiscard]] JNIEnv *getEnv() const {
         return m_env;
     }
 
     JniEnvironment() = default;
-    JniEnvironment(const JniEnvironment&) = delete;
-    JniEnvironment& operator=(const JniEnvironment&) = delete;
+
+    JniEnvironment(const JniEnvironment &) = delete;
+
+    JniEnvironment &operator=(const JniEnvironment &) = delete;
 
 private:
-    JNIEnv* m_env;
+    JNIEnv *m_env;
 };
 
 #endif //MY_APPLICATION_JNIENVIRONMENT_H

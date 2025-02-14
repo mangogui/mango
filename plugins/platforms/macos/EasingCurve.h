@@ -13,9 +13,11 @@ public:
     };
 
     explicit EasingCurve(EasingCurve::EasingType type = EasingCurve::EasingType::Linear) : easingType(type) {};
+
     virtual ~EasingCurve() = default;
 
     virtual float valueForProgress(float progress);
+
 private:
     EasingType easingType;
 };

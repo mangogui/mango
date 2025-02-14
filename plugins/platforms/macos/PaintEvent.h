@@ -4,16 +4,17 @@
 
 
 class PaintEvent {
-    public:
-        PaintEvent() = default;
-        void setRect(const MNRect& r) {
-            this->_rect = r;
-        }
+public:
+    PaintEvent() = default;
 
-        [[nodiscard]] const MNRect& rect() const { return _rect; }
+    void setRect(const MNRect &r) {
+        this->_rect = r;
+    }
 
-    private:
-        MNRect _rect;
+    [[nodiscard]] const MNRect &rect() const { return _rect; }
+
+private:
+    MNRect _rect;
 };
 
 

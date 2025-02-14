@@ -72,7 +72,7 @@ Widget::Widget(Widget *_parent) {
         [parent->view_wrapper->wrapped addSubview:view_wrapper->wrapped];
     } else {
         UIApplication *uiApplication = [UIApplication sharedApplication];
-        id<UIApplicationDelegate> appDelegate = uiApplication.delegate;
+        id <UIApplicationDelegate> appDelegate = uiApplication.delegate;
         UIWindow *mainWindow = appDelegate.window;
         [mainWindow addSubview:view_wrapper->wrapped];
     }
@@ -112,7 +112,8 @@ void Widget::init_view() {
 }
 
 void Widget::move(int x, int y) {
-    view_wrapper->wrapped.frame = CGRectMake(x, y, view_wrapper->wrapped.frame.size.width, view_wrapper->wrapped.frame.size.height);
+    view_wrapper->wrapped.frame = CGRectMake(x, y, view_wrapper->wrapped.frame.size.width,
+                                             view_wrapper->wrapped.frame.size.height);
 }
 
 void Widget::mousePressEvent() {

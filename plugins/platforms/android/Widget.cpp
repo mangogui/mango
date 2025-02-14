@@ -9,7 +9,7 @@ JniObject getActivityObject() {
     return AndroidActivity::getInstance().getActivity();
 }
 
-JniObject getDecorViewObject(const JniObject& activityObject) {
+JniObject getDecorViewObject(const JniObject &activityObject) {
     JniObject windowObject = activityObject.callMethod<jobject>("getWindow", "()Landroid/view/Window;");
     return windowObject.callMethod<jobject>("getDecorView", "()Landroid/view/View;");
 }

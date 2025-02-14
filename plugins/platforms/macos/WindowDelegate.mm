@@ -4,9 +4,11 @@
 - (void)windowDidResize:(NSNotification *)notification {
 
 }
+
 - (void)windowWillStartLiveResize:(NSNotification *)notification {
 
 }
+
 - (void)windowDidEndLiveResize:(NSNotification *)notification {
 
 }

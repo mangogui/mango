@@ -9,7 +9,7 @@
         return;
     }
 
-    UIWindowScene *windowScene = (UIWindowScene *)scene;
+    UIWindowScene *windowScene = (UIWindowScene *) scene;
     self.window = [[UIWindow alloc] initWithFrame:windowScene.coordinateSpace.bounds];
     self.window.windowScene = windowScene;
 

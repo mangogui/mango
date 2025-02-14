@@ -19,29 +19,29 @@ Widget::Widget(Widget *_parent) {
 
         // It is _a child widget
         if (parent) {
-            NSWindow* parent_window = static_cast<id>(parent->window_wrapper);
+            NSWindow *parent_window = static_cast<id>(parent->window_wrapper);
             [[parent_window contentView] addSubview:static_cast<id>(view_wrapper)];
         }
-        // It is _a top-level widget
+            // It is _a top-level widget
         else {
             NSRect rect = NSMakeRect(0, 0, 400, 400);
             NSWindowStyleMask styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskMiniaturizable
                                           | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable;
             window_wrapper = [[CocoaWindowObjC alloc] initWithContentRect:rect
-                                                                         styleMask:styleMask
-                                                                           backing:NSBackingStoreBuffered
-                                                                             defer:NO];
+                                                                styleMask:styleMask
+                                                                  backing:NSBackingStoreBuffered
+                                                                    defer:NO];
             WindowDelegate *windowDelegate = [[WindowDelegate alloc] init];
-            CocoaWindowObjC* window = static_cast<id>(window_wrapper);
+            CocoaWindowObjC *window = static_cast<id>(window_wrapper);
             [window setDelegate:windowDelegate];
             [window setShowsResizeIndicator:YES];
             [window setAcceptsMouseMovedEvents:YES];
             [window setLevel:NSNormalWindowLevel];
             [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary |
-                                                           NSWindowCollectionBehaviorManaged];
+                                          NSWindowCollectionBehaviorManaged];
             [window setTitle:@"MainWindow"];
 
-            NSView* view = static_cast<id>(view_wrapper);
+            NSView *view = static_cast<id>(view_wrapper);
             [window setContentView:view];
             [window makeFirstResponder:view];
             [window center];
@@ -64,7 +64,7 @@ std::string Widget::windowTitle() const {
     }
 }
 
-void Widget::setWindowTitle(const std::string& title) {
+void Widget::setWindowTitle(const std::string &title) {
     @autoreleasepool {
         [static_cast<id>(window_wrapper) setTitle:[NSString stringWithUTF8String:title.c_str()]];
     }
@@ -75,8 +75,7 @@ void Widget::resize(int width, int height) {
         NSSize size = CGSizeMake(width, height);
         if (!parent) {
             [static_cast<id>(window_wrapper) setContentSize:size];
-        }
-        else {
+        } else {
             [static_cast<id>(view_wrapper) setFrameSize:size];
             [static_cast<id>(view_wrapper) setBounds:NSMakeRect(0, 0, size.width, size.height)];
         }
@@ -109,16 +108,16 @@ void Widget::init_view() {
         view_wrapper = [[ViewObjC alloc] initWithWidget:this];
         [static_cast<id>(view_wrapper) setWantsLayer:YES];
         [[static_cast<id>(view_wrapper) window] setOpaque:NO];
-        ViewObjC* view = static_cast<id>(view_wrapper);
+        ViewObjC *view = static_cast<id>(view_wrapper);
         view.layer.opaque = NO;
         view_wrapper = view;
     }
 }
 
-void Widget::paintEvent(const PaintEvent& event) {
+void Widget::paintEvent(const PaintEvent &event) {
 }
 
-void Widget::setBackgroundColor(const std::string& hexColor) {
+void Widget::setBackgroundColor(const std::string &hexColor) {
     Color color(hexColor);
 
     CGFloat redFloat = color.red() / 255.0;
@@ -149,17 +148,17 @@ void Widget::move(int x, int y) {
     }
 }
 
-void Widget::mousePressEvent(MouseEvent* event) {
+void Widget::mousePressEvent(MouseEvent *event) {
     if (event->type() == MouseEvent::Type::LeftButtonDown) {
     }
 }
 
-void Widget::mouseReleaseEvent(MouseEvent* event) {
+void Widget::mouseReleaseEvent(MouseEvent *event) {
     if (event->type() == MouseEvent::Type::LeftButtonUp) {
     }
 }
 
-void Widget::resizeEvent(ResizeEvent* event) {
+void Widget::resizeEvent(ResizeEvent *event) {
     std::cout << "ResizeEvent" << std::endl;
 }
 

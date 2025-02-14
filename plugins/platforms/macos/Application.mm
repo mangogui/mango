@@ -30,6 +30,7 @@
 
 struct CocoaApplicationWrapper {
     CocoaApplicationObjC *wrapped;
+
     ~CocoaApplicationWrapper() {
         [wrapped release];
     }
@@ -87,16 +88,16 @@ void Application::updateAnimations() {
 
     // Remove expired or non-running animations and update active ones
     animations.erase(std::remove_if(animations.begin(), animations.end(),
-        [deltaTime](std::weak_ptr<VariantAnimation>& weakAnim) {
-            if (auto anim = weakAnim.lock()) {  // Lock weak_ptr to check validity
-                if (!anim->isRunning()) {
-                    return true;  // Remove if animation is not running
-                }
-                anim->setCurrentTime(anim->getCurrentTime() + deltaTime);
-                return false;  // Keep active animations
-            }
-            return true;  // Remove expired weak_ptr
-        }), animations.end());
+                                    [deltaTime](std::weak_ptr<VariantAnimation> &weakAnim) {
+                                        if (auto anim = weakAnim.lock()) {  // Lock weak_ptr to check validity
+                                            if (!anim->isRunning()) {
+                                                return true;  // Remove if animation is not running
+                                            }
+                                            anim->setCurrentTime(anim->getCurrentTime() + deltaTime);
+                                            return false;  // Keep active animations
+                                        }
+                                        return true;  // Remove expired weak_ptr
+                                    }), animations.end());
 }
 
 void Application::run() {
@@ -121,7 +122,7 @@ void Application::addWidget(Widget *widget) {
     widgets.push_back(widget);
 }
 
-void Application::addAnimation(const std::shared_ptr<VariantAnimation>& animation) {
+void Application::addAnimation(const std::shared_ptr<VariantAnimation> &animation) {
     if (!animation) return;
     animations.push_back(animation);
 }

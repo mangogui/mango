@@ -9,55 +9,88 @@
 #include "JniEnvironment.h"
 
 template<typename T>
-struct is_jni_primitive : std::false_type {};
+struct is_jni_primitive : std::false_type {
+};
 
-template<> struct is_jni_primitive<void> : std::true_type {};
-template<> struct is_jni_primitive<jint> : std::true_type {};
-template<> struct is_jni_primitive<jboolean> : std::true_type {};
-template<> struct is_jni_primitive<jbyte> : std::true_type {};
-template<> struct is_jni_primitive<jchar> : std::true_type {};
-template<> struct is_jni_primitive<jshort> : std::true_type {};
-template<> struct is_jni_primitive<jlong> : std::true_type {};
-template<> struct is_jni_primitive<jfloat> : std::true_type {};
-template<> struct is_jni_primitive<jdouble> : std::true_type {};
-template<> struct is_jni_primitive<jobject> : std::true_type {};
-template<> struct is_jni_primitive<jstring> : std::true_type {};
-template<> struct is_jni_primitive<jclass> : std::true_type {};
-template<> struct is_jni_primitive<jthrowable> : std::true_type {};
-template<> struct is_jni_primitive<jarray> : std::true_type {};
+template<>
+struct is_jni_primitive<void> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jint> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jboolean> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jbyte> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jchar> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jshort> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jlong> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jfloat> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jdouble> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jobject> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jstring> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jclass> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jthrowable> : std::true_type {
+};
+template<>
+struct is_jni_primitive<jarray> : std::true_type {
+};
 
 class JniObject {
 public:
     // Constructors and Destructor
-    JniObject(const std::string& className, const std::string& constructorSig, ...);
+    JniObject(const std::string &className, const std::string &constructorSig, ...);
+
     JniObject(jobject obj);
+
     ~JniObject();
 
     // Method to call instance methods
-    template <typename ReturnType, typename... Args>
-    ReturnType callMethod(const std::string& methodName, const std::string& methodSig, Args... args) const;
+    template<typename ReturnType, typename... Args>
+    ReturnType callMethod(const std::string &methodName, const std::string &methodSig, Args... args) const;
 
     // Static method to call static methods
-    template <typename ReturnType, typename... Args>
-    static ReturnType callStaticMethod(const std::string& className, const std::string& methodName, const std::string& methodSig, Args... args);
+    template<typename ReturnType, typename... Args>
+    static ReturnType
+    callStaticMethod(const std::string &className, const std::string &methodName, const std::string &methodSig,
+                     Args... args);
 
     // Getter for the underlying jobject
     jobject getObject() const;
 
     // Method to check instance of a class
-    bool isInstanceOf(const std::string& className) const;
+    bool isInstanceOf(const std::string &className) const;
 
-    static jstring createStringUTF(const std::string& utf8String);
+    static jstring createStringUTF(const std::string &utf8String);
 
 private:
-    JNIEnv* m_env;
+    JNIEnv *m_env;
     jobject m_obj;
     jclass m_class;
 };
 
 
-template <typename ReturnType, typename... Args>
-ReturnType JniObject::callMethod(const std::string& methodName, const std::string& methodSig, Args... args) const {
+template<typename ReturnType, typename... Args>
+ReturnType JniObject::callMethod(const std::string &methodName, const std::string &methodSig, Args... args) const {
     static_assert(is_jni_primitive<ReturnType>::value, "Unsupported return type");
 
     jmethodID methodID = m_env->GetMethodID(m_class, methodName.c_str(), methodSig.c_str());
@@ -90,10 +123,12 @@ ReturnType JniObject::callMethod(const std::string& methodName, const std::strin
     }
 }
 
-template <typename ReturnType, typename... Args>
-ReturnType JniObject::callStaticMethod(const std::string& className, const std::string& methodName, const std::string& methodSig, Args... args) {
+template<typename ReturnType, typename... Args>
+ReturnType
+JniObject::callStaticMethod(const std::string &className, const std::string &methodName, const std::string &methodSig,
+                            Args... args) {
     static_assert(is_jni_primitive<ReturnType>::value, "Unsupported return type");
-    JNIEnv* env = JniEnvironment::getInstance().getEnv();
+    JNIEnv *env = JniEnvironment::getInstance().getEnv();
 
     jclass clazz = env->FindClass(className.c_str());
     if (!clazz) {

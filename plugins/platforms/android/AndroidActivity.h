@@ -5,7 +5,7 @@
 
 class AndroidActivity {
 public:
-    static AndroidActivity& getInstance() {
+    static AndroidActivity &getInstance() {
         static AndroidActivity instance;
         return instance;
     }
@@ -20,8 +20,10 @@ public:
 
 private:
     AndroidActivity() = default;
-    AndroidActivity(const AndroidActivity&) = delete;
-    AndroidActivity& operator=(const AndroidActivity&) = delete;
+
+    AndroidActivity(const AndroidActivity &) = delete;
+
+    AndroidActivity &operator=(const AndroidActivity &) = delete;
 
     jobject m_activity;
 };
