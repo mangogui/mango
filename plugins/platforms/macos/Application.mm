@@ -1,35 +1,47 @@
-#include "Application.h"
-#include "Widget.h"
+#include <Application.h>
+#include <Widget.h>
 #import <Cocoa/Cocoa.h>
+#include <AnimationScheduler.h>
 
-@interface AppDelegate : NSObject <NSApplicationDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate>
 @end
 
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    NSLog(@"Application did finish launching");
+
+    // Set up window delegate for all windows
+    for (NSWindow *window in [NSApp windows]) {
+        [window setDelegate:self];
+    }
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)app {
+    NSLog(@"Close button clicked, terminating app...");
     return YES;
 }
 
 - (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app {
     return YES;
 }
-@end
 
-@interface CocoaApplicationObjC : NSApplication
-@end
+- (void)windowWillClose:(NSNotification *)notification {
+    NSLog(@"Window will close called");
+    [NSApp terminate:nil];
+}
 
-@implementation CocoaApplicationObjC
+- (BOOL)windowShouldClose:(NSWindow *)sender {
+    NSLog(@"Window should close called");
+    return YES;
+}
 @end
 
 struct CocoaApplicationWrapper {
-    CocoaApplicationObjC *wrapped;
+    NSApplication *wrapped;
 
     ~CocoaApplicationWrapper() {
         [wrapped release];
@@ -38,9 +50,15 @@ struct CocoaApplicationWrapper {
 
 Application::Application() : wrapper(std::make_unique<CocoaApplicationWrapper>()) {
     @autoreleasepool {
-        wrapper->wrapped = [NSApplication sharedApplication];
+        [NSApplication sharedApplication];
+        wrapper->wrapped = [NSApp retain];
+
+        // Create and set delegate
         AppDelegate *appDelegate = [[AppDelegate alloc] init];
-        [wrapper->wrapped setDelegate:appDelegate];
+        [NSApp setDelegate:appDelegate];
+
+        // Activate the application
+        [NSApp activateIgnoringOtherApps:YES];
     }
 }
 
@@ -71,34 +89,6 @@ void Application::processEvents() {
     }
 }
 
-// TODO: Optimise this function
-void Application::updateAnimations() {
-    using Clock = std::chrono::steady_clock;
-
-    auto now = Clock::now();
-
-    // Initialize lastUpdate if uninitialized
-    if (lastUpdate == Clock::time_point{}) {
-        lastUpdate = now;
-    }
-
-    // Calculate time difference (delta time in milliseconds)
-    auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdate).count();
-    lastUpdate = now;
-
-    // Remove expired or non-running animations and update active ones
-    animations.erase(std::remove_if(animations.begin(), animations.end(),
-                                    [deltaTime](std::weak_ptr<VariantAnimation> &weakAnim) {
-                                        if (auto anim = weakAnim.lock()) {  // Lock weak_ptr to check validity
-                                            if (!anim->isRunning()) {
-                                                return true;  // Remove if animation is not running
-                                            }
-                                            anim->setCurrentTime(anim->getCurrentTime() + deltaTime);
-                                            return false;  // Keep active animations
-                                        }
-                                        return true;  // Remove expired weak_ptr
-                                    }), animations.end());
-}
 
 void Application::run() {
     @autoreleasepool {
@@ -110,7 +100,7 @@ void Application::run() {
 
         while (true) {
             processEvents();
-            updateAnimations();
+            AnimationScheduler::instance().updateAnimations();
 
             NSDate *nextFrameTime = [NSDate dateWithTimeIntervalSinceNow:1.0 / 60.0];
             [runLoop runMode:NSDefaultRunLoopMode beforeDate:nextFrameTime];
@@ -122,7 +112,3 @@ void Application::addWidget(Widget *widget) {
     widgets.push_back(widget);
 }
 
-void Application::addAnimation(const std::shared_ptr<VariantAnimation> &animation) {
-    if (!animation) return;
-    animations.push_back(animation);
-}

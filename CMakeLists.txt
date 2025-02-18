@@ -1,6 +1,4 @@
 cmake_minimum_required(VERSION 3.16)
-
-# Define the project
 project(Mango VERSION 0.0.0 LANGUAGES C CXX OBJC OBJCXX)
 
 
@@ -38,6 +36,10 @@ elseif(BUILD_IOS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc -isysroot ${CMAKE_OSX_SYSROOT}")
 endif()
 
+set(MANGO_LIBRARY_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+
+add_subdirectory(core)
+
 if(BUILD_ANDROID)
     add_subdirectory(plugins/platforms/android)
     add_subdirectory(android)
@@ -49,42 +51,33 @@ elseif(BUILD_MACOS)
     add_subdirectory(plugins/platforms/macos)
 endif()
 
-# Export targets
-install(
-    EXPORT ${PROJECT_NAME}Targets
-    FILE ${PROJECT_NAME}Targets.cmake
+# Install and export the package
+install(EXPORT MangoTargets
+    FILE MangoTargets.cmake
     NAMESPACE Mango::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Mango
 )
 
-# Define Mango installation directory
-set(${PROJECT_NAME}_DIR "${CMAKE_INSTALL_PREFIX}/lib/cmake/${PROJECT_NAME}")
-
-# Configure package version file
 include(CMakePackageConfigHelpers)
+
+# Generate and install package configuration files
+configure_package_config_file(
+    cmake/MangoConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/MangoConfig.cmake
+    INSTALL_DESTINATION lib/cmake/Mango
+    PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_PREFIX
+)
+
 write_basic_package_version_file(
-    "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    ${CMAKE_CURRENT_BINARY_DIR}/MangoConfigVersion.cmake
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
-# Configure the config file
-configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
-    "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-    PATH_VARS CMAKE_INSTALL_INCLUDEDIR
-)
-
-# Install config files
-install(
-    FILES
-        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/MangoConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/MangoConfigVersion.cmake
+    DESTINATION lib/cmake/Mango
 )
 
 export(PACKAGE Mango)
-
-message(STATUS "Mango installation directory: ${CMAKE_INSTALL_PREFIX}")
-message(STATUS "Mango CMake configuration files installed to: ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")

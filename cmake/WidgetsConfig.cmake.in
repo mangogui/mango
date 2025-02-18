@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# Widgets depends on Core
+find_dependency(Mango::Core REQUIRED)
+
+if(NOT TARGET Mango::Widgets)
+    include("${CMAKE_CURRENT_LIST_DIR}/WidgetsTargets.cmake")
+endif()
+
+check_required_components(Widgets)

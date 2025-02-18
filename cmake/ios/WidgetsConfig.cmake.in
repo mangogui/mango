@@ -1,0 +1,10 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+include("${CMAKE_CURRENT_LIST_DIR}/WidgetsTargets.cmake")
+
+set(Widgets_INCLUDE_DIRS "@Widgets_INCLUDE_DIRS@")
+
+
+include_directories("/Users/parhamoyan/Mango/0.0.0/ios/include")

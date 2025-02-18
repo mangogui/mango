@@ -1,5 +1,5 @@
-#import "Cocoa/Cocoa.h"
-#import "Widget.h"
+#include <Cocoa/Cocoa.h>
+#include <Widget.h>
 
 @interface ViewObjC : NSView
 - (NSView *)initWithWidget:(Widget *)_widget;

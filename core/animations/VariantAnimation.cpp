@@ -1,5 +1,5 @@
-#include "VariantAnimation.h"
-#include "Application.h"
+#include <VariantAnimation.h>
+#include <AnimationRegistry.h>
 
 VariantAnimation::VariantAnimation(const Variant &start, const Variant &end, int duration,
                                    VariantAnimation::Callback updateCallback) :
@@ -16,7 +16,7 @@ VariantAnimation::~VariantAnimation() {
 }
 
 void VariantAnimation::start() {
-    Application::instance().addAnimation(this->getSharedPtr());
+    AnimationRegistry::instance().addAnimation(this->getSharedPtr());
     running = true;
     startTime = 0;
 }

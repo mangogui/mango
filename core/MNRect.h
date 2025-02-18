@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Point.h"
+#include <Point.h>
 #include <cstdlib>
 #include <ostream>
 
@@ -36,7 +36,7 @@ private:
     GUI::Point p1, p2;
 };
 
-inline MNRect::MNRect(float x, float y, float w, float h): p1(x, y), p2(x + w, y + h) {}
+inline MNRect::MNRect(float x, float y, float w, float h) : p1(x, y), p2(x + w, y + h) {}
 
 inline void MNRect::set_x(float x) {
     p1.setX(x);

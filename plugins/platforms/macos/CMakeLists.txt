@@ -1,110 +1,56 @@
 cmake_minimum_required(VERSION 3.16)
 project(MangoWidgets LANGUAGES C CXX OBJC OBJCXX)
 
-# Set the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
-    MNSize.cpp
-    MNRect.cpp
-    PaintEvent.cpp
-    Color.cpp
-    MouseEvent.cpp
-    PainterPath.cpp
-    EasingCurve.cpp
-
     Widget.mm
     CocoaWindowObjC.mm
     WindowDelegate.mm
     ViewObjC.mm
     Application.mm
     Canvas.mm
-    Point.cpp
-    ResizeEvent.cpp
-    Point.cpp
 )
 
 set(HEADERS
-    MNSize.h
-    MNRect.h
-    PaintEvent.h
     Application.h
-    Color.h
     Widget.h
-    MouseEvent.h
     WindowDelegate.h
     ViewObjC.h
     CocoaWindowObjC.h
-    PainterPath.h
     Canvas.h
-    EasingCurve.h
-    ResizeEvent.h
-    Point.h
 )
 
-set(ANIMATION_SOURCES
-    animations/NumberAnimation.cpp
-    animations/ColorAnimation.cpp
-    animations/VariantAnimation.cpp
-)
-
-set(ANIMATION_HEADERS
-    animations/NumberAnimation.h
-    animations/ColorAnimation.h
-    animations/Variant.h
-    animations/VariantAnimation.h
-)
-
-# Define the shared library
-add_library(Widgets SHARED ${SOURCES} ${ANIMATION_SOURCES}  ${HEADERS}  ${ANIMATION_HEADERS})
-
-# Create an alias for Mango::Widgets
+add_library(Widgets STATIC ${SOURCES} ${HEADERS})
 add_library(Mango::Widgets ALIAS Widgets)
 
-# Set properties for the target
-set_target_properties(Widgets PROPERTIES
-    OUTPUT_NAME "MangoWidgets"
-)
-
-target_link_libraries(Widgets
+target_link_libraries(Widgets PUBLIC Mango::Core
     "-framework Cocoa"
     "-framework Metal"
     "-framework QuartzCore"
-    "-framework MetalKit"
-)
+    "-framework MetalKit")
 
-# Update library output path to use top-level build directory
-set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/libs")
+set_target_properties(Widgets PROPERTIES OUTPUT_NAME "MangoWidgets" PREFIX "lib")
 
-# Correct include directories for both build and install phases
 target_include_directories(Widgets PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/widgets>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/core/animations>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/core>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/macos>
 )
 
-# Install headers to Mango subdirectory under include
 install(FILES ${HEADERS}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mango
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mango/widgets
 )
 
-# Install animation headers to Mango/animations subdirectory under include
-install(FILES ${ANIMATION_HEADERS}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mango/animations
-)
-
-# Install the target and create an export set
-install(TARGETS Widgets
-    EXPORT MangoTargets
+install(TARGETS Widgets EXPORT MangoTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-# Export the MangoWidgets library for CMake find_package
-install(EXPORT MangoTargets
-    FILE MangoWidgetsConfig.cmake
-    NAMESPACE Mango::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Mango
 )

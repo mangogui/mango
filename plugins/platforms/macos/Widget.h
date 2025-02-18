@@ -2,10 +2,10 @@
 
 #include <string>
 #include <utility>
-#include "MNSize.h"
-#include "PaintEvent.h"
-#include "MouseEvent.h"
-#include "ResizeEvent.h"
+#include <MNSize.h>
+#include <PaintEvent.h>
+#include <MouseEvent.h>
+#include <ResizeEvent.h>
 
 
 class Widget {

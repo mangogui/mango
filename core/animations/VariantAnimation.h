@@ -2,8 +2,8 @@
 
 #include <functional>
 #include <chrono>
-#include "EasingCurve.h"
-#include "Variant.h"
+#include <EasingCurve.h>
+#include <Variant.h>
 
 class VariantAnimation : public std::enable_shared_from_this<VariantAnimation> {
 public:

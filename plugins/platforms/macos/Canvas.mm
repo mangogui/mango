@@ -1,4 +1,4 @@
-#include "Canvas.h"
+#include <Canvas.h>
 #include <Cocoa/Cocoa.h>
 
 CGColor *createNSColor(const Color &color) {

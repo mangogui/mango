@@ -12,21 +12,21 @@ set(DEST_DIR ${CMAKE_BINARY_DIR}/android)
 
 # Define the custom command to copy android directory
 add_custom_command(
-    OUTPUT ${DEST_DIR}/copied_files.txt
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${ANDROID_DIR} ${DEST_DIR}
-    COMMAND ${CMAKE_COMMAND} -E touch ${DEST_DIR}/copied_files.txt  # Touch a file to indicate completion
-    DEPENDS ${ANDROID_DIR}  # Depend on the source directory
-    COMMENT "Copying files from ${ANDROID_DIR} to ${DEST_DIR}"
+OUTPUT ${DEST_DIR}/copied_files.txt
+COMMAND ${CMAKE_COMMAND} -E copy_directory ${ANDROID_DIR} ${DEST_DIR}
+COMMAND ${CMAKE_COMMAND} -E touch ${DEST_DIR}/copied_files.txt  # Touch a file to indicate completion
+DEPENDS ${ANDROID_DIR}  # Depend on the source directory
+COMMENT "Copying files from ${ANDROID_DIR} to ${DEST_DIR}"
 )
 
 add_custom_target(copy_android_dir ALL
-    DEPENDS ${DEST_DIR}/copied_files.txt
+DEPENDS ${DEST_DIR}/copied_files.txt
 )
 
 file(COPY "@USER_HOME_DIR@/Mango/0.0.0/android_arm64_v8a/lib/libWidgets.so"
-    DESTINATION "${CMAKE_BINARY_DIR}/android/libs/arm64-v8a")
+DESTINATION "${CMAKE_BINARY_DIR}/android/libs/arm64-v8a")
 
 file(COPY "@USER_HOME_DIR@/Mango/0.0.0/android_arm64_v8a/jar/MangoAndroid.jar"
-    DESTINATION "${CMAKE_BINARY_DIR}/android/libs")
+DESTINATION "${CMAKE_BINARY_DIR}/android/libs")
 
 

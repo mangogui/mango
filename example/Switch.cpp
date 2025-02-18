@@ -1,5 +1,5 @@
 #include "Switch.h"
-#include "Mango/Canvas.h"
+#include <Canvas.h>
 
 
 Switch::Switch(Widget *parent) : Widget(parent), m_checked(false),

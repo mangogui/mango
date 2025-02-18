@@ -2,20 +2,46 @@
 
 include(CMakeFindDependencyMacro)
 
-# Find dependencies if any
-# find_dependency(SomePackage REQUIRED)
+# Include the generated target file
+include("${CMAKE_CURRENT_LIST_DIR}/MangoTargets.cmake")
+message(STATUS "Loaded MangoTargets.cmake from: ${CMAKE_CURRENT_LIST_DIR}/MangoTargets.cmake")
 
-# Include targets file if it exists
-if(NOT TARGET Mango::Widgets AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/MangoTargets.cmake")
-    include("${CMAKE_CURRENT_LIST_DIR}/MangoTargets.cmake")
+# Print requested components for debugging
+message(STATUS "Requested Mango components: ${Mango_FIND_COMPONENTS}")
+
+# Define available components (must match exported targets)
+set(AVAILABLE_MANGO_COMPONENTS "Widgets" "Core")
+
+# Assume Mango is found unless a requested component is missing
+set(Mango_FOUND TRUE)
+message(STATUS "Initial Mango_FOUND: ${Mango_FOUND}")
+
+# Strip the "Mango::" prefix from the requested components and check
+foreach(component ${Mango_FIND_COMPONENTS})
+string(REPLACE "Mango::" "" component_name ${component})
+message(STATUS "Checking component: ${component_name}")
+
+if(NOT component_name IN_LIST AVAILABLE_MANGO_COMPONENTS)
+set(Mango_FOUND FALSE)
+message(STATUS "Mango_FOUND set to FALSE due to missing component: ${component_name}")
+message(FATAL_ERROR "Mango: Requested component '${component}' is not available! Available components: ${AVAILABLE_MANGO_COMPONENTS}")
+endif()
+endforeach()
+
+# If Mango_FOUND is still TRUE, mark only the requested components as found
+if (Mango_FOUND)
+message(STATUS "Mango_FOUND is TRUE, marking requested components as found")
+foreach(component ${Mango_FIND_COMPONENTS})
+string(REPLACE "Mango::" "" component_name ${component})
+set(Mango_${component_name}_FOUND TRUE)
+endforeach()
+else()
+message(STATUS "Mango_FOUND is FALSE, not marking components")
 endif()
 
-# Set paths relative to the package location
-set_and_check(MANGO_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
-set(MANGO_LIBRARIES Mango::Widgets)
+# Set package variables
+set(Mango_INCLUDE_DIRS "@CMAKE_INSTALL_INCLUDEDIR@")
+set(Mango_LIBRARIES Mango::Core Mango::Widgets)
 
-# Set found status
-set(@CMAKE_PROJECT_NAME@_FOUND TRUE)
-set(@CMAKE_PROJECT_NAME@_INCLUDE_DIRS ${@CMAKE_PROJECT_NAME@_INCLUDE_DIRS} ${INCLUDE_DIRS})
-set(@CMAKE_PROJECT_NAME@_LIBRARY_DIRS ${@CMAKE_PROJECT_NAME@_LIB_DIR} ${LIBRARY_DIRS})
-set(@CMAKE_PROJECT_NAME@_LIBRARIES ${@CMAKE_PROJECT_NAME@_LIBS_LIST})
+# Ensure required components are available
+check_required_components(Mango)

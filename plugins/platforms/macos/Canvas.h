@@ -1,8 +1,8 @@
 #pragma once
 
-#include "PainterPath.h"
-#include "Widget.h"
-#include "Color.h"
+#include <PainterPath.h>
+#include <Widget.h>
+#include <Color.h>
 
 
 class FillStyle {

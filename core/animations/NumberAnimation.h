@@ -5,8 +5,8 @@
 #include <iostream>
 #include <memory>
 
-#include "EasingCurve.h"
-#include "VariantAnimation.h"
+#include <EasingCurve.h>
+#include <VariantAnimation.h>
 
 
 class NumberAnimation : public VariantAnimation {

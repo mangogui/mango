@@ -1,5 +1,5 @@
-#include "Application.h"
-#include "Widget.h"
+#include <Application.h>
+#include <Widget.h>
 #include "Switch.h"
 
 

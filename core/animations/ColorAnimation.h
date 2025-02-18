@@ -1,5 +1,5 @@
-#include "Color.h"
-#include "VariantAnimation.h"
+#include <Color.h>
+#include <VariantAnimation.h>
 
 class ColorAnimation : public VariantAnimation {
 public:

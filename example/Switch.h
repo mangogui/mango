@@ -1,8 +1,9 @@
 #pragma once
 
 #include <Widget.h>
-#include "animations/NumberAnimation.h"
-#include "animations/ColorAnimation.h"
+#include <NumberAnimation.h>
+#include <ColorAnimation.h>
+#include <MouseEvent.h>
 
 class Switch : public Widget {
 public:

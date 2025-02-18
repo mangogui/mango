@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Point.h"
-#include "MNRect.h"
+#include <Point.h>
+#include <MNRect.h>
 #include <vector>
-#include "PainterPath.h"
-
 
 namespace GUI {
     struct CubicBezierCurve {

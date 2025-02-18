@@ -1,13 +1,14 @@
-#import "Widget.h"
 #import "Cocoa/Cocoa.h"
-#include "Color.h"
+
+#include <Widget.h>
 #include "CocoaWindowObjC.h"
 #include "WindowDelegate.h"
 #include "ViewObjC.h"
-#include "PainterPath.h"
-#include "Application.h"
-#include "MNRect.h"
-#include "MNSize.h"
+#include <Color.h>
+#include <PainterPath.h>
+#include <Application.h>
+#include <MNRect.h>
+#include <MNSize.h>
 
 
 Widget::Widget(Widget *_parent) {
