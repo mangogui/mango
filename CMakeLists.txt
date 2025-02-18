@@ -36,8 +36,6 @@ elseif(BUILD_IOS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fobjc-arc -isysroot ${CMAKE_OSX_SYSROOT}")
 endif()
 
-set(MANGO_LIBRARY_DIR "${CMAKE_INSTALL_PREFIX}/lib")
-
 add_subdirectory(core)
 
 if(BUILD_ANDROID)
@@ -65,7 +63,6 @@ configure_package_config_file(
     cmake/MangoConfig.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/MangoConfig.cmake
     INSTALL_DESTINATION lib/cmake/Mango
-    PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_PREFIX
 )
 
 write_basic_package_version_file(
