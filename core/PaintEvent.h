@@ -1,11 +1,12 @@
 #pragma once
 
 #include "MNRect.h"
+#include <Event.h>
 
 
-class PaintEvent {
+class PaintEvent: public Event {
 public:
-    PaintEvent() = default;
+    PaintEvent(): Event(Event::Type::PaintEvent) {}
 
     void setRect(const MNRect &r) {
         this->_rect = r;

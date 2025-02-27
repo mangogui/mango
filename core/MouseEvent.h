@@ -1,12 +1,12 @@
 #pragma once
+#include <Event.h>
 
-
-class MouseEvent {
+class MouseEvent: public Event {
 public:
     enum Type {
         LeftButtonDown,
         LeftButtonUp,
-        RightMouseDown,
+        RightButtonDown,
         RightMouseUp,
         MouseMoved,
         LeftMouseDragged,
@@ -28,6 +28,10 @@ public:
         OtherMouseUp,
         OtherMouseDragged
     };
+
+    MouseEvent(MouseEvent::Type type): Event(Event::Type::MouseEvent) {
+        this->_type = type;
+    }
 
     void setType(MouseEvent::Type type) {
         this->_type = type;

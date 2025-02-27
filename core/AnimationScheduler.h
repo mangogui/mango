@@ -1,5 +1,5 @@
 #pragma once
-#include <chrono>
+#include <Windows.h>
 
 class AnimationScheduler {
 public:
@@ -7,7 +7,8 @@ public:
     AnimationScheduler(const AnimationScheduler &) = delete;
     void updateAnimations();
 private:
-    std::chrono::time_point<std::chrono::steady_clock> lastUpdate;
-    AnimationScheduler() = default;
+    LARGE_INTEGER lastUpdate;
+    LARGE_INTEGER frequency; // To store the frequency of the high-resolution timer
+    AnimationScheduler();
 };
 

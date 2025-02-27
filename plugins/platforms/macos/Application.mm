@@ -89,7 +89,6 @@ void Application::processEvents() {
     }
 }
 
-
 void Application::run() {
     @autoreleasepool {
         NSRunLoop *runLoop = [NSRunLoop currentRunLoop];

@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <chrono>
+#include <memory>
 #include <EasingCurve.h>
 #include <Variant.h>
 

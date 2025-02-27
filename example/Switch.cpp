@@ -45,7 +45,7 @@ void Switch::startAnimation() {
     m_colorAnimation->start();
 }
 
-void Switch::paintEvent(const PaintEvent &event) {
+void Switch::paintEvent(PaintEvent *event) {
     Canvas canvas(this);
     canvas.begin();
 

@@ -3,6 +3,7 @@
 #include <Point.h>
 #include <cstdlib>
 #include <ostream>
+#include <MNSize.h>
 
 class MNRect {
 public:
@@ -18,6 +19,10 @@ public:
 
     inline void set_height(float h);
 
+    [[nodiscard]] inline MNSize size() const;
+
+    inline void move(float new_x, float new_y);
+
     [[nodiscard]] inline float x() const noexcept;
 
     [[nodiscard]] inline float y() const noexcept;
@@ -25,6 +30,11 @@ public:
     [[nodiscard]] inline float width() const noexcept;
 
     [[nodiscard]] inline float height() const noexcept;
+
+    [[nodiscard]] inline float left() const noexcept;
+    [[nodiscard]] inline float right() const noexcept;
+    [[nodiscard]] inline float top() const noexcept;
+    [[nodiscard]] inline float bottom() const noexcept;
 
     friend std::ostream &operator<<(std::ostream &os, const MNRect &rect) {
         os << "MNRect(x=" << rect.x() << ", y=" << rect.y() << ", m_width=" << rect.width() << ", m_height="
@@ -70,5 +80,34 @@ inline float MNRect::width() const noexcept {
 
 inline float MNRect::height() const noexcept {
     return abs(p2.y() - p1.y());
+}
+
+float MNRect::left() const noexcept {
+    return p1.x();
+}
+
+float MNRect::right() const noexcept {
+    return p2.x();
+}
+
+float MNRect::top() const noexcept {
+    return p1.y();
+}
+
+float MNRect::bottom() const noexcept {
+    return p2.y();
+}
+
+void MNRect::move(float new_x, float new_y) {
+    float w = width();
+    float h = height();
+    p1.setX(new_x);
+    p1.setY(new_y);
+    p2.setX(new_x + w);
+    p2.setY(new_y + h);
+}
+
+inline MNSize MNRect::size() const {
+    return MNSize(width(), height());
 }
 

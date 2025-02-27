@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Color.h>
 #include <VariantAnimation.h>
 

@@ -24,7 +24,7 @@ public:
     }
 
 protected:
-    void paintEvent(const PaintEvent &event) override;
+    void paintEvent(PaintEvent *event) override;
 
 private:
     void startAnimation();

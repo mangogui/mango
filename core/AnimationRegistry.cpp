@@ -1,4 +1,5 @@
 #include "AnimationRegistry.h"
+#include <algorithm>
 
 void AnimationRegistry::addAnimation(const std::shared_ptr<VariantAnimation> &animation) {
     if (!animation) return;

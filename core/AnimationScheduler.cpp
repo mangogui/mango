@@ -1,24 +1,27 @@
 #include "AnimationScheduler.h"
 #include <AnimationRegistry.h>
 
-// TODO: Optimise this function
-void AnimationScheduler::updateAnimations() {
-    using Clock = std::chrono::steady_clock;
 
-    auto now = Clock::now();
+
+void AnimationScheduler::updateAnimations() {
+    LARGE_INTEGER now;
+    QueryPerformanceCounter(&now);
 
     // Initialize lastUpdate if uninitialized
-    if (lastUpdate == Clock::time_point{}) {
+    if (lastUpdate.QuadPart == 0) {
         lastUpdate = now;
     }
 
-    // Calculate time difference (delta time in milliseconds)
-    auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdate).count();
+    // Calculate time difference (delta time in seconds)
+    // Convert the counter difference to seconds (since frequency is counts per second)
+    double deltaTime = static_cast<double>(now.QuadPart - lastUpdate.QuadPart) / frequency.QuadPart;
     lastUpdate = now;
 
-    auto animations = AnimationRegistry::instance().getActiveAnimations();
+    // You can convert deltaTime to milliseconds by multiplying by 1000 if needed
+    deltaTime *= 1000;
 
-    // Remove expired or non-running animations and update active ones
+    // Update the animations using the deltaTime
+    auto animations = AnimationRegistry::instance().getActiveAnimations();
     AnimationRegistry::instance().removeFinishedAnimation();
     AnimationRegistry::instance().syncAnimations(deltaTime);
 }
@@ -26,4 +29,9 @@ void AnimationScheduler::updateAnimations() {
 AnimationScheduler &AnimationScheduler::instance() {
     static AnimationScheduler instance;
     return instance;
+}
+
+AnimationScheduler::AnimationScheduler() {
+    // Initialize the frequency on the first use
+    QueryPerformanceFrequency(&frequency);
 }

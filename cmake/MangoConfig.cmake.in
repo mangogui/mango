@@ -43,5 +43,6 @@ endif()
 set(Mango_INCLUDE_DIRS "@CMAKE_INSTALL_INCLUDEDIR@")
 set(Mango_LIBRARIES Mango::Core Mango::Widgets)
 
+
 # Ensure required components are available
 check_required_components(Mango)

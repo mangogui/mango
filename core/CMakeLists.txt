@@ -16,6 +16,7 @@ set(SOURCES
     EasingCurve.cpp
     Point.cpp
     ResizeEvent.cpp
+    Event.cpp
 )
 
 set(HEADERS
@@ -27,6 +28,7 @@ set(HEADERS
     PainterPath.h
     EasingCurve.h
     ResizeEvent.h
+    Event.h
     Point.h
 )
 
@@ -47,7 +49,7 @@ set(ANIMATION_HEADERS
     AnimationScheduler.h
 )
 
-add_library(Core SHARED ${SOURCES} ${HEADERS} ${ANIMATION_SOURCES} ${ANIMATION_HEADERS})
+add_library(Core STATIC ${SOURCES} ${HEADERS} ${ANIMATION_SOURCES} ${ANIMATION_HEADERS})
 add_library(Mango::Core ALIAS Core)
 
 set_target_properties(Core PROPERTIES
