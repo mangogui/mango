@@ -15,23 +15,6 @@ Widget::Widget(Widget *parent)
     if (m_parent) parent->addChild(this);
 }
 
-void Widget::resizeRenderTarget(int width, int height) {
-    if (!m_pRenderTarget) return;  // Ensure the render target exists
-
-    D2D1_SIZE_U newSize = D2D1::SizeU(width, height);
-    m_pRenderTarget->Resize(newSize); // Resize render target to match widget
-
-    if (m_pBackBuffer) {
-        m_pBackBuffer->Release(); // Release old back buffer
-        m_pBackBuffer = nullptr;
-
-        HRESULT hr = m_pRenderTarget->CreateCompatibleRenderTarget(&m_pBackBuffer);
-        if (FAILED(hr)) {
-            MessageBoxW(nullptr, L"Failed to create resized back buffer", L"Error", MB_OK);
-        }
-    }
-}
-
 std::string Widget::getWindowTitle() const {
     char wnd_title[256] = {0}; // Ensure buffer is zero-initialized
     GetWindowTextA(m_hWnd, wnd_title, sizeof(wnd_title));
@@ -89,56 +72,7 @@ void Widget::createWindow() {
         return;
     }
 
-    HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
-    if (FAILED(hr)) {
-        MessageBoxW(nullptr, L"Failed to create Direct2D factory", L"Error", MB_OK);
-        return;
-    }
-
-    // Create render target
-    if (!m_pD2DFactory) return;
-
-    RECT rc;
-    GetClientRect(m_hWnd, &rc);
-    D2D1_SIZE_U size = D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top);
-
-    hr = m_pD2DFactory->CreateHwndRenderTarget(
-            D2D1::RenderTargetProperties(),
-            D2D1::HwndRenderTargetProperties(m_hWnd, size),
-            &m_pRenderTarget
-    );
-
-    if (FAILED(hr)) {
-        MessageBoxW(nullptr, L"Failed to create Direct2D render target", L"Error", MB_OK);
-        return;
-    }
-
-    hr = m_pRenderTarget->CreateCompatibleRenderTarget(&m_pBackBuffer);
-    if (FAILED(hr)) {
-        MessageBoxW(nullptr, L"Failed to create back buffer", L"Error", MB_OK);
-        return;
-    }
-    // Finished
-
-    hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&m_pDWriteFactory));
-    if (FAILED(hr)) {
-        MessageBoxW(nullptr, L"Failed to create DirectWrite factory", L"Error", MB_OK);
-        return;
-    }
-
-    hr = m_pDWriteFactory->CreateTextFormat(
-            L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
-            36.0f, L"en-us", &m_pTextFormat
-    );
-
-    if (FAILED(hr)) {
-        MessageBoxW(nullptr, L"Failed to create text format", L"Error", MB_OK);
-    }
-
-    hr = m_pRenderTarget->CreateSolidColorBrush(convertColorToD2DColorF(Color::White), &m_pBrush);
-    if (FAILED(hr)) {
-        MessageBoxW(nullptr, L"Failed to create solid color brush", L"Error", MB_OK);
-    }
+    graphics = std::make_unique<Direct2DGraphicsContext>(getWinId());
 }
 
 void Widget::display() {
@@ -158,35 +92,6 @@ void Widget::center() {
 Widget::~Widget() {
     const wchar_t* CLASS_NAME = L"Widget";
     UnregisterClass(reinterpret_cast<LPCSTR>(CLASS_NAME), m_hInstance);
-    if (m_pBrush) {
-        m_pBrush->Release();
-        m_pBrush = nullptr;
-    }
-
-    if (m_pTextFormat) {
-        m_pTextFormat->Release();
-        m_pTextFormat = nullptr;
-    }
-
-    if (m_pDWriteFactory) {
-        m_pDWriteFactory->Release();
-        m_pDWriteFactory = nullptr;
-    }
-
-    if (m_pBackBuffer) {
-        m_pBackBuffer->Release();
-        m_pBackBuffer = nullptr;
-    }
-
-    if (m_pRenderTarget) {
-        m_pRenderTarget->Release();
-        m_pRenderTarget = nullptr;
-    }
-
-    if (m_pD2DFactory) {
-        m_pD2DFactory->Release();
-        m_pD2DFactory = nullptr;
-    }
 }
 
 void Widget::move(int x, int y) {

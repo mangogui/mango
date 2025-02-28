@@ -11,14 +11,18 @@ set(SOURCES
     Canvas.cpp
     Widget.cpp
     WindowManager.cpp
-    D2D1Helpers.cpp)
+    D2D1Helpers.cpp
+    Direct2DGraphicsContext.cpp
+    ../common/GraphicsContext.cpp)
 
 set(HEADERS
     Application.h
     Canvas.h
     Widget.h
     WindowManager.h
-    D2D1Helpers.h)
+    D2D1Helpers.h
+    Direct2DGraphicsContext.h
+    ../common/GraphicsContext.h)
 
 add_library(Widgets STATIC ${SOURCES} ${HEADERS})
 add_library(Mango::Widgets ALIAS Widgets)
@@ -36,6 +40,7 @@ target_include_directories(Widgets PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/windows>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/common>
 )
 
 install(FILES ${HEADERS}

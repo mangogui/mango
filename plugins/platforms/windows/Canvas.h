@@ -5,22 +5,12 @@
 #include <Color.h>
 #include <memory>
 
-class FillStyle {
-    Color _color;
-public:
-
-    explicit FillStyle(const Color &color) : _color(color) {}
-
-    void setColor(const Color &color) {
-        this->_color = color;
-    }
-
-    [[nodiscard]] Color getColor() const { return _color; }
-};
+#include "Direct2DGraphicsContext.h"
+#include <FillStyle.h>
 
 class Canvas {
     Widget *_widget;
-    std::unique_ptr<FillStyle> fillStyle;
+
 public:
     explicit Canvas(Widget *widget);
 
@@ -39,6 +29,6 @@ public:
     ~Canvas();
 
 private:
-
+    Direct2DGraphicsContext* context;
     void createRenderTarget();
 };

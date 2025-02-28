@@ -17,7 +17,8 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, 
         case WM_SIZE: {
             int width = LOWORD(lParam);
             int height = HIWORD(lParam);
-            widget->resizeRenderTarget(width, height);
+            if (widget->getGraphicsContext())
+                widget->getGraphicsContext()->resizeContext(width, height);
             ResizeEvent event(width, height);
             widget->handleEvent(&event);
             break;

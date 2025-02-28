@@ -17,6 +17,7 @@ set(SOURCES
     Point.cpp
     ResizeEvent.cpp
     Event.cpp
+    FillStyle.cpp
 )
 
 set(HEADERS
@@ -30,6 +31,7 @@ set(HEADERS
     ResizeEvent.h
     Event.h
     Point.h
+    FillStyle.h
 )
 
 set(ANIMATION_SOURCES
