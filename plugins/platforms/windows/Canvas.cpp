@@ -1,8 +1,4 @@
 #include "Canvas.h"
-#include <d2d1helper.h>
-#include <dwrite.h>
-#include <windows.h>
-#include "D2D1Helpers.h"
 
 
 Canvas::Canvas(Widget *widget) : _widget(widget), context(widget->getGraphicsContext()) {

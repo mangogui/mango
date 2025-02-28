@@ -22,7 +22,7 @@
 #include <MouseEvent.h>
 #include <ResizeEvent.h>
 
-#include "Direct2DGraphicsContext.h"
+#include <Direct2DGraphicsContext.h>
 
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM uParam, LPARAM lParam);

@@ -5,7 +5,7 @@
 #include <Color.h>
 #include <memory>
 
-#include "Direct2DGraphicsContext.h"
+#include <Direct2DGraphicsContext.h>
 #include <FillStyle.h>
 
 class Canvas {

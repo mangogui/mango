@@ -4,8 +4,8 @@
 
 #include <d2d1.h>
 #include <dwrite.h>
-#include <FillStyle.h>
-#include <MNRect.h>
+#include "core/FillStyle.h"
+#include "core/MNRect.h"
 #include <GraphicsContext.h>
 
 

@@ -3,7 +3,6 @@
 #include "MouseEvent.h"
 #include "WindowManager.h"
 #include "Color.h"
-#include "D2D1Helpers.h"
 
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
