@@ -21,9 +21,16 @@ Widget::Widget(Widget *_parent) {
         // It is _a child widget
         if (parent) {
             NSWindow *parent_window = static_cast<id>(parent->window_wrapper);
-            [[parent_window contentView] addSubview:static_cast<id>(view_wrapper)];
+            NSView *parent_view = [parent_window contentView];
+
+            NSRect frame = NSMakeRect(0, 0, 200, 200); // Set a non-zero size
+            [static_cast<id>(view_wrapper) setFrame:frame];
+
+            NSLog(@"Adding child view: %@", view_wrapper);
+            [parent_view addSubview:static_cast<id>(view_wrapper)];
+            [static_cast<id>(view_wrapper) setNeedsDisplay:YES];
         }
-            // It is _a top-level widget
+        // It is _a top-level widget
         else {
             NSRect rect = NSMakeRect(0, 0, 400, 400);
             NSWindowStyleMask styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskMiniaturizable
@@ -112,10 +119,12 @@ void Widget::init_view() {
         ViewObjC *view = static_cast<id>(view_wrapper);
         view.layer.opaque = NO;
         view_wrapper = view;
+        CGContextRef _context = [[NSGraphicsContext currentContext] CGContext];
+        graphics = std::make_unique<CoreGraphicsContext>(_context);
     }
 }
 
-void Widget::paintEvent(const PaintEvent &event) {
+void Widget::paintEvent(PaintEvent *event) {
 }
 
 void Widget::setBackgroundColor(const std::string &hexColor) {
@@ -213,5 +222,9 @@ int Widget::y() const {
 
 void Widget::setObjectName(const std::string &obj_name) {
     this->object_name = obj_name;
+}
+
+void Widget::display() {
+    [static_cast<id>(view_wrapper) setNeedsDisplay:YES];
 }
 

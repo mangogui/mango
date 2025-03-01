@@ -55,6 +55,7 @@ elseif(BUILD_WINDOWS)
     add_subdirectory(graphics/direct2d)
     add_subdirectory(plugins/platforms/windows)
 elseif(BUILD_MACOS)
+    add_subdirectory(graphics/coregraphics)
     add_subdirectory(plugins/platforms/macos)
 endif()
 

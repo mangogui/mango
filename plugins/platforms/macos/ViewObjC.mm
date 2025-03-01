@@ -15,8 +15,16 @@
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect]; // Call the super implementation
 
+    CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
+    if (!context) {
+        NSLog(@"ViewObjC: CGContext is null");
+        return;
+    }
+
+    widget->setCGContextRef(context);
+
     PaintEvent event;
-    widget->paintEvent(event); // Call the paintEvent method
+    widget->paintEvent(&event); // Call the paintEvent method
 }
 
 
@@ -63,23 +71,13 @@
 
 - (void)mouseUp:(NSEvent *)event {
     NSEventType eventType = [event type];
-    MouseEvent mouseEvent{};
-    MouseEvent::Type type = MouseEvent::LeftButtonUp;
-    if (eventType == NSEventTypeLeftMouseUp) {
-        type = MouseEvent::Type::LeftButtonUp;
-    }
-    mouseEvent.setType(type);
+    MouseEvent mouseEvent(MouseEvent::LeftButtonUp);
     widget->mouseReleaseEvent(&mouseEvent);
 }
 
 - (void)mouseDown:(NSEvent *)event {
     NSEventType eventType = [event type];
-    MouseEvent mouseEvent{};
-    MouseEvent::Type type = MouseEvent::LeftButtonDown;
-    if (eventType == NSEventTypeLeftMouseDown) {
-        type = MouseEvent::Type::LeftButtonDown;
-    }
-    mouseEvent.setType(type);
+    MouseEvent mouseEvent(MouseEvent::LeftButtonDown);
     widget->mousePressEvent(&mouseEvent);
 }
 

@@ -39,7 +39,6 @@ set(ANIMATION_SOURCES
     animations/ColorAnimation.cpp
     animations/VariantAnimation.cpp
     AnimationRegistry.cpp
-    AnimationScheduler.cpp
 )
 
 set(ANIMATION_HEADERS
@@ -48,8 +47,15 @@ set(ANIMATION_HEADERS
     animations/Variant.h
     animations/VariantAnimation.h
     AnimationRegistry.h
-    AnimationScheduler.h
 )
+
+if (BUILD_MACOS)
+    list(APPEND ANIMATION_SOURCES macos/AnimationScheduler.cpp)
+    list(APPEND ANIMATION_HEADERS macos/AnimationScheduler.h)
+elseif (BUILD_WINDOWS)
+    list(APPEND ANIMATION_SOURCES windows/AnimationScheduler.cpp)
+    list(APPEND ANIMATION_HEADERS windows/AnimationScheduler.h)
+endif ()
 
 add_library(Core STATIC ${SOURCES} ${HEADERS} ${ANIMATION_SOURCES} ${ANIMATION_HEADERS})
 add_library(Mango::Core ALIAS Core)

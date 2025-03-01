@@ -11,6 +11,7 @@ set(SOURCES
     ViewObjC.mm
     Application.mm
     Canvas.mm
+    ../common/GraphicsContext.cpp
 )
 
 set(HEADERS
@@ -20,12 +21,14 @@ set(HEADERS
     ViewObjC.h
     CocoaWindowObjC.h
     Canvas.h
+    ../common/GraphicsContext.h
 )
 
 add_library(Widgets STATIC ${SOURCES} ${HEADERS})
 add_library(Mango::Widgets ALIAS Widgets)
 
 target_link_libraries(Widgets PUBLIC Mango::Core
+    Mango::CoreGraphicsEngine
     "-framework Cocoa"
     "-framework Metal"
     "-framework QuartzCore"
@@ -39,8 +42,11 @@ target_include_directories(Widgets PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/core/animations>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/core>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/common>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/macos>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/graphics/coregraphics>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/macos>
 )
 

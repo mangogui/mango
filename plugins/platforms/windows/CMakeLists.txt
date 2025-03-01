@@ -35,6 +35,7 @@ target_include_directories(Widgets PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/graphics/direct2d>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/windows>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/windows>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/common>

@@ -6,6 +6,7 @@
 #include <PaintEvent.h>
 #include <MouseEvent.h>
 #include <ResizeEvent.h>
+#include <CoreGraphicsContext.h>
 
 
 class Widget {
@@ -24,7 +25,7 @@ public:
 
     virtual void resizeEvent(ResizeEvent *event);
 
-    virtual void paintEvent(const PaintEvent &event);
+    virtual void paintEvent(PaintEvent *event);
 
     void maximize();
 
@@ -60,9 +61,22 @@ public:
 
     [[nodiscard]] MNSize size() const;
 
+    CoreGraphicsContext* getGraphicsContext() {
+        return graphics.get();
+    }
+
+    void setCGContextRef(CGContextRef _context) {
+        context = _context;
+        graphics->setCGContextRef(_context);
+    }
+
+    void display();
+
 protected:
     void *window_wrapper; // NSWindow id
     void *view_wrapper{nullptr}; // NSView id
+    CGContextRef context;
+    std::unique_ptr<CoreGraphicsContext> graphics;
     Widget *parent;
 private:
     std::string object_name;

@@ -6,4 +6,4 @@ find_package(Mango REQUIRED COMPONENTS Widgets Core)
 
 add_executable(MangoBasedProject main.cpp Switch.h Switch.cpp)
 
-target_link_libraries(MangoBasedProject PRIVATE Mango::Widgets Mango::Core d2d1 dwrite gdi32 comctl32)
+target_link_libraries(MangoBasedProject PRIVATE Mango::Widgets Mango::Core)
