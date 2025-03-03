@@ -19,6 +19,11 @@ public:
 
     inline void set_height(float h);
 
+    void resize(float width, float height) {
+        set_width(width);
+        set_height(height);
+    }
+
     [[nodiscard]] inline MNSize size() const;
 
     inline void move(float new_x, float new_y);

@@ -15,6 +15,12 @@
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect]; // Call the super implementation
 
+    NSGraphicsContext *graphicsContext = [NSGraphicsContext currentContext];
+    if (!graphicsContext) {
+        NSLog(@"ViewObjC: NSGraphicsContext is null, window might be invalid.");
+        return;
+    }
+
     CGContextRef context = [[NSGraphicsContext currentContext] CGContext];
     if (!context) {
         NSLog(@"ViewObjC: CGContext is null");

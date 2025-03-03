@@ -2,16 +2,30 @@
 
 #include <string>
 #include <utility>
+#include <memory>
+
 #include <MNSize.h>
 #include <PaintEvent.h>
 #include <MouseEvent.h>
 #include <ResizeEvent.h>
 #include <CoreGraphicsContext.h>
+#include <PlatformWindow.h>
+#include <PlatformView.h>
 
 
 class Widget {
+    std::unique_ptr<PlatformWindow> window;
+    std::unique_ptr<PlatformView> view;
 public:
     explicit Widget(Widget *parent = nullptr);
+
+    PlatformView *getView() {
+        return view.get();
+    }
+
+    PlatformWindow *getWindow() {
+        return window.get();
+    }
 
     ~Widget();
 
@@ -20,11 +34,8 @@ public:
     void resize(int width, int height);
 
     virtual void mousePressEvent(MouseEvent *event);
-
     virtual void mouseReleaseEvent(MouseEvent *event);
-
     virtual void resizeEvent(ResizeEvent *event);
-
     virtual void paintEvent(PaintEvent *event);
 
     void maximize();
@@ -57,7 +68,7 @@ public:
 
     [[nodiscard]] const std::string &objectName() const { return object_name; }
 
-    [[nodiscard]] void *getNSViewId() const { return view_wrapper; }
+    [[nodiscard]] void *getNSViewId() const { return view.get(); }
 
     [[nodiscard]] MNSize size() const;
 
@@ -73,14 +84,12 @@ public:
     void display();
 
 protected:
-    void *window_wrapper; // NSWindow id
-    void *view_wrapper{nullptr}; // NSView id
     CGContextRef context;
     std::unique_ptr<CoreGraphicsContext> graphics;
     Widget *parent;
 private:
     std::string object_name;
-
-    void init_view();
+    std::string m_windowTitle;
+    MNRect m_geometry;
 };
 

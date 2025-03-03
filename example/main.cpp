@@ -8,6 +8,7 @@ int main(int argc, char* argv[]) {
 
     auto *outerWidget = new Widget();
     outerWidget->setObjectName("Window");
+
     auto *toggleSwitch = new Switch(outerWidget);
     toggleSwitch->setObjectName("Switch");
 

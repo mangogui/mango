@@ -1,160 +1,86 @@
 #import "Cocoa/Cocoa.h"
 
 #include <Widget.h>
-#include "CocoaWindowObjC.h"
-#include "WindowDelegate.h"
-#include "ViewObjC.h"
 #include <Color.h>
-#include <PainterPath.h>
 #include <Application.h>
 #include <MNRect.h>
 #include <MNSize.h>
+#include <CocoaWindow.h>
+#include <CocoaView.h>
 
-
-Widget::Widget(Widget *_parent) {
+Widget::Widget(Widget *_parent): parent(_parent), m_geometry(MNRect(0, 0, 100, 100)) {
     @autoreleasepool {
         Application::instance().addWidget(this);
-        parent = _parent;
 
-        init_view();
+        CGContextRef _context = [[NSGraphicsContext currentContext] CGContext];
+        graphics = std::make_unique<CoreGraphicsContext>(_context);
 
-        // It is _a child widget
-        if (parent) {
-            NSWindow *parent_window = static_cast<id>(parent->window_wrapper);
-            NSView *parent_view = [parent_window contentView];
+        if (parent == nullptr) {
+            window = std::make_unique<CocoaWindow>();
+            view = std::make_unique<CocoaView>(static_cast<NSWindow*>(window->getNativeWindow()), this);
 
-            NSRect frame = NSMakeRect(0, 0, 200, 200); // Set a non-zero size
-            [static_cast<id>(view_wrapper) setFrame:frame];
-
-            NSLog(@"Adding child view: %@", view_wrapper);
-            [parent_view addSubview:static_cast<id>(view_wrapper)];
-            [static_cast<id>(view_wrapper) setNeedsDisplay:YES];
-        }
-        // It is _a top-level widget
-        else {
-            NSRect rect = NSMakeRect(0, 0, 400, 400);
-            NSWindowStyleMask styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskMiniaturizable
-                                          | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable;
-            window_wrapper = [[CocoaWindowObjC alloc] initWithContentRect:rect
-                                                                styleMask:styleMask
-                                                                  backing:NSBackingStoreBuffered
-                                                                    defer:NO];
-            WindowDelegate *windowDelegate = [[WindowDelegate alloc] init];
-            CocoaWindowObjC *window = static_cast<id>(window_wrapper);
-            [window setDelegate:windowDelegate];
-            [window setShowsResizeIndicator:YES];
-            [window setAcceptsMouseMovedEvents:YES];
-            [window setLevel:NSNormalWindowLevel];
-            [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary |
-                                          NSWindowCollectionBehaviorManaged];
-            [window setTitle:@"MainWindow"];
-
-            NSView *view = static_cast<id>(view_wrapper);
-            [window setContentView:view];
-            [window makeFirstResponder:view];
-            [window center];
-            [window display];
-            [window orderFrontRegardless];
+            auto parentWindow = static_cast<NSWindow*>(window->getNativeWindow());
+            auto parentView = static_cast<NSView*>(view->getNativeView());
+            [parentWindow setContentView:parentView];
+            [parentWindow makeFirstResponder:parentView];
+            [parentWindow center];
+        } else {
+            view = std::make_unique<CocoaView>(static_cast<NSView*>(parent->getView()->getNativeView()), this);
         }
     }
 }
 
 Widget::~Widget() {
-    @autoreleasepool {
-        if (window_wrapper)
-            [static_cast<id>(window_wrapper) release];
-    }
 }
 
 std::string Widget::windowTitle() const {
-    @autoreleasepool {
-        return [[static_cast<id>(window_wrapper) title] UTF8String];
-    }
+    return m_windowTitle;
 }
 
 void Widget::setWindowTitle(const std::string &title) {
-    @autoreleasepool {
-        [static_cast<id>(window_wrapper) setTitle:[NSString stringWithUTF8String:title.c_str()]];
-    }
+    m_windowTitle = title;
+    window->setTitle(title);
 }
 
 void Widget::resize(int width, int height) {
-    @autoreleasepool {
-        NSSize size = CGSizeMake(width, height);
-        if (!parent) {
-            [static_cast<id>(window_wrapper) setContentSize:size];
-        } else {
-            [static_cast<id>(view_wrapper) setFrameSize:size];
-            [static_cast<id>(view_wrapper) setBounds:NSMakeRect(0, 0, size.width, size.height)];
-        }
+    m_geometry.resize(width, height);
+    if (!parent) {
+        window->resize(width, height);
+    } else {
+        view->resize(width, height);
     }
 }
 
 MNSize Widget::size() const {
-    @autoreleasepool {
-        NSRect frame = [static_cast<id>(view_wrapper) frame];
-        MNSize _size = MNSize(frame.size.width, frame.size.height);
-        return _size;
-    }
+    return m_geometry.size();
 }
 
 void Widget::maximize() {
-    @autoreleasepool {
-        [static_cast<id>(window_wrapper) setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
-    }
+//    @autoreleasepool {
+//        [static_cast<id>(window_wrapper) setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
+//    }
 }
 
 void Widget::fullscreen() {
-    @autoreleasepool {
-        [static_cast<id>(window_wrapper) setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
-        [static_cast<id>(window_wrapper) toggleFullScreen:static_cast<id>(window_wrapper)];
-    }
-}
-
-void Widget::init_view() {
-    @autoreleasepool {
-        view_wrapper = [[ViewObjC alloc] initWithWidget:this];
-        [static_cast<id>(view_wrapper) setWantsLayer:YES];
-        [[static_cast<id>(view_wrapper) window] setOpaque:NO];
-        ViewObjC *view = static_cast<id>(view_wrapper);
-        view.layer.opaque = NO;
-        view_wrapper = view;
-        CGContextRef _context = [[NSGraphicsContext currentContext] CGContext];
-        graphics = std::make_unique<CoreGraphicsContext>(_context);
-    }
+//    @autoreleasepool {
+//        [static_cast<id>(window_wrapper) setFrame:[[NSScreen mainScreen] visibleFrame] display:YES];
+//        [static_cast<id>(window_wrapper) toggleFullScreen:static_cast<id>(window_wrapper)];
+//    }
 }
 
 void Widget::paintEvent(PaintEvent *event) {
 }
 
 void Widget::setBackgroundColor(const std::string &hexColor) {
-    Color color(hexColor);
-
-    CGFloat redFloat = color.red() / 255.0;
-    CGFloat greenFloat = color.green() / 255.0;
-    CGFloat blueFloat = color.blue() / 255.0;
-
-    // Create and return the NSColor object
-    NSColor *nscolor = [NSColor colorWithCalibratedRed:redFloat green:greenFloat blue:blueFloat alpha:1.0];
-
-    // Set the background color
-    [[static_cast<id>(view_wrapper) layer] setBackgroundColor:[nscolor CGColor]];
+    window->setBackgroundColor(hexColor);
 }
 
 
 void Widget::move(int x, int y) {
     if (parent) {
-        NSView *view = static_cast<id>(view_wrapper);
-        [view setFrameOrigin:NSMakePoint(x, y)];
-        [view setNeedsDisplay:YES];
+        view->move(x, y);
     } else {
-        NSWindow *window = static_cast<id>(window_wrapper);
-        NSScreen *screen = [NSScreen mainScreen];
-        CGFloat screenHeight = [screen frame].size.height;
-        // Adjust y-coordinate for top-left origin
-        CGFloat adjustedY = screenHeight - y;
-        [window setFrameTopLeftPoint:NSMakePoint(x, adjustedY)];
-        [window display];
+        window->move(x, y);
     }
 }
 
@@ -173,51 +99,34 @@ void Widget::resizeEvent(ResizeEvent *event) {
 }
 
 void Widget::update() {
-    [static_cast<id>(view_wrapper) setNeedsDisplay:YES];
+    view->update();
 }
 
 float Widget::scaleFactor() const {
-    NSWindow *window = static_cast<id>(window_wrapper);
-    NSScreen *windowScreen = [window screen];
-    CGFloat screenScale = [windowScreen backingScaleFactor];
-    return screenScale;
+//    NSWindow *window = static_cast<id>(window_wrapper);
+//    NSScreen *windowScreen = [window screen];
+//    CGFloat screenScale = [windowScreen backingScaleFactor];
+//    return screenScale;
 }
 
 MNRect Widget::rect() const {
-    MNSize widgetSize = size();
-    int x = 0, y = 0;
-    if (view_wrapper) {
-        @autoreleasepool {
-            NSRect frame = [static_cast<id>(view_wrapper) frame];
-            x = frame.origin.x;
-            y = frame.origin.y;
-        }
-    }
-    return MNRect(x, y, widgetSize.getWidth(), widgetSize.getHeight());
+    return m_geometry;
 }
 
 int Widget::width() const {
-    NSRect frame = [static_cast<id>(view_wrapper) frame];
-    int _w = frame.size.width;
-    return _w;
+    return m_geometry.width();
 }
 
 int Widget::height() const {
-    NSRect frame = [static_cast<id>(view_wrapper) frame];
-    int _h = frame.size.height;
-    return _h;
+    return m_geometry.height();
 }
 
 int Widget::x() const {
-    NSRect frame = [static_cast<id>(view_wrapper) frame];
-    int x = frame.origin.x;
-    return x;
+    return m_geometry.x();
 }
 
 int Widget::y() const {
-    NSRect frame = [static_cast<id>(view_wrapper) frame];
-    int y = frame.origin.y;
-    return y;
+    return m_geometry.y();
 }
 
 void Widget::setObjectName(const std::string &obj_name) {
@@ -225,6 +134,6 @@ void Widget::setObjectName(const std::string &obj_name) {
 }
 
 void Widget::display() {
-    [static_cast<id>(view_wrapper) setNeedsDisplay:YES];
+    window->show();
 }
 

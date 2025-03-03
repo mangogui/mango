@@ -11,6 +11,10 @@ set(SOURCES
     ViewObjC.mm
     Application.mm
     Canvas.mm
+    PlatformView.cpp
+    PlatformWindow.cpp
+    CocoaView.mm
+    CocoaWindow.mm
     ../common/GraphicsContext.cpp
 )
 
@@ -21,6 +25,10 @@ set(HEADERS
     ViewObjC.h
     CocoaWindowObjC.h
     Canvas.h
+    PlatformView.h
+    PlatformWindow.h
+    CocoaView.h
+    CocoaWindow.h
     ../common/GraphicsContext.h
 )
 
