@@ -1,6 +1,6 @@
 #pragma once
 
-#include <PlatformWindow.h>
+#include "plugins/platforms/common/PlatformWindow.h"
 
 #include <Cocoa/Cocoa.h>
 

@@ -9,8 +9,8 @@
 #include <MouseEvent.h>
 #include <ResizeEvent.h>
 #include <CoreGraphicsContext.h>
-#include <PlatformWindow.h>
-#include <PlatformView.h>
+#include "plugins/platforms/common/PlatformWindow.h"
+#include "plugins/platforms/common/PlatformView.h"
 
 
 class Widget {

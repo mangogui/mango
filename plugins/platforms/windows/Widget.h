@@ -21,24 +21,17 @@
 #include <PaintEvent.h>
 #include <MouseEvent.h>
 #include <ResizeEvent.h>
+#include <PlatformWindow.h>
+#include <Object.h>
+#include <memory>
 
 #include <Direct2DGraphicsContext.h>
 
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM uParam, LPARAM lParam);
 
-class Object {
-public:
-    std::string objectName() { return m_objectName; };
-
-    void setObjectName(std::string objectName) {
-        m_objectName = std::move(objectName);
-    }
-private:
-    std::string m_objectName;
-};
-
 class Widget: public Object {
+    std::unique_ptr<PlatformWindow> window;
 public:
     explicit Widget(Widget *parent = nullptr);
 
@@ -66,30 +59,27 @@ public:
     [[nodiscard]] MNSize size() const;
     [[nodiscard]] MNRect rect() const;
     [[nodiscard]] std::string getWindowTitle() const;
-    [[nodiscard]] HWND getWinId() const { return m_hWnd; }
+    [[nodiscard]] HWND getWinId() const { return static_cast<HWND>(window->getNativeWindow()); }
 
     void addChild(Widget* child);
     void setParent(Widget* parent);
 
     Direct2DGraphicsContext* getGraphicsContext() {
-        return graphics.get();
+        Direct2DGraphicsContext* _c = static_cast<Direct2DGraphicsContext*>(window->getGraphicsContext());
+        return _c;
+    }
+
+    PlatformWindow* getWindow() {
+        return window.get();
     }
 
     void update();
 
     ~Widget();
 private:
-    HINSTANCE m_hInstance;
-    HWND m_hWnd;
-    HDC hdc;
     std::string window_title;
     Widget *m_parent;
-    MNRect geometry;
-
+    std::string m_windowTitle;
     std::vector<Widget*> m_children;
-
-    std::unique_ptr<Direct2DGraphicsContext> graphics;
-
-    void createWindow();
 };
 

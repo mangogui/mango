@@ -112,7 +112,7 @@ void MNRect::move(float new_x, float new_y) {
     p2.setY(new_y + h);
 }
 
-inline MNSize MNRect::size() const {
+MNSize MNRect::size() const {
     return MNSize(width(), height());
 }
 

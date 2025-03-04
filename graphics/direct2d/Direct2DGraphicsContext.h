@@ -12,7 +12,7 @@
 class Direct2DGraphicsContext: public GraphicsContext {
 public:
     explicit Direct2DGraphicsContext(HWND winId);
-    ~Direct2DGraphicsContext();
+    ~Direct2DGraphicsContext() override;
 
     void beginDraw() override;
     void endDraw() override;

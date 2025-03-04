@@ -11,14 +11,20 @@ set(SOURCES
     Canvas.cpp
     Widget.cpp
     WindowManager.cpp
-    ../common/GraphicsContext.cpp)
+    Win32Window.cpp
+    Object.cpp
+    ../common/GraphicsContext.cpp
+    ../common/PlatformWindow.cpp)
 
 set(HEADERS
     Application.h
     Canvas.h
     Widget.h
     WindowManager.h
-    ../common/GraphicsContext.h)
+    Win32Window.h
+    Object.h
+    ../common/GraphicsContext.h
+    ../common/PlatformWindow.h)
 
 add_library(Widgets STATIC ${SOURCES} ${HEADERS})
 add_library(Mango::Widgets ALIAS Widgets)
