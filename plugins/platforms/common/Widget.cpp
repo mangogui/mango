@@ -16,16 +16,34 @@ Widget::Widget(Widget *parent)
     window = std::make_unique<Win32Window>(parentWindow);
 }
 
-std::string Widget::getWindowTitle() const {
-    return m_windowTitle;
+void Widget::addChild(Widget *child) {
+    m_children.push_back(child);
+    child->setParent(this);
 }
 
-int Widget::x() const noexcept {
-    return (int) window->x();
+void Widget::setParent(Widget* parent) {
+    m_parent = parent;
 }
 
-int Widget::y() const noexcept {
-    return (int) window->y();
+void Widget::center() {
+    // TODO
+}
+
+void Widget::move(int x, int y) {
+    window->move(x, y);
+}
+
+void Widget::resize(int w, int h) {
+    window->resize(w, h);
+    update();
+}
+
+void Widget::maximize() {
+    window->maximize();
+}
+
+void Widget::fullscreen() {
+
 }
 
 void Widget::display() {
@@ -39,42 +57,33 @@ void Widget::display() {
     }
 }
 
-void Widget::center() {
-    // TODO
-}
-
-Widget::~Widget() {
-}
-
-void Widget::move(int x, int y) {
-    window->move(x, y);
-}
-
-void Widget::resize(int w, int h) {
-    window->resize(w, h);
-    update();
-}
-
-void Widget::mousePressEvent(MouseEvent *event) {}
-void Widget::mouseReleaseEvent(MouseEvent *event) {}
-void Widget::resizeEvent(ResizeEvent *event) {}
-void Widget::paintEvent(PaintEvent *event) {}
-
-
-void Widget::fullscreen() {
-
-}
-
 void Widget::update() {
     window->update();
 }
 
-void Widget::maximize() {
-    window->maximize();
+void Widget::setWindowTitle(const std::string& title) {
+    m_windowTitle = title;
+    window->setTitle(title);
 }
 
 void Widget::setBackgroundColor(const std::string &hexColor) {
 
+}
+
+GraphicsContext* Widget::getGraphicsContext() {
+    return window->getGraphicsContext();
+}
+
+PlatformWindow* Widget::getWindow() {
+    return window.get();
+}
+
+int Widget::x() const noexcept {
+    return (int) window->x();
+}
+
+int Widget::y() const noexcept {
+    return (int) window->y();
 }
 
 int Widget::width() const {
@@ -93,18 +102,8 @@ MNRect Widget::rect() const {
     return window->geometry();
 }
 
-void Widget::addChild(Widget *child) {
-    m_children.push_back(child);
-    child->setParent(this);
-}
-
-void Widget::setParent(Widget* parent) {
-    m_parent = parent;
-}
-
-void Widget::setWindowTitle(const std::string& title) {
-    m_windowTitle = title;
-    window->setTitle(title);
+std::string Widget::getWindowTitle() const {
+    return m_windowTitle;
 }
 
 void Widget::handleEvent(Event *event) {
@@ -126,3 +125,8 @@ void Widget::handleEvent(Event *event) {
         }
     }
 }
+
+void Widget::mousePressEvent(MouseEvent *event) {}
+void Widget::mouseReleaseEvent(MouseEvent *event) {}
+void Widget::resizeEvent(ResizeEvent *event) {}
+void Widget::paintEvent(PaintEvent *event) {}

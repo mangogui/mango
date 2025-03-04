@@ -9,22 +9,22 @@ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 set(SOURCES
     Application.cpp
     Canvas.cpp
-    Widget.cpp
     WindowManager.cpp
     Win32Window.cpp
     Object.cpp
     ../common/GraphicsContext.cpp
-    ../common/PlatformWindow.cpp)
+    ../common/PlatformWindow.cpp
+    ../common/Widget.cpp)
 
 set(HEADERS
     Application.h
     Canvas.h
-    Widget.h
     WindowManager.h
     Win32Window.h
     Object.h
     ../common/GraphicsContext.h
-    ../common/PlatformWindow.h)
+    ../common/PlatformWindow.h
+    ../common/Widget.h)
 
 add_library(Widgets STATIC ${SOURCES} ${HEADERS})
 add_library(Mango::Widgets ALIAS Widgets)

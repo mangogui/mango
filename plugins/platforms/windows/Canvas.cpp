@@ -1,4 +1,5 @@
 #include "Canvas.h"
+#include <Direct2DGraphicsContext.h>
 
 
 Canvas::Canvas(Widget *widget) : _widget(widget), context(widget->getGraphicsContext()) {

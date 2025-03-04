@@ -30,7 +30,7 @@ public:
     void move(int x, int y) override;
     void update() override;
 
-    void* getGraphicsContext() override {
+    GraphicsContext* getGraphicsContext() override {
         return graphics.get();
     }
 };

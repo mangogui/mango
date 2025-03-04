@@ -8,6 +8,7 @@
 #include <ResizeEvent.h>
 #include <PaintEvent.h>
 #include <MouseEvent.h>
+#include <GraphicsContext.h>
 
 
 class PlatformWindow: public Object {
@@ -22,7 +23,7 @@ public:
 
     // Getters
     virtual void* getNativeWindow() = 0;
-    virtual void* getGraphicsContext() = 0;
+    virtual GraphicsContext* getGraphicsContext() = 0;
     [[nodiscard]] const MNRect& geometry() const { return m_geometry; }
     [[nodiscard]] MNSize size() const { return m_geometry.size(); }
 

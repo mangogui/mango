@@ -4,8 +4,8 @@
 #include <Widget.h>
 #include <Color.h>
 #include <memory>
+#include <GraphicsContext.h>
 
-#include <Direct2DGraphicsContext.h>
 #include <FillStyle.h>
 
 class Canvas {
@@ -29,6 +29,6 @@ public:
     ~Canvas();
 
 private:
-    Direct2DGraphicsContext* context;
+    GraphicsContext* context;
     void createRenderTarget();
 };
