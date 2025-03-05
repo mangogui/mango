@@ -102,7 +102,7 @@ void Win32Window::setBackgroundColor(const std::string &hexColor) {
 
 }
 
-void *Win32Window::getNativeWindow() {
+void *Win32Window::getNativeObject() {
     return m_hWnd;
 }
 

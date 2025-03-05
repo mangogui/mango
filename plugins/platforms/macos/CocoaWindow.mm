@@ -2,58 +2,45 @@
 #include "WindowDelegate.h"
 #include "CocoaWindowObjC.h"
 #include <Color.h>
+#include "ViewObjC.h"
+#include <Cocoa/Cocoa.h>
+#include <CoreGraphicsContext.h>
 
-CocoaWindow::CocoaWindow() {
-    @autoreleasepool {
-        NSRect rect = NSMakeRect(0, 0, 400, 400);
-        NSWindowStyleMask styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskMiniaturizable
-                                      | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable;
-        window = [[CocoaWindowObjC alloc] initWithContentRect:rect
-                                             styleMask:styleMask
-                                               backing:NSBackingStoreBuffered
-                                                 defer:NO];
-        [window setTitle:@"Window"];
-        [window center];
-
-        WindowDelegate *windowDelegate = [[WindowDelegate alloc] init];
-        [window setDelegate:windowDelegate];
-
-        [window setShowsResizeIndicator:YES];
-        [window setAcceptsMouseMovedEvents:YES];
-        [window setLevel:NSNormalWindowLevel];
-        [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary |
-                                      NSWindowCollectionBehaviorManaged];
-    }
+CocoaWindow::CocoaWindow(Widget *widget): PlatformWindow(widget) {
+    CGContextRef _context = [[NSGraphicsContext currentContext] CGContext];
+    m_graphicsContext = new CoreGraphicsContext(_context);
 }
 
 CocoaWindow::~CocoaWindow() {
     @autoreleasepool {
-        [window release];
+        [(id) m_nativeObject release];
     }
 }
 
 void CocoaWindow::show() {
-    [window makeKeyAndOrderFront:nil];
+    [(NSWindow *) m_nativeObject makeKeyAndOrderFront:nil];
 }
 
 void CocoaWindow::hide() {
-    [window orderOut:nil];
+    [(NSWindow *)m_nativeObject orderOut:nil];
 }
 
-void CocoaWindow::resize(int width, int height) {
-    [window setContentSize:NSMakeSize(width, height)];
+void CocoaWindow::resize(int w, int h) {
+    if (!m_nativeObject) return;
+    [(NSWindow *)m_nativeObject setContentSize:NSMakeSize(w, h)];
 }
 
 void CocoaWindow::move(int x, int y) {
+    if (!m_nativeObject) return;
     NSScreen *screen = [NSScreen mainScreen];
     CGFloat screenHeight = [screen frame].size.height;
     CGFloat adjustedY = screenHeight - y;
-    [window setFrameTopLeftPoint:NSMakePoint(x, adjustedY)];
-    [window display];
+    [(NSWindow *)m_nativeObject setFrameTopLeftPoint:NSMakePoint(x, adjustedY)];
+    [(NSWindow *)m_nativeObject display];
 }
 
 void CocoaWindow::setTitle(const std::string &title) {
-    [window setTitle:[NSString stringWithUTF8String:title.c_str()]];
+    [(NSWindow *)m_nativeObject setTitle:[NSString stringWithUTF8String:title.c_str()]];
 }
 
 void CocoaWindow::setBackgroundColor(const std::string &hexColor) {
@@ -66,9 +53,49 @@ void CocoaWindow::setBackgroundColor(const std::string &hexColor) {
 
     NSColor *nscolor = [NSColor colorWithCalibratedRed:redFloat green:greenFloat blue:blueFloat alpha:alphaFloat];
 
-    [[window contentView] setBackgroundColor:nscolor];
+    [[(NSWindow *)m_nativeObject contentView] setBackgroundColor:nscolor];
 }
 
-void* CocoaWindow::getNativeWindow() {
-    return window;
+void CocoaWindow::create() {
+    @autoreleasepool {
+        NSRect rect = NSMakeRect(x(), y(), width(), height());
+        NSWindowStyleMask styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskMiniaturizable
+                                      | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable;
+        NSWindow* window = [[CocoaWindowObjC alloc] initWithContentRect:rect
+                                                              styleMask:styleMask
+                                                                backing:NSBackingStoreBuffered
+                                                                  defer:NO];
+
+        m_nativeObject = window;
+        [window setBackgroundColor:[NSColor whiteColor]];
+        [window setTitle:@"Window"];
+        [window center];
+        WindowDelegate *windowDelegate = [[WindowDelegate alloc] init];
+        [window setDelegate:windowDelegate];
+
+        [window setShowsResizeIndicator:YES];
+        [window setAcceptsMouseMovedEvents:YES];
+        [window setLevel:NSNormalWindowLevel];
+        [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary |
+                                      NSWindowCollectionBehaviorManaged];
+
+        NSView* view = [[ViewObjC alloc] initWithWidget:m_widget];
+
+        [view setWantsLayer:YES];
+        [window setContentView:view];
+        [window makeFirstResponder:view];
+        [window center];
+    }
+}
+
+void CocoaWindow::maximize() {
+
+}
+
+void CocoaWindow::update() {
+    [(NSWindow *)m_nativeObject display];
+}
+
+void CocoaWindow::addSubView(PlatformView *subView) {
+    [[(NSWindow*)m_nativeObject contentView] addSubview:(NSView*)subView->getNativeObject()];
 }

@@ -3,8 +3,9 @@
 #include <PainterPath.h>
 #include <Widget.h>
 #include <Color.h>
-#include <CoreGraphicsContext.h>
 #include <FillStyle.h>
+#include <GraphicsContext.h>
+
 
 class Canvas {
     Widget *_widget;
@@ -27,5 +28,5 @@ public:
     ~Canvas();
 
 private:
-    CoreGraphicsContext* context;
+    GraphicsContext* context;
 };

@@ -1,53 +1,51 @@
 #include "CocoaView.h"
-
+#include <Cocoa/Cocoa.h>
 #include "ViewObjC.h"
 
 
-CocoaView::CocoaView(NSView *parentView, Widget *widget) {
-    if (widget == nullptr) {
-        std::cout << "Widget is null" << std::endl;
-    }
-    @autoreleasepool {
-        NSRect frame = NSMakeRect(0, 0, 200, 200);
-        view = [[ViewObjC alloc] initWithWidget:widget];
-        [view setWantsLayer:YES];
-        if (parentView) {
-            // Case: Child widget -> Add as a subview to the parent
-            [parentView addSubview:view];
-        }
-    }
-}
-
-CocoaView::CocoaView(NSWindow *parentWindow, Widget *widget) {
-    NSRect frame = NSMakeRect(0, 0, 400, 400); // Default size for top-level widget
-    view = [[ViewObjC alloc] initWithWidget:widget];
-    [view setWantsLayer:YES];
-
-    // Set the background color
-    [[view layer] setBackgroundColor:NSColor.whiteColor.CGColor];
+CocoaView::CocoaView(Widget *widget): PlatformView(widget) {
 }
 
 CocoaView::~CocoaView() {
-    [view release];
+    [(id) view release];
+}
+
+void CocoaView::create() {
+    @autoreleasepool {
+        NSRect frame = NSMakeRect(x(), y(), width(), height());
+        view = [[ViewObjC alloc] initWithWidget:m_widget];
+        [(NSView*) view setFrame:frame];
+        [(NSView*)view setWantsLayer:YES];
+    }
 }
 
 void CocoaView::update() {
-    [view setNeedsDisplay:YES];
+    [(id) view setNeedsDisplay:YES];
 }
 
 void CocoaView::setFrame(int x, int y, int width, int height) {
-    [view setFrame:NSMakeRect(x, y, width, height)];
+    [(id) view setFrame:NSMakeRect(x, y, width, height)];
 }
 
-void *CocoaView::getNativeView() {
+void *CocoaView::getNativeObject() {
     return view;
 }
 
 void CocoaView::resize(int width, int height) {
     NSSize size = CGSizeMake(width, height);
-    [view setFrameSize:size];
+    [(id) view setFrameSize:size];
 }
 
 void CocoaView::move(int x, int y) {
-    [view setFrameOrigin:NSMakePoint(x, y)];
+    [(id) view setFrameOrigin:NSMakePoint(x, y)];
 }
+
+void CocoaView::show() {
+    [(id) view setHidden:NO];
+}
+
+void CocoaView::addSubView(PlatformView *subView) {
+    [(NSView*)view addSubview:(NSView*)subView->getNativeObject()];
+}
+
+

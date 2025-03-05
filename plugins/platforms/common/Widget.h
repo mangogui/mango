@@ -14,22 +14,13 @@
 #include <MouseEvent.h>
 #include <ResizeEvent.h>
 #include <PlatformWindow.h>
+#include <PlatformView.h>
 #include <Object.h>
-
-#ifdef _WIN64
-    #include <Direct2DGraphicsContext.h>
-    #include <Windows.h>
-    #pragma comment(lib, "d2d1.lib")
-    #pragma comment(lib, "dwrite.lib")
-    #include <d2d1.h>
-    #include <dwrite.h>
-#elif __APPLE__
-    #include <CoreGraphicsContext.h>
-#endif
 
 
 class Widget: public Object {
-    std::unique_ptr<PlatformWindow> window;
+    PlatformWindow* m_window;
+    PlatformView* m_view;
 public:
     explicit Widget(Widget *parent = nullptr);
     ~Widget();
@@ -44,21 +35,25 @@ public:
     void fullscreen();
     void display();
     void update();
+    void create();
 
     // Setters
     void setWindowTitle(const std::string& title);
     void setBackgroundColor(const std::string &hexColor);
 
-    // Getters
     GraphicsContext* getGraphicsContext();
-    PlatformWindow* getWindow();
-    [[nodiscard]] int x() const noexcept;
-    [[nodiscard]] int y() const noexcept;
+    void setNativeContext(void* context);
+
+    // Getters
+    [[nodiscard]] int x() const;
+    [[nodiscard]] int y() const;
     [[nodiscard]] int width() const;
     [[nodiscard]] int height() const;
-    [[nodiscard]] MNSize size() const;
     [[nodiscard]] MNRect rect() const;
     [[nodiscard]] std::string getWindowTitle() const;
+    [[nodiscard]] const MNRect& geometry();
+    [[nodiscard]] MNSize size() const;
+    [[nodiscard]] bool isCreated() const { return m_isCreated; }
 
     // Events
     virtual void handleEvent(Event *event);
@@ -67,13 +62,36 @@ public:
     virtual void resizeEvent(ResizeEvent *event);
     virtual void paintEvent(PaintEvent *event);
 
-#ifdef _WIN32
-    [[nodiscard]] HWND getWinId() const { return static_cast<HWND>(window->getNativeWindow()); }
-#endif
+    [[nodiscard]] void* getWinId() const {
+        if (isTopLevel())
+            return m_window->getNativeObject();
+        else
+            return m_view->getNativeObject();
+    }
+
+    [[nodiscard]] PlatformWindow* window() const {
+        return m_window;
+    }
+
+    [[nodiscard]] PlatformView* view() const {
+        return m_view;
+    }
+
+    [[nodiscard]] bool isTopLevel() const {
+        return m_isTopLevel;
+    }
+
+    void setWindow(PlatformWindow* win) {
+        m_window = win;
+    }
 
 private:
     Widget *m_parent;
     std::string m_windowTitle;
     std::vector<Widget*> m_children;
+    bool m_isCreated;
+    bool m_isTopLevel;
+    MNRect m_geometry;
+    void* nativeContext;
 };
 

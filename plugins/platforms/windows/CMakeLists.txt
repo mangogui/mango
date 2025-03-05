@@ -21,7 +21,7 @@ set(HEADERS
     Canvas.h
     WindowManager.h
     Win32Window.h
-    Object.h
+    ../common/Object.h
     ../common/GraphicsContext.h
     ../common/PlatformWindow.h
     ../common/Widget.h)

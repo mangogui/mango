@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
-    Widget.mm
     CocoaWindowObjC.mm
     WindowDelegate.mm
     ViewObjC.mm
@@ -16,11 +15,13 @@ set(SOURCES
     CocoaView.mm
     CocoaWindow.mm
     ../common/GraphicsContext.cpp
+    ../common/Widget.cpp
+    ../common/Object.cpp
+    ../common/WindowManager.cpp
 )
 
 set(HEADERS
     Application.h
-    Widget.h
     WindowDelegate.h
     ViewObjC.h
     CocoaWindowObjC.h
@@ -30,6 +31,9 @@ set(HEADERS
     CocoaView.h
     CocoaWindow.h
     ../common/GraphicsContext.h
+    ../common/Widget.h
+    ../common/Object.h
+    ../common/WindowManager.h
 )
 
 add_library(Widgets STATIC ${SOURCES} ${HEADERS})

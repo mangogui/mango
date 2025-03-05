@@ -19,8 +19,8 @@ public:
     void setBackgroundColor(const std::string &hexColor) override;
 
     // Getters
-    [[nodiscard]] HWND getWinId() const { return m_hWnd; }
-    void* getNativeWindow() override;
+    [[nodiscard]] void* getWinId() const { return m_hWnd; }
+    void* getNativeObject() override;
 
     void create() override;
     void show() override;

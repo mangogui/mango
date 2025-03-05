@@ -1,21 +1,23 @@
 #pragma once
 
-#include "plugins/platforms/common/PlatformView.h"
-#include <Widget.h>
-#include <Cocoa/Cocoa.h>
+#include <PlatformView.h>
+class Widget;
 
 class CocoaView : public PlatformView {
 private:
-    NSView *view;
+    void* view; // NSView*
 public:
-    explicit CocoaView(NSView *parentView, Widget *widget);
-    explicit CocoaView(NSWindow *parentWindow, Widget *widget);
+    explicit CocoaView(Widget *widget);
     ~CocoaView() override;
 
+    void create() override;
+    void show() override;
     void update() override;
     void setFrame(int x, int y, int width, int height) override;
     void resize(int width, int height) override;
     void move(int x, int y) override;
-    void * getNativeView() override;
+    void * getNativeObject() override;
+
+    void addSubView(PlatformView* subView) override;
 };
 

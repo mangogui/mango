@@ -1,19 +1,36 @@
 #include "Widget.h"
 #include "MNRect.h"
 #include "MouseEvent.h"
-
 #include "Color.h"
-#include <Win32Window.h>
 #include "WindowManager.h"
+
+#ifdef _WIN64
+    #include <Direct2DGraphicsContext.h>
+    #include <Windows.h>
+    #pragma comment(lib, "d2d1.lib")
+    #pragma comment(lib, "dwrite.lib")
+    #include <d2d1.h>
+    #include <dwrite.h>
+    #include <Win32Window.h>
+    typedef Window = Win32Window;
+#elif __APPLE__
+    #include <CoreGraphicsContext.h>
+    #include <CocoaWindow.h>
+    #include <CocoaView.h>
+#endif
 
 
 Widget::Widget(Widget *parent)
-        : m_parent(parent), Object() {
-    if (m_parent) parent->addChild(this);
-    Win32Window* parentWindow = nullptr;
-    if (parent)
-        parentWindow = dynamic_cast<Win32Window*>(parent->getWindow());
-    window = std::make_unique<Win32Window>(parentWindow);
+        : m_isCreated(false), m_parent(parent),
+        Object(), m_isTopLevel(parent==nullptr) {
+    if (m_parent)
+        m_parent->addChild(this);
+}
+
+Widget::~Widget() {
+    for (Widget* child : m_children) {
+        delete child;
+    }
 }
 
 void Widget::addChild(Widget *child) {
@@ -30,40 +47,87 @@ void Widget::center() {
 }
 
 void Widget::move(int x, int y) {
-    window->move(x, y);
+    m_geometry.move(x, y);
+    if (!isCreated()) return;
+    m_window->move(x, y);
 }
 
 void Widget::resize(int w, int h) {
-    window->resize(w, h);
+    m_geometry.resize(w, h);
+    if (!isCreated()) return;
+    if (isTopLevel() and m_window)
+        m_window->resize(w, h);
+    else if (!isTopLevel() and m_view)
+        m_view->resize(w, h);
+    else
+        return;
+
     update();
 }
 
 void Widget::maximize() {
-    window->maximize();
+    m_window->maximize();
 }
 
 void Widget::fullscreen() {
 
 }
 
+void Widget::create() {
+    if (isTopLevel())
+#ifdef _WIN64
+        m_window = std::make_unique<Win32Window>(parentWindow);
+        m_view = std::make_unique<Win32View>(m_window->getNativeObject(), this);
+#elif __APPLE__
+        m_window = new CocoaWindow(this);
+#endif
+    else {
+        m_view = new CocoaView(this);
+    }
+
+    if (isTopLevel()) {
+        m_window->setObjectName(objectName());
+        m_window->create();
+    }
+    else {
+        m_view->create();
+    }
+
+    if (m_parent) {
+        if (m_parent->isTopLevel()) {
+            m_parent->window()->addSubView(m_view);
+        }
+        else {
+            m_parent->view()->addSubView(m_view);
+        }
+    }
+
+    m_isCreated = true;
+}
+
 void Widget::display() {
-    window->setObjectName(objectName());
-    window->create();
+    create();
     WindowManager::insertWidget(getWinId(), this);
-    window->show();
     for (Widget* child : m_children) {
+        child->setWindow(this->window());
+        if (child->window() == nullptr)
+            std::cout << "Child window is null" << std::endl;
         child->display();
         child->update();
     }
+
+    if (isTopLevel())
+        m_window->show();
 }
 
 void Widget::update() {
-    window->update();
+    if (!isTopLevel())
+        m_view->update();
 }
 
 void Widget::setWindowTitle(const std::string& title) {
     m_windowTitle = title;
-    window->setTitle(title);
+    m_window->setTitle(title);
 }
 
 void Widget::setBackgroundColor(const std::string &hexColor) {
@@ -71,35 +135,35 @@ void Widget::setBackgroundColor(const std::string &hexColor) {
 }
 
 GraphicsContext* Widget::getGraphicsContext() {
-    return window->getGraphicsContext();
+    return (GraphicsContext*) m_window->getGraphicsContext();
 }
 
-PlatformWindow* Widget::getWindow() {
-    return window.get();
+int Widget::x() const {
+    return (int) m_geometry.x();
 }
 
-int Widget::x() const noexcept {
-    return (int) window->x();
-}
-
-int Widget::y() const noexcept {
-    return (int) window->y();
+int Widget::y() const {
+    return (int) m_geometry.y();
 }
 
 int Widget::width() const {
-    return window->geometry().width();
+    return (int) m_geometry.width();
 }
 
 int Widget::height() const {
-    return window->geometry().height();
+    return (int) m_geometry.height();
+}
+
+const MNRect& Widget::geometry() {
+    return m_geometry;
 }
 
 MNSize Widget::size() const {
-    return window->geometry().size();
+    return m_geometry.size();
 }
 
 MNRect Widget::rect() const {
-    return window->geometry();
+    return m_window->geometry();
 }
 
 std::string Widget::getWindowTitle() const {
@@ -130,3 +194,8 @@ void Widget::mousePressEvent(MouseEvent *event) {}
 void Widget::mouseReleaseEvent(MouseEvent *event) {}
 void Widget::resizeEvent(ResizeEvent *event) {}
 void Widget::paintEvent(PaintEvent *event) {}
+
+void Widget::setNativeContext(void *context) {
+    nativeContext = context;
+    getGraphicsContext()->setNativeContext(context);
+}

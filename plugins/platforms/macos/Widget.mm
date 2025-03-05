@@ -8,6 +8,7 @@
 #include <CocoaWindow.h>
 #include <CocoaView.h>
 
+
 Widget::Widget(Widget *_parent): parent(_parent), m_geometry(MNRect(0, 0, 100, 100)) {
     @autoreleasepool {
         Application::instance().addWidget(this);
@@ -107,6 +108,7 @@ float Widget::scaleFactor() const {
 //    NSScreen *windowScreen = [window screen];
 //    CGFloat screenScale = [windowScreen backingScaleFactor];
 //    return screenScale;
+    return 1.0;
 }
 
 MNRect Widget::rect() const {

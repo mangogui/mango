@@ -1,5 +1,6 @@
 #include <Canvas.h>
 #include <Cocoa/Cocoa.h>
+#include <CoreGraphicsContext.h>
 
 CGColor *createNSColor(const Color &color) {
     return [[NSColor colorWithCalibratedRed:color.red() / 255.0

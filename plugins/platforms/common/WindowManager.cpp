@@ -1,12 +1,13 @@
 #include "WindowManager.h"
-#include <Win32Window.h>
 #include <ResizeEvent.h>
 #include <PaintEvent.h>
 #include <MouseEvent.h>
 #include <Widget.h>
 
-std::map<HWND, Object*> WindowManager::windowMapper;
+std::map<void*, Object*> WindowManager::windowMapper;
 
+#ifdef _WIN32
+#include <Win32Window.h>
 LRESULT CALLBACK WindowManager::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     auto* window = reinterpret_cast<Win32Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
@@ -68,3 +69,5 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, 
     }
     return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
+
+#endif

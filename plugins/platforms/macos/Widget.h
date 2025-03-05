@@ -76,15 +76,14 @@ public:
         return graphics.get();
     }
 
-    void setCGContextRef(CGContextRef _context) {
+    void setNativeContext(CGContextRef _context) {
         context = _context;
-        graphics->setCGContextRef(_context);
+        graphics->setNativeContext(_context);
     }
 
     void display();
 
 protected:
-    CGContextRef context;
     std::unique_ptr<CoreGraphicsContext> graphics;
     Widget *parent;
 private:

@@ -1,20 +1,24 @@
 #pragma once
 
-#include "plugins/platforms/common/PlatformWindow.h"
+#include <PlatformWindow.h>
 
-#include <Cocoa/Cocoa.h>
 
 class CocoaWindow : public PlatformWindow {
-private:
-    NSWindow *window;
 public:
-    CocoaWindow();
+    explicit CocoaWindow(Widget *widget = nullptr);
     ~CocoaWindow() override;
-    void show() override;
-    void hide() override;
-    void resize(int width, int height) override;
-    void move(int x, int y) override;
+
+    // Setters
     void setTitle(const std::string &title) override;
     void setBackgroundColor(const std::string &hexColor) override;
-    void* getNativeWindow() override;
+
+    void create() override;
+    void show() override;
+    void hide() override;
+    void maximize() override;
+    void resize(int w, int h) override;
+    void move(int x, int y) override;
+    void update() override;
+
+    void addSubView(PlatformView* subView) override;
 };
