@@ -67,7 +67,6 @@ void CocoaWindow::create() {
                                                                   defer:NO];
 
         m_nativeObject = window;
-        [window setBackgroundColor:[NSColor whiteColor]];
         [window setTitle:@"Window"];
         [window center];
         WindowDelegate *windowDelegate = [[WindowDelegate alloc] init];
@@ -81,7 +80,9 @@ void CocoaWindow::create() {
 
         NSView* view = [[ViewObjC alloc] initWithWidget:m_widget];
 
+
         [view setWantsLayer:YES];
+        [[view layer] setBackgroundColor:[[NSColor whiteColor] CGColor]];
         [window setContentView:view];
         [window makeFirstResponder:view];
         [window center];
