@@ -28,6 +28,8 @@ Widget::Widget(Widget *parent)
 }
 
 Widget::~Widget() {
+    delete m_window;
+    delete m_view;
     for (Widget* child : m_children) {
         delete child;
     }
