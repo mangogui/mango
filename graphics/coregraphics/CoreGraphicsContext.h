@@ -23,7 +23,6 @@ public:
     }
 
 private:
-    std::unique_ptr<FillStyle> m_fillStyle;
     CGColorRef m_pColor;
 };
 

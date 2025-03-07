@@ -169,7 +169,6 @@ void Direct2DGraphicsContext::drawRoundedRect(const MNRect &rect, int x_r, int y
 }
 
 void Direct2DGraphicsContext::setFillStyle(const FillStyle &style) {
-    m_fillStyle = std::make_unique<FillStyle>(style);
     m_pBrush->SetColor(convertColorToD2DColorF(style.getColor()));
 }
 

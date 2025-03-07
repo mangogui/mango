@@ -7,8 +7,7 @@
 
 
 class GraphicsContext {
-protected:
-    void* m_context;
+
 public:
     GraphicsContext() : m_context(nullptr) {}
     virtual ~GraphicsContext() = default;
@@ -31,4 +30,6 @@ public:
     void* getNativeContext() {
         return m_context;
     }
+protected:
+    void* m_context;
 };

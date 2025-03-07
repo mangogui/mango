@@ -28,7 +28,6 @@ public:
 private:
     void* m_hWnd;
 
-    std::unique_ptr<FillStyle> m_fillStyle;
     ID2D1Factory *m_pD2DFactory = nullptr;
     ID2D1HwndRenderTarget *m_pRenderTarget = nullptr;
     ID2D1BitmapRenderTarget *m_pBackBuffer = nullptr;

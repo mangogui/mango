@@ -71,7 +71,6 @@ void CoreGraphicsContext::drawRoundedRect(const MNRect &rect, int x_r, int y_r) 
 }
 
 void CoreGraphicsContext::setFillStyle(const FillStyle &style) {
-    m_fillStyle = std::make_unique<FillStyle>(style);
     if (!m_context) return;
 
     CGColorRelease(m_pColor); // Release the old color
