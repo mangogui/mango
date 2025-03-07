@@ -1,7 +1,7 @@
 #include "Direct2DGraphicsContext.h"
 #include "D2D1Helpers.h"
 
-Direct2DGraphicsContext::Direct2DGraphicsContext(HWND winId)
+Direct2DGraphicsContext::Direct2DGraphicsContext(void* winId)
         : m_hWnd(winId), m_pBrush(nullptr) {
     initFactory();
     initRenderTarget();
@@ -21,12 +21,12 @@ void Direct2DGraphicsContext::initFactory() {
 
 void Direct2DGraphicsContext::initRenderTarget() {
     RECT rc;
-    GetClientRect(m_hWnd, &rc);
+    GetClientRect((HWND)m_hWnd, &rc);
     D2D1_SIZE_U size = D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top);
 
     HRESULT hr = m_pD2DFactory->CreateHwndRenderTarget(
             D2D1::RenderTargetProperties(),
-            D2D1::HwndRenderTargetProperties(m_hWnd, size),
+            D2D1::HwndRenderTargetProperties((HWND)m_hWnd, size),
             &m_pRenderTarget
     );
 

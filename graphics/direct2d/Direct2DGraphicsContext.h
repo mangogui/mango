@@ -11,7 +11,7 @@
 
 class Direct2DGraphicsContext: public GraphicsContext {
 public:
-    explicit Direct2DGraphicsContext(HWND winId);
+    explicit Direct2DGraphicsContext(void* winId);
     ~Direct2DGraphicsContext() override;
 
     void beginDraw() override;
@@ -23,10 +23,10 @@ public:
     void drawRoundedRect(const MNRect &rect, int x_r, int y_r) override;
     void setFillStyle(const FillStyle &style) override;
 
-    void resizeContext(int width, int height);
+    void resizeContext(int width, int height) override;
 
 private:
-    HWND m_hWnd;
+    void* m_hWnd;
 
     std::unique_ptr<FillStyle> m_fillStyle;
     ID2D1Factory *m_pD2DFactory = nullptr;
@@ -35,7 +35,6 @@ private:
     ID2D1SolidColorBrush *m_pBrush = nullptr;
     IDWriteFactory *m_pDWriteFactory = nullptr;
     IDWriteTextFormat *m_pTextFormat = nullptr;
-
 
     void initFactory();
     void initRenderTarget();

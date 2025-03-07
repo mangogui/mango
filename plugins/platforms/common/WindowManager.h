@@ -3,6 +3,10 @@
 #include <optional>
 #include "Object.h"
 
+#ifdef _WIN32
+    #include <Windows.h>
+#endif
+
 class WindowManager {
 public:
     static std::map<void*, Object*> windowMapper;

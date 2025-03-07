@@ -4,7 +4,7 @@
 #include "Color.h"
 #include "WindowManager.h"
 
-#ifdef _WIN64
+#ifdef _WIN32
     #include <Direct2DGraphicsContext.h>
     #include <Windows.h>
     #pragma comment(lib, "d2d1.lib")
@@ -12,7 +12,7 @@
     #include <d2d1.h>
     #include <dwrite.h>
     #include <Win32Window.h>
-    typedef Window = Win32Window;
+    #include <Win32View.h>
 #elif __APPLE__
     #include <CoreGraphicsContext.h>
     #include <CocoaWindow.h>
@@ -21,8 +21,8 @@
 
 
 Widget::Widget(Widget *parent)
-        : m_isCreated(false), m_parent(parent),
-        Object(), m_isTopLevel(parent==nullptr) {
+        : Object(), m_isCreated(false), m_parent(parent),
+        m_isTopLevel(parent==nullptr) {
     if (m_parent)
         m_parent->addChild(this);
 }
@@ -30,9 +30,8 @@ Widget::Widget(Widget *parent)
 Widget::~Widget() {
     delete m_window;
     delete m_view;
-    for (Widget* child : m_children) {
+    for (Widget* child : m_children)
         delete child;
-    }
 }
 
 void Widget::addChild(Widget *child) {
@@ -77,14 +76,18 @@ void Widget::fullscreen() {
 
 void Widget::create() {
     if (isTopLevel())
-#ifdef _WIN64
-        m_window = std::make_unique<Win32Window>(parentWindow);
-        m_view = std::make_unique<Win32View>(m_window->getNativeObject(), this);
+#ifdef _WIN32
+        m_window = new Win32Window(this);
 #elif __APPLE__
         m_window = new CocoaWindow(this);
 #endif
+
     else {
+#ifdef _WIN32
+        m_view = new Win32View(this);
+#elif __APPLE__
         m_view = new CocoaView(this);
+#endif
     }
 
     if (isTopLevel()) {
@@ -94,6 +97,9 @@ void Widget::create() {
     else {
         m_view->create();
     }
+
+    std::cout << objectName() << " initialize graphics context" << std::endl;
+    m_graphicsContext = new Direct2DGraphicsContext(getWinId());
 
     if (m_parent) {
         if (m_parent->isTopLevel()) {
@@ -109,21 +115,18 @@ void Widget::create() {
 
 void Widget::display() {
     create();
-    WindowManager::insertWidget(getWinId(), this);
     for (Widget* child : m_children) {
         child->setWindow(this->window());
-        if (child->window() == nullptr)
-            std::cout << "Child window is null" << std::endl;
-        child->display();
-        child->update();
+        child->create();
     }
-
     if (isTopLevel())
         m_window->show();
 }
 
 void Widget::update() {
-    if (!isTopLevel())
+    if (isTopLevel())
+        m_window->update();
+    else
         m_view->update();
 }
 
@@ -134,10 +137,6 @@ void Widget::setWindowTitle(const std::string& title) {
 
 void Widget::setBackgroundColor(const std::string &hexColor) {
 
-}
-
-GraphicsContext* Widget::getGraphicsContext() {
-    return (GraphicsContext*) m_window->getGraphicsContext();
 }
 
 int Widget::x() const {
@@ -199,5 +198,5 @@ void Widget::paintEvent(PaintEvent *event) {}
 
 void Widget::setNativeContext(void *context) {
     nativeContext = context;
-    getGraphicsContext()->setNativeContext(context);
+    // getGraphicsContext()->setNativeContext(context); // TODO: very important
 }

@@ -22,6 +22,8 @@ public:
     virtual void drawEllipse(const MNRect &rect) = 0;
     virtual void setFillStyle(const FillStyle &style) = 0;
 
+    virtual void resizeContext(int width, int height) = 0;
+
     void setNativeContext(void* context) {
         m_context = context;
     }

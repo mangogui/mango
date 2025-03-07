@@ -7,20 +7,17 @@
 std::map<void*, Object*> WindowManager::windowMapper;
 
 #ifdef _WIN32
+
 #include <Win32Window.h>
 LRESULT CALLBACK WindowManager::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    auto* window = reinterpret_cast<Win32Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-
-    Widget* widget = nullptr;
-    if (auto objOpt = WindowManager::findWidget(hWnd)) {
-        Object* obj = *objOpt;
-        widget = static_cast<Widget*>(obj);
-    }
+    auto* widget = reinterpret_cast<Widget*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
     switch (uMsg) {
         case WM_QUIT:
             PostQuitMessage(0);
             return 0;
+        case WM_ERASEBKGND:
+            return 1;
         case WM_NCCREATE: {
             CREATESTRUCT* cs = reinterpret_cast<CREATESTRUCT*>(lParam);
             SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(cs->lpCreateParams));
@@ -33,8 +30,8 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, 
             if (!widget) break;
             int width = LOWORD(lParam);
             int height = HIWORD(lParam);
-            if (window->getGraphicsContext())
-                static_cast<Direct2DGraphicsContext*>(window->getGraphicsContext())->resizeContext(width, height);
+            if (widget->getGraphicsContext())
+                static_cast<Direct2DGraphicsContext*>(widget->getGraphicsContext())->resizeContext(width, height);
             ResizeEvent event(width, height);
             widget->handleEvent(&event);
             break;
@@ -50,9 +47,7 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, 
             break;
         }
         case WM_SHOWWINDOW:
-        {
             break;
-        }
         case WM_LBUTTONDOWN:
         case WM_RBUTTONDOWN:
         case WM_MBUTTONDOWN: {
@@ -66,6 +61,8 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, 
             widget->mousePressEvent(&event);
             break;
         }
+        default:
+            break;
     }
     return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

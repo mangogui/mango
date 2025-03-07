@@ -5,7 +5,7 @@
 
 class Object {
 public:
-    std::string objectName() { return m_objectName; };
+    const std::string objectName() const { return m_objectName; };
 
     void setObjectName(std::string objectName) {
         m_objectName = std::move(objectName);

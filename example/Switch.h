@@ -23,7 +23,6 @@ public:
         m_checked = checked;
     }
 
-protected:
     void paintEvent(PaintEvent *event) override;
 
 private:

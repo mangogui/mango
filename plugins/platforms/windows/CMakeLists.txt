@@ -9,20 +9,26 @@ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 set(SOURCES
     Application.cpp
     Canvas.cpp
-    WindowManager.cpp
     Win32Window.cpp
-    Object.cpp
+    Win32View.cpp
+    WindowProcedure.cpp
+    ../common/Object.cpp
+    ../common/WindowManager.cpp
     ../common/GraphicsContext.cpp
+    ../common/PlatformView.cpp
     ../common/PlatformWindow.cpp
     ../common/Widget.cpp)
 
 set(HEADERS
     Application.h
     Canvas.h
-    WindowManager.h
     Win32Window.h
+    Win32View.h
+    WindowProcedure.h
+    ../common/WindowManager.h
     ../common/Object.h
     ../common/GraphicsContext.h
+    ../common/PlatformView.h
     ../common/PlatformWindow.h
     ../common/Widget.h)
 

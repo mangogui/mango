@@ -21,6 +21,7 @@
 class Widget: public Object {
     PlatformWindow* m_window;
     PlatformView* m_view;
+    void* m_graphicsContext;
 public:
     explicit Widget(Widget *parent = nullptr);
     ~Widget();
@@ -40,8 +41,6 @@ public:
     // Setters
     void setWindowTitle(const std::string& title);
     void setBackgroundColor(const std::string &hexColor);
-
-    GraphicsContext* getGraphicsContext();
     void setNativeContext(void* context);
 
     // Getters
@@ -62,11 +61,15 @@ public:
     virtual void resizeEvent(ResizeEvent *event);
     virtual void paintEvent(PaintEvent *event);
 
+    [[nodiscard]] Widget* parent() {
+        return m_parent;
+    }
+
     [[nodiscard]] void* getWinId() const {
         if (isTopLevel())
-            return m_window->getNativeObject();
+            return m_window->nativeObject();
         else
-            return m_view->getNativeObject();
+            return m_view->nativeObject();
     }
 
     [[nodiscard]] PlatformWindow* window() const {
@@ -83,6 +86,14 @@ public:
 
     void setWindow(PlatformWindow* win) {
         m_window = win;
+    }
+
+    void setGraphicsContext(void* context) {
+        m_graphicsContext = context;
+    }
+
+    void* getGraphicsContext() {
+        return m_graphicsContext;
     }
 
 private:
