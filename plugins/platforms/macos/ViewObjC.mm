@@ -28,7 +28,6 @@
     }
 
     widget->setNativeContext(context);
-
     PaintEvent event;
     widget->paintEvent(&event); // Call the paintEvent method
 }

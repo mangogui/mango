@@ -16,7 +16,7 @@ public:
     void setFrame(int x, int y, int width, int height) override;
     void resize(int width, int height) override;
     void move(int x, int y) override;
-    void * getNativeObject() override;
+    void* nativeObject() override;
 
     void addSubView(PlatformView* subView) override;
 };

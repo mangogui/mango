@@ -7,8 +7,6 @@
 #include <CoreGraphicsContext.h>
 
 CocoaWindow::CocoaWindow(Widget *widget): PlatformWindow(widget) {
-    CGContextRef _context = [[NSGraphicsContext currentContext] CGContext];
-    m_graphicsContext = new CoreGraphicsContext(_context);
 }
 
 CocoaWindow::~CocoaWindow() {
@@ -98,5 +96,9 @@ void CocoaWindow::update() {
 }
 
 void CocoaWindow::addSubView(PlatformView *subView) {
-    [[(NSWindow*)m_nativeObject contentView] addSubview:(NSView*)subView->getNativeObject()];
+    [[(NSWindow*)m_nativeObject contentView] addSubview:(NSView*)subView->nativeObject()];
+}
+
+void *CocoaWindow::nativeObject() {
+    return m_nativeObject;
 }

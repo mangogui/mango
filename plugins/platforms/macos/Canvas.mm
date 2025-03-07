@@ -43,7 +43,7 @@ CGPathRef convertPainterPathToCGPath(const GUI::PainterPath &painterPath) {
     return cgPath;
 }
 
-Canvas::Canvas(Widget *widget) : _widget(widget), context(widget->getGraphicsContext()) {
+Canvas::Canvas(Widget *widget) : _widget(widget), context((GraphicsContext*)widget->getGraphicsContext()) {
     this->fillStyle = std::make_unique<FillStyle>(Color::Gray);
 
 }

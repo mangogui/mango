@@ -4,6 +4,7 @@
 
 
 class CocoaWindow : public PlatformWindow {
+    void* m_nativeObject;
 public:
     explicit CocoaWindow(Widget *widget = nullptr);
     ~CocoaWindow() override;
@@ -21,4 +22,6 @@ public:
     void update() override;
 
     void addSubView(PlatformView* subView) override;
+
+    void* nativeObject() override;
 };

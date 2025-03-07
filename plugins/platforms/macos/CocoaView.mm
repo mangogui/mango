@@ -27,7 +27,7 @@ void CocoaView::setFrame(int x, int y, int width, int height) {
     [(id) view setFrame:NSMakeRect(x, y, width, height)];
 }
 
-void *CocoaView::getNativeObject() {
+void *CocoaView::nativeObject() {
     return view;
 }
 
@@ -45,7 +45,7 @@ void CocoaView::show() {
 }
 
 void CocoaView::addSubView(PlatformView *subView) {
-    [(NSView*)view addSubview:(NSView*)subView->getNativeObject()];
+    [(NSView*)view addSubview:(NSView*)subView->nativeObject()];
 }
 
 

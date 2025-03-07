@@ -103,6 +103,5 @@ private:
     bool m_isCreated;
     bool m_isTopLevel;
     MNRect m_geometry;
-    void* nativeContext;
 };
 

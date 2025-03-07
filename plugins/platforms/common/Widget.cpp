@@ -98,11 +98,14 @@ void Widget::create() {
         m_view->create();
     }
 
-    std::cout << objectName() << " initialize graphics context" << std::endl;
+#ifdef _WIN32
     m_graphicsContext = new Direct2DGraphicsContext(getWinId());
-
+#elif __APPLE__
+    m_graphicsContext = new CoreGraphicsContext(getWinId());
+#endif
     if (m_parent) {
         if (m_parent->isTopLevel()) {
+            std::cout << "add subview to window" << std::endl;
             m_parent->window()->addSubView(m_view);
         }
         else {
@@ -197,6 +200,5 @@ void Widget::resizeEvent(ResizeEvent *event) {}
 void Widget::paintEvent(PaintEvent *event) {}
 
 void Widget::setNativeContext(void *context) {
-    nativeContext = context;
-    // getGraphicsContext()->setNativeContext(context); // TODO: very important
+    ((GraphicsContext*)m_graphicsContext)->setNativeContext(context);
 }
