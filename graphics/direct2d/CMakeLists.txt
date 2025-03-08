@@ -30,7 +30,7 @@ target_include_directories(Direct2DGraphicsEngine PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/windows>
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/common>)
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/common>)
 
 install(FILES ${HEADERS}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mango/widgets)

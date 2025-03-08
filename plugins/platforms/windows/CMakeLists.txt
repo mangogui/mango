@@ -7,30 +7,32 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 set(SOURCES
+    ../../common/PlatformView.cpp
+    ../../common/PlatformWindow.cpp
+    ../../common/GraphicsContext.cpp
+    ../../common/Widget.cpp
+    ../../common/Object.cpp
+    ../../common/WindowManager.cpp
+    ../../common/Canvas.cpp
+
     Application.cpp
-    Canvas.cpp
     Win32Window.cpp
     Win32View.cpp
-    WindowProcedure.cpp
-    ../common/Object.cpp
-    ../common/WindowManager.cpp
-    ../common/GraphicsContext.cpp
-    ../common/PlatformView.cpp
-    ../common/PlatformWindow.cpp
-    ../common/Widget.cpp)
+    WindowProcedure.cpp)
 
 set(HEADERS
+    ../../common/PlatformView.h
+    ../../common/PlatformWindow.h
+    ../../common/GraphicsContext.h
+    ../../common/Widget.h
+    ../../common/Object.h
+    ../../common/WindowManager.h
+    ../../common/Canvas.h
+
     Application.h
-    Canvas.h
     Win32Window.h
     Win32View.h
-    WindowProcedure.h
-    ../common/WindowManager.h
-    ../common/Object.h
-    ../common/GraphicsContext.h
-    ../common/PlatformView.h
-    ../common/PlatformWindow.h
-    ../common/Widget.h)
+    WindowProcedure.h)
 
 add_library(Widgets STATIC ${SOURCES} ${HEADERS})
 add_library(Mango::Widgets ALIAS Widgets)
@@ -50,7 +52,7 @@ target_include_directories(Widgets PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/windows>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/windows>
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/common>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/common>
 )
 
 install(FILES ${HEADERS}

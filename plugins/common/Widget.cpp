@@ -103,14 +103,12 @@ void Widget::create() {
 #elif __APPLE__
     m_graphicsContext = new CoreGraphicsContext(getWinId());
 #endif
+
     if (m_parent) {
-        if (m_parent->isTopLevel()) {
-            std::cout << "add subview to window" << std::endl;
+        if (m_parent->isTopLevel())
             m_parent->window()->addSubView(m_view);
-        }
-        else {
+        else
             m_parent->view()->addSubView(m_view);
-        }
     }
 
     m_isCreated = true;

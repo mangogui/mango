@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
 
-#include "core/MNRect.h"
-#include "core/Color.h"
-#include "core/FillStyle.h"
+#include <MNRect.h>
+#include <Color.h>
+#include <FillStyle.h>
 
 
 class GraphicsContext {

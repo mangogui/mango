@@ -7,34 +7,37 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(CMakePackageConfigHelpers)
 
 set(SOURCES
-    MNSize.cpp
-    MNRect.cpp
-    PaintEvent.cpp
     Color.cpp
-    MouseEvent.cpp
     PainterPath.cpp
-    EasingCurve.cpp
-    Point.cpp
-    ResizeEvent.cpp
-    Event.cpp
     FillStyle.cpp
+
+    geometry/MNSize.cpp
+    geometry/MNRect.cpp
+    geometry/Point.cpp
+
+    events/Event.cpp
+    events/MouseEvent.cpp
+    events/PaintEvent.cpp
+    events/ResizeEvent.cpp
 )
 
 set(HEADERS
-    MNSize.h
-    MNRect.h
-    PaintEvent.h
     Color.h
-    MouseEvent.h
     PainterPath.h
-    EasingCurve.h
-    ResizeEvent.h
-    Event.h
-    Point.h
     FillStyle.h
+
+    geometry/MNSize.h
+    geometry/MNRect.h
+    geometry/Point.h
+
+    events/Event.h
+    events/MouseEvent.h
+    events/PaintEvent.h
+    events/ResizeEvent.h
 )
 
 set(ANIMATION_SOURCES
+    animations/EasingCurve.cpp
     animations/NumberAnimation.cpp
     animations/ColorAnimation.cpp
     animations/VariantAnimation.cpp
@@ -42,6 +45,7 @@ set(ANIMATION_SOURCES
 )
 
 set(ANIMATION_HEADERS
+    animations/EasingCurve.h
     animations/NumberAnimation.h
     animations/ColorAnimation.h
     animations/Variant.h
@@ -70,6 +74,8 @@ target_include_directories(Core PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/events>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/geometry>
 )
 
 install(FILES ${HEADERS}

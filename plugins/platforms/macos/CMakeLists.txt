@@ -5,35 +5,37 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
-    CocoaWindowObjC.mm
+    ../../common/PlatformView.cpp
+    ../../common/PlatformWindow.cpp
+    ../../common/GraphicsContext.cpp
+    ../../common/Widget.cpp
+    ../../common/Object.cpp
+    ../../common/WindowManager.cpp
+    ../../common/Canvas.cpp
+
+    Application.mm
     WindowDelegate.mm
     ViewObjC.mm
-    Application.mm
-    Canvas.mm
-    ../common/PlatformView.cpp
-    ../common/PlatformWindow.cpp
+    CocoaWindowObjC.mm
     CocoaView.mm
     CocoaWindow.mm
-    ../common/GraphicsContext.cpp
-    ../common/Widget.cpp
-    ../common/Object.cpp
-    ../common/WindowManager.cpp
 )
 
 set(HEADERS
+    ../../common/PlatformView.h
+    ../../common/PlatformWindow.h
+    ../../common/GraphicsContext.h
+    ../../common/Widget.h
+    ../../common/Object.h
+    ../../common/WindowManager.h
+    ../../common/Canvas.h
+
     Application.h
     WindowDelegate.h
     ViewObjC.h
     CocoaWindowObjC.h
-    Canvas.h
-    ../common/PlatformView.h
-    ../common/PlatformWindow.h
     CocoaView.h
     CocoaWindow.h
-    ../common/GraphicsContext.h
-    ../common/Widget.h
-    ../common/Object.h
-    ../common/WindowManager.h
 )
 
 add_library(Widgets STATIC ${SOURCES} ${HEADERS})
@@ -54,7 +56,7 @@ target_include_directories(Widgets PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/core/animations>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/core>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/common>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/common>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/macos>
