@@ -1,5 +1,5 @@
 #include "PlatformWindow.h"
-#include <Widget.h>
+#include <AbstractWidget.h>
 
 const MNRect& PlatformWindow::geometry() const {
     return m_widget->geometry();

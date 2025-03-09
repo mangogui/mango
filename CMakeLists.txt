@@ -45,6 +45,7 @@ elseif(BUILD_WINDOWS)
 endif()
 
 add_subdirectory(core)
+add_subdirectory(plugins/common)
 
 if(BUILD_ANDROID)
     add_subdirectory(plugins/platforms/android)
@@ -58,6 +59,8 @@ elseif(BUILD_MACOS)
     add_subdirectory(graphics/coregraphics)
     add_subdirectory(plugins/platforms/macos)
 endif()
+
+add_subdirectory(widgets)
 
 # Install and export the package
 install(EXPORT MangoTargets
@@ -86,5 +89,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/MangoConfigVersion.cmake
     DESTINATION lib/cmake/Mango
 )
+
+add_subdirectory(example)
 
 export(PACKAGE Mango)

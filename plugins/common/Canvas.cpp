@@ -1,7 +1,7 @@
 #include <Canvas.h>
 
 
-Canvas::Canvas(Widget *widget) : _widget(widget), context((GraphicsContext*)widget->getGraphicsContext()) {
+Canvas::Canvas(AbstractWidget *widget) : _widget(widget), context((GraphicsContext*)widget->getGraphicsContext()) {
     this->fillStyle = std::make_unique<FillStyle>(Color::Gray);
 }
 

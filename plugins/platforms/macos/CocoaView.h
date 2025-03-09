@@ -1,13 +1,13 @@
 #pragma once
 
 #include <PlatformView.h>
-class Widget;
+class AbstractWidget;
 
 class CocoaView : public PlatformView {
 private:
     void* view; // NSView*
 public:
-    explicit CocoaView(Widget *widget);
+    explicit CocoaView(AbstractWidget *widget);
     ~CocoaView() override;
 
     void create() override;

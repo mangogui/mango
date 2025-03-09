@@ -1,5 +1,5 @@
 #include "PlatformView.h"
-#include <Widget.h>
+#include <AbstractWidget.h>
 
 
 int PlatformView::x() const {

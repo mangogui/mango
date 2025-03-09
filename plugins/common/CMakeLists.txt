@@ -3,46 +3,51 @@ cmake_minimum_required(VERSION 3.16)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-
 set(SOURCES
-    Application.cpp
-    Win32Window.cpp
-    Win32View.cpp
-    WindowProcedure.cpp)
+    PlatformView.cpp
+    PlatformWindow.cpp
+    GraphicsContext.cpp
+    Object.cpp
+    WindowManager.cpp
+    Canvas.cpp
+)
 
 set(HEADERS
-    Application.h
-    Win32Window.h
-    Win32View.h
-    WindowProcedure.h)
+    PlatformView.h
+    PlatformWindow.h
+    GraphicsContext.h
+    Object.h
+    WindowManager.h
+    Canvas.h
+    AbstractWidget.h
+)
 
-add_library(Widgets STATIC ${SOURCES} ${HEADERS})
-add_library(Mango::Widgets ALIAS Widgets)
+add_library(Common STATIC ${SOURCES} ${HEADERS})
+add_library(Mango::Common ALIAS Common)
 
-target_link_libraries(Widgets PUBLIC Mango::Core Mango::Common Mango::Direct2DGraphicsEngine d2d1 dwrite winmm)
+target_link_libraries(Common PUBLIC Mango::Core)
 
-set_target_properties(Widgets PROPERTIES OUTPUT_NAME "MangoWidgets" PREFIX "lib")
+set_target_properties(Common PROPERTIES OUTPUT_NAME "MangoCommon" PREFIX "lib")
 
-target_include_directories(Widgets PUBLIC
+target_include_directories(Common PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/widgets>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/core/animations>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/core>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/graphics/direct2d>
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core>
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/windows>
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/windows>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/common>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/macos>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/graphics/coregraphics>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/macos>
 )
 
 install(FILES ${HEADERS}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mango/widgets
 )
 
-install(TARGETS Widgets EXPORT MangoTargets
+install(TARGETS Common EXPORT MangoTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

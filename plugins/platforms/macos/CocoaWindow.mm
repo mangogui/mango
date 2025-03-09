@@ -6,7 +6,7 @@
 #include <Cocoa/Cocoa.h>
 #include <CoreGraphicsContext.h>
 
-CocoaWindow::CocoaWindow(Widget *widget): PlatformWindow(widget) {
+CocoaWindow::CocoaWindow(AbstractWidget *widget): PlatformWindow(widget) {
 }
 
 CocoaWindow::~CocoaWindow() {
@@ -17,6 +17,8 @@ CocoaWindow::~CocoaWindow() {
 
 void CocoaWindow::show() {
     [(NSWindow *) m_nativeObject makeKeyAndOrderFront:nil];
+    [(NSWindow *) m_nativeObject makeMainWindow];
+    [(NSWindow *) m_nativeObject makeKeyWindow];
 }
 
 void CocoaWindow::hide() {

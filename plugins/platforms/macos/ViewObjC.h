@@ -1,7 +1,7 @@
 #include <Cocoa/Cocoa.h>
-#include <Widget.h>
+#include <AbstractWidget.h>
 
 @interface ViewObjC : NSView
-- (NSView *)initWithWidget:(Widget *)_widget;
+- (NSView *)initWithWidget:(AbstractWidget *)_widget;
 - (void)setBackgroundColor:(NSColor *)color;
 @end

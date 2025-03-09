@@ -6,7 +6,7 @@
 class CocoaWindow : public PlatformWindow {
     void* m_nativeObject;
 public:
-    explicit CocoaWindow(Widget *widget = nullptr);
+    explicit CocoaWindow(AbstractWidget *widget = nullptr);
     ~CocoaWindow() override;
 
     // Setters

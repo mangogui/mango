@@ -1,18 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
-project(MangoWidgets LANGUAGES C CXX OBJC OBJCXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
-    ../../common/PlatformView.cpp
-    ../../common/PlatformWindow.cpp
-    ../../common/GraphicsContext.cpp
-    ../../common/Widget.cpp
-    ../../common/Object.cpp
-    ../../common/WindowManager.cpp
-    ../../common/Canvas.cpp
-
     Application.mm
     WindowDelegate.mm
     ViewObjC.mm
@@ -22,35 +13,23 @@ set(SOURCES
 )
 
 set(HEADERS
-    ../../common/PlatformView.h
-    ../../common/PlatformWindow.h
-    ../../common/GraphicsContext.h
-    ../../common/Widget.h
-    ../../common/Object.h
-    ../../common/WindowManager.h
-    ../../common/Canvas.h
-
     Application.h
-    WindowDelegate.h
-    ViewObjC.h
-    CocoaWindowObjC.h
-    CocoaView.h
-    CocoaWindow.h
 )
 
-add_library(Widgets STATIC ${SOURCES} ${HEADERS})
-add_library(Mango::Widgets ALIAS Widgets)
+add_library(Platform STATIC ${SOURCES} ${HEADERS})
+add_library(Mango::Platform ALIAS Platform)
 
-target_link_libraries(Widgets PUBLIC Mango::Core
+target_link_libraries(Platform PUBLIC Mango::Core
     Mango::CoreGraphicsEngine
+    Mango::Common
     "-framework Cocoa"
     "-framework Metal"
     "-framework QuartzCore"
     "-framework MetalKit")
 
-set_target_properties(Widgets PROPERTIES OUTPUT_NAME "MangoWidgets" PREFIX "lib")
+set_target_properties(Platform PROPERTIES OUTPUT_NAME "MangoPlatform" PREFIX "lib")
 
-target_include_directories(Widgets PUBLIC
+target_include_directories(Platform PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/widgets>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Mango/core/animations>
@@ -58,17 +37,14 @@ target_include_directories(Widgets PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/common>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/widgets>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/macos>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/graphics/coregraphics>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/platforms/macos>
 )
 
-install(FILES ${HEADERS}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Mango/widgets
-)
-
-install(TARGETS Widgets EXPORT MangoTargets
+install(TARGETS Platform EXPORT MangoTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

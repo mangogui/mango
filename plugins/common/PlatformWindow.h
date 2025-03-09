@@ -10,16 +10,16 @@
 #include <MouseEvent.h>
 #include <GraphicsContext.h>
 
-class Widget;
+class AbstractWidget;
 class PlatformView;
 
 
 class PlatformWindow: public Object {
 protected:
-    Widget* m_widget;
+    AbstractWidget* m_widget;
     void* m_nativeContext;
 public:
-    explicit PlatformWindow(Widget *widget = nullptr): Object(), m_widget(widget) {};
+    explicit PlatformWindow(AbstractWidget *widget = nullptr): Object(), m_widget(widget) {};
 
     virtual ~PlatformWindow() = default;
 

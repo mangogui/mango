@@ -1,17 +1,17 @@
 #pragma once
 
 #include <PainterPath.h>
-#include <Widget.h>
+#include <AbstractWidget.h>
 #include <Color.h>
 #include <FillStyle.h>
 #include <GraphicsContext.h>
 
 
 class Canvas {
-    Widget *_widget;
+    AbstractWidget *_widget;
     std::unique_ptr<FillStyle> fillStyle;
 public:
-    explicit Canvas(Widget *widget);
+    explicit Canvas(AbstractWidget *widget);
 
     void drawRect(const MNRect &rect);
 

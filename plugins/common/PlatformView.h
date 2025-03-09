@@ -2,13 +2,13 @@
 
 #include <Object.h>
 
-class Widget;
+class AbstractWidget;
 
 class PlatformView: public Object {
 protected:
-    Widget* m_widget;
+    AbstractWidget* m_widget;
 public:
-    PlatformView(Widget *widget): Object(), m_widget(widget) {}
+    explicit PlatformView(AbstractWidget *widget): Object(), m_widget(widget) {}
     virtual ~PlatformView() = default;
 
     virtual void update() = 0;

@@ -1,10 +1,10 @@
 #import "ViewObjC.h"
 
 @implementation ViewObjC {
-    Widget *widget;
+    AbstractWidget *widget;
 }
 
-- (NSView *)initWithWidget:(Widget *)_widget {
+- (NSView *)initWithWidget:(AbstractWidget *)_widget {
     self = [super init];
 
     widget = _widget;

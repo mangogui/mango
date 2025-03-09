@@ -2,7 +2,7 @@
 #include <ResizeEvent.h>
 #include <PaintEvent.h>
 #include <MouseEvent.h>
-#include <Widget.h>
+#include <AbstractWidget.h>
 
 std::map<void*, Object*> WindowManager::windowMapper;
 

@@ -3,7 +3,7 @@
 #include "ViewObjC.h"
 
 
-CocoaView::CocoaView(Widget *widget): PlatformView(widget) {
+CocoaView::CocoaView(AbstractWidget *widget): PlatformView(widget) {
 }
 
 CocoaView::~CocoaView() {
