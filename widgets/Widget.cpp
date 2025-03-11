@@ -2,7 +2,6 @@
 #include "MNRect.h"
 #include "MouseEvent.h"
 #include "Color.h"
-#include "WindowManager.h"
 
 #ifdef _WIN32
     #include <Direct2DGraphicsContext.h>
@@ -22,7 +21,8 @@
 
 Widget::Widget(Widget *parent)
         : Object(), m_isCreated(false), m_parent(parent),
-        m_isTopLevel(parent==nullptr) {
+        m_isTopLevel(parent==nullptr), m_backgroundColor(Color::NoColor) {
+    m_geometry.resize(200, 200);
     if (m_parent)
         m_parent->addChild(this);
 }
@@ -30,6 +30,7 @@ Widget::Widget(Widget *parent)
 Widget::~Widget() {
     delete m_window;
     delete m_view;
+    delete m_layout;
     for (Widget* child : m_children)
         delete child;
 }
@@ -50,12 +51,16 @@ void Widget::center() {
 void Widget::move(int x, int y) {
     m_geometry.move(x, y);
     if (!isCreated()) return;
-    m_window->move(x, y);
+    if (isTopLevel())
+        m_window->move(x, y);
+    else
+        m_view->move(x, y);
 }
 
 void Widget::resize(int w, int h) {
     m_geometry.resize(w, h);
     if (!isCreated()) return;
+    m_graphicsContext->resizeContext(w, h);
     if (isTopLevel() and m_window)
         m_window->resize(w, h);
     else if (!isTopLevel() and m_view)
@@ -114,12 +119,42 @@ void Widget::create() {
     m_isCreated = true;
 }
 
+void applyLayout(Widget* widget) {
+    if (widget->layout()) {
+        widget->layout()->applyLayout();
+    }
+    std::stack<Widget*> widgetStack;
+    widgetStack.push(widget);
+    widgetStack.pop();
+
+    for (Widget* child : widget->children()) {
+        if (child->layout()) {
+            child->layout()->applyLayout();
+        }
+        widgetStack.push(child);
+    }
+    while (!widgetStack.empty()) {
+        Widget* currentWidget = widgetStack.top();
+        widgetStack.pop();
+
+        for (Widget* child : currentWidget->children()) {
+            if (child->layout()) {
+                child->layout()->applyLayout();
+            }
+            widgetStack.push(child);
+        }
+    }
+}
+
 void Widget::display() {
     create();
     for (Widget* child : m_children) {
         child->setWindow(this->window());
         child->create();
     }
+
+    applyLayout(this);
+
     if (isTopLevel())
         m_window->show();
 }
@@ -133,11 +168,17 @@ void Widget::update() {
 
 void Widget::setWindowTitle(const std::string& title) {
     m_windowTitle = title;
+    if (!isCreated()) return;
     m_window->setTitle(title);
 }
 
 void Widget::setBackgroundColor(const std::string &hexColor) {
-
+    m_backgroundColor = Color(hexColor);
+    if (!isCreated()) return;
+    if (isTopLevel())
+        m_window->setBackgroundColor(hexColor);
+    else
+        m_view->setBackgroundColor(hexColor);
 }
 
 int Widget::x() const {
@@ -194,8 +235,13 @@ void Widget::handleEvent(Event *event) {
 
 void Widget::mousePressEvent(MouseEvent *event) {}
 void Widget::mouseReleaseEvent(MouseEvent *event) {}
-void Widget::resizeEvent(ResizeEvent *event) {}
-void Widget::paintEvent(PaintEvent *event) {}
+void Widget::resizeEvent(ResizeEvent *event) {
+    m_geometry.resize(event->width(), event->height());
+    if (m_layout)
+        m_layout->applyLayout();
+}
+void Widget::paintEvent(PaintEvent *event) {
+}
 
 void Widget::setNativeContext(void *context) {
     ((GraphicsContext*)m_graphicsContext)->setNativeContext(context);

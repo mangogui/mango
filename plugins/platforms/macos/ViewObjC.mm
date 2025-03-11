@@ -32,7 +32,6 @@
     widget->paintEvent(&event); // Call the paintEvent method
 }
 
-
 - (BOOL)isFlipped { return YES; }
 
 - (void)awakeFromNib {
@@ -86,12 +85,9 @@
     widget->mousePressEvent(&mouseEvent);
 }
 
-- (void)setBackgroundColor:(NSColor *)color {
-    if ([self wantsLayer]) {
-        [self.layer setBackgroundColor:[color CGColor]];
-    } else {
-        [self setWantsLayer:YES];
-        [self.layer setBackgroundColor:[color CGColor]];
-    }
+- (void)mouseMoved:(NSEvent *)event {
+//    NSEventType eventType = [event type];
+//    MouseEvent mouseEvent(MouseEvent::MouseMove);
+//    widget->mouseMoveEvent(&mouseEvent);
 }
 @end

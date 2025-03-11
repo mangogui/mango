@@ -3,6 +3,34 @@
 #import <Cocoa/Cocoa.h>
 #include <AnimationScheduler.h>
 
+@interface ApplicationDisplayLinkHandler : NSObject
+
+- (instancetype)initWithApplication:(void*)application;
+- (void)handleDisplayLink:(CADisplayLink *)displayLink;
+
+@end
+
+@interface ApplicationDisplayLinkHandler ()
+@property (nonatomic, assign) void* application;
+@end
+
+@implementation ApplicationDisplayLinkHandler
+
+- (instancetype)initWithApplication:(void*)application {
+    self = [super init];
+    if (self) {
+        _application = application;
+    }
+    return self;
+}
+
+- (void)handleDisplayLink:(CADisplayLink *)displayLink {
+    Application *app = static_cast<Application*>(_application);
+    app->updateAnimations();
+}
+
+@end
+
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate>
 @end
 
@@ -10,11 +38,6 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     NSLog(@"Application did finish launching");
-
-    // Set up window delegate for all windows
-    for (NSWindow *window in [NSApp windows]) {
-        [window setDelegate:self];
-    }
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
@@ -31,6 +54,7 @@
 
 - (void)windowWillClose:(NSNotification *)notification {
     NSLog(@"Window will close called");
+    Application::instance().stop();
     [NSApp terminate:nil];
 }
 
@@ -53,11 +77,9 @@ Application::Application() : wrapper(std::make_unique<CocoaApplicationWrapper>()
         [NSApplication sharedApplication];
         wrapper->wrapped = [NSApp retain];
 
-        // Create and set delegate
-        AppDelegate *appDelegate = [[AppDelegate alloc] init];
-        [NSApp setDelegate:appDelegate];
-
-        // Activate the application
+        m_appDelegate = [[AppDelegate alloc] init];
+        [NSApp setDelegate:(AppDelegate*)m_appDelegate];
+        [(AppDelegate*)m_appDelegate retain];
         [NSApp activateIgnoringOtherApps:YES];
     }
 }
@@ -65,7 +87,6 @@ Application::Application() : wrapper(std::make_unique<CocoaApplicationWrapper>()
 Application::~Application() {
     @autoreleasepool {
         if (wrapper) {
-            // TODO: Maybe release delegate here?
             [wrapper->wrapped release];
         }
     }
@@ -76,34 +97,13 @@ Application &Application::instance() {
     return instance;
 }
 
-void Application::processEvents() {
-    @autoreleasepool {
-        NSEvent *event;
-        while ((event = [NSApp nextEventMatchingMask:NSEventMaskAny
-                                           untilDate:[NSDate distantPast]
-                                              inMode:NSDefaultRunLoopMode
-                                             dequeue:YES])) {
-            [NSApp sendEvent:event];
-            [NSApp updateWindows];
-        }
-    }
-}
-
 void Application::run() {
     @autoreleasepool {
-        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-
         if (![NSApp isRunning]) {
             [NSApp finishLaunching];
         }
-
-        while (true) {
-            processEvents();
-            AnimationScheduler::instance().updateAnimations();
-
-            NSDate *nextFrameTime = [NSDate dateWithTimeIntervalSinceNow:1.0 / 60.0];
-            [runLoop runMode:NSDefaultRunLoopMode beforeDate:nextFrameTime];
-        }
+        setupDisplayLink();
+        [NSApp run];
     }
 }
 
@@ -111,3 +111,14 @@ void Application::addWidget(Widget *widget) {
     widgets.push_back(widget);
 }
 
+void Application::updateAnimations() {
+    AnimationScheduler::instance().updateAnimations();
+}
+
+void Application::setupDisplayLink() {
+    displayLinkHandler = [[ApplicationDisplayLinkHandler alloc] initWithApplication:this];
+    displayLink = [CADisplayLink displayLinkWithTarget:displayLinkHandler selector:@selector(handleDisplayLink:)];
+    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    [displayLink retain];
+    [(ApplicationDisplayLinkHandler*)displayLinkHandler retain];
+}

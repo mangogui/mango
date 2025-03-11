@@ -11,30 +11,39 @@ set(SOURCES
     PainterPath.cpp
     FillStyle.cpp
 
-    geometry/MNSize.cpp
-    geometry/MNRect.cpp
-    geometry/Point.cpp
 
-    events/Event.cpp
-    events/MouseEvent.cpp
-    events/PaintEvent.cpp
-    events/ResizeEvent.cpp
 )
 
 set(HEADERS
     Color.h
     PainterPath.h
     FillStyle.h
+)
 
+set(GEOMETRY_SOURCES
+    geometry/MNSize.cpp
+    geometry/MNRect.cpp
+    geometry/Point.cpp
+)
+
+set(GEOMETRY_HEADERS
     geometry/MNSize.h
     geometry/MNRect.h
     geometry/Point.h
+)
 
+set(EVENT_SOURCES
+    events/Event.cpp
+    events/MouseEvent.cpp
+    events/PaintEvent.cpp
+    events/ResizeEvent.cpp
+)
+
+set(EVENT_HEADERS
     events/Event.h
     events/MouseEvent.h
     events/PaintEvent.h
-    events/ResizeEvent.h
-)
+    events/ResizeEvent.h)
 
 set(ANIMATION_SOURCES
     animations/EasingCurve.cpp
@@ -53,6 +62,18 @@ set(ANIMATION_HEADERS
     AnimationRegistry.h
 )
 
+set(LAYOUT_SOURCES
+    layouts/Layout.cpp
+    layouts/BoxLayout.cpp
+    layouts/GridLayout.cpp
+)
+
+set(LAYOUT_HEADERS
+    layouts/Layout.h
+    layouts/BoxLayout.h
+    layouts/GridLayout.h
+)
+
 if (BUILD_MACOS)
     list(APPEND ANIMATION_SOURCES macos/AnimationScheduler.cpp)
     list(APPEND ANIMATION_HEADERS macos/AnimationScheduler.h)
@@ -61,7 +82,12 @@ elseif (BUILD_WINDOWS)
     list(APPEND ANIMATION_HEADERS windows/AnimationScheduler.h)
 endif ()
 
-add_library(Core STATIC ${SOURCES} ${HEADERS} ${ANIMATION_SOURCES} ${ANIMATION_HEADERS})
+add_library(Core STATIC ${SOURCES} ${HEADERS}
+    ${GEOMETRY_SOURCES} ${GEOMETRY_HEADERS}
+    ${EVENT_SOURCES} ${EVENT_HEADERS}
+    ${ANIMATION_SOURCES} ${ANIMATION_HEADERS}
+    ${LAYOUT_SOURCES} ${LAYOUT_HEADERS})
+
 add_library(Mango::Core ALIAS Core)
 
 set_target_properties(Core PROPERTIES
@@ -76,6 +102,8 @@ target_include_directories(Core PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/animations>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/events>
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/geometry>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/core/layouts>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/plugins/common>
 )
 
 install(FILES ${HEADERS}

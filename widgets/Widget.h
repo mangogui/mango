@@ -17,11 +17,15 @@
 #include <PlatformView.h>
 #include <Object.h>
 #include <AbstractWidget.h>
+#include <Layout.h>
+#include <Color.h>
+
 
 class Widget: public AbstractWidget, public Object {
     PlatformWindow* m_window;
     PlatformView* m_view;
-    void* m_graphicsContext;
+    Layout* m_layout;
+    GraphicsContext* m_graphicsContext;
 public:
     explicit Widget(Widget *parent = nullptr);
     ~Widget();
@@ -53,6 +57,7 @@ public:
     [[nodiscard]] const MNRect& geometry() override;
     [[nodiscard]] MNSize size() const override;
     [[nodiscard]] bool isCreated() const override { return m_isCreated; }
+    [[nodiscard]] const Color& backgroundColor() const override { return m_backgroundColor; }
 
     // Events
     void handleEvent(Event *event) override;
@@ -84,13 +89,25 @@ public:
         m_window = win;
     }
 
-    void setGraphicsContext(void* context) override {
+    void setGraphicsContext(GraphicsContext* context) override {
         m_graphicsContext = context;
     }
 
-    void* getGraphicsContext() override {
+    GraphicsContext* getGraphicsContext() override {
         return m_graphicsContext;
     }
+
+    void setLayout(Layout* layout) override {
+        m_layout = layout;
+    }
+
+    [[nodiscard]] Layout* layout() override {
+        return m_layout;
+    }
+
+    const std::vector<Widget*>& children() const {
+        return m_children;
+    };
 
 private:
     Widget *m_parent;
@@ -99,5 +116,6 @@ private:
     bool m_isCreated;
     bool m_isTopLevel;
     MNRect m_geometry;
+    Color m_backgroundColor;
 };
 

@@ -10,6 +10,8 @@ public:
     explicit CocoaView(AbstractWidget *widget);
     ~CocoaView() override;
 
+    void setBackgroundColor(const std::string &hexColor) override;
+
     void create() override;
     void show() override;
     void update() override;

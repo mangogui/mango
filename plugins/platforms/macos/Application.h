@@ -21,13 +21,23 @@ public:
 
     void run();
 
+    void stop() {
+        m_running = false;
+    }
+
     ~Application();
+
+    void updateAnimations();
 
 private:
     Application();
 
     std::unique_ptr<CocoaApplicationWrapper> wrapper;
     std::vector<Widget *> widgets;
+    void* m_appDelegate;
+    bool m_running = true;
 
-    static void processEvents();
+    void setupDisplayLink();
+    void* displayLink;
+    void* displayLinkHandler;
 };

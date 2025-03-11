@@ -5,6 +5,7 @@
 
 class CocoaWindow : public PlatformWindow {
     void* m_nativeObject;
+    void* m_windowDelegate;
 public:
     explicit CocoaWindow(AbstractWidget *widget = nullptr);
     ~CocoaWindow() override;

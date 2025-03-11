@@ -11,6 +11,8 @@ public:
     explicit PlatformView(AbstractWidget *widget): Object(), m_widget(widget) {}
     virtual ~PlatformView() = default;
 
+    virtual void setBackgroundColor(const std::string &hexColor) = 0;
+
     virtual void update() = 0;
     virtual void create() = 0;
     virtual void setFrame(int x, int y, int width, int height) = 0;

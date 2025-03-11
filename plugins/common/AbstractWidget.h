@@ -16,7 +16,7 @@
 #include <PlatformWindow.h>
 #include <PlatformView.h>
 #include <Object.h>
-
+#include <Layout.h>
 
 class AbstractWidget {
 public:
@@ -44,6 +44,7 @@ public:
     [[nodiscard]] virtual const MNRect& geometry() = 0;
     [[nodiscard]] virtual MNSize size() const = 0;
     [[nodiscard]] virtual bool isCreated() const = 0;
+    [[nodiscard]] virtual const Color& backgroundColor() const = 0;
 
     // Events
     virtual void handleEvent(Event *event) = 0;
@@ -55,7 +56,10 @@ public:
     [[nodiscard]] virtual void* getWinId() const = 0;
     [[nodiscard]] virtual bool isTopLevel() const = 0;
 
-    virtual void setGraphicsContext(void* context) = 0;
-    virtual void* getGraphicsContext() = 0;
+    virtual void setGraphicsContext(GraphicsContext* context) = 0;
+    virtual GraphicsContext* getGraphicsContext() = 0;
+
+    virtual void setLayout(Layout* layout) = 0;
+    [[nodiscard]] virtual Layout* layout() = 0;
 };
 

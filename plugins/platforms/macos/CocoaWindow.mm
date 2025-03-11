@@ -12,6 +12,7 @@ CocoaWindow::CocoaWindow(AbstractWidget *widget): PlatformWindow(widget) {
 CocoaWindow::~CocoaWindow() {
     @autoreleasepool {
         [(id) m_nativeObject release];
+        [(id) m_windowDelegate release];
     }
 }
 
@@ -44,6 +45,7 @@ void CocoaWindow::setTitle(const std::string &title) {
 }
 
 void CocoaWindow::setBackgroundColor(const std::string &hexColor) {
+    if (!m_nativeObject) return;
     Color color(hexColor);
 
     CGFloat redFloat = color.red() / 255.0;
@@ -61,28 +63,29 @@ void CocoaWindow::create() {
         NSRect rect = NSMakeRect(x(), y(), width(), height());
         NSWindowStyleMask styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskMiniaturizable
                                       | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable;
-        NSWindow* window = [[CocoaWindowObjC alloc] initWithContentRect:rect
-                                                              styleMask:styleMask
-                                                                backing:NSBackingStoreBuffered
-                                                                  defer:NO];
+        NSWindow *window = [[CocoaWindowObjC alloc] initWithWidget:m_widget];
+        [window setFrame:rect display:YES];
+        [window setStyleMask:styleMask];
+        [window setBackingType:NSBackingStoreBuffered];
+        [window setReleasedWhenClosed:NO];
 
         m_nativeObject = window;
         [window setTitle:@"Window"];
         [window center];
-        WindowDelegate *windowDelegate = [[WindowDelegate alloc] init];
-        [window setDelegate:windowDelegate];
+        m_windowDelegate = [[WindowDelegate alloc] init];
+        [window setDelegate:(WindowDelegate*)m_windowDelegate];
 
-        [window setShowsResizeIndicator:YES];
         [window setAcceptsMouseMovedEvents:YES];
         [window setLevel:NSNormalWindowLevel];
         [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary |
                                       NSWindowCollectionBehaviorManaged];
+        [window setShowsResizeIndicator:YES];
 
         NSView* view = [[ViewObjC alloc] initWithWidget:m_widget];
-
-
         [view setWantsLayer:YES];
-        [[view layer] setBackgroundColor:[[NSColor whiteColor] CGColor]];
+        const Color& color = m_widget->backgroundColor();
+        CGColorRef cgcolor = CGColorCreateGenericRGB(color.red()/255.0, color.green()/255.0, color.blue()/255.0, color.alpha()/255.0);
+        [[view layer] setBackgroundColor:cgcolor];
         [window setContentView:view];
         [window makeFirstResponder:view];
         [window center];
