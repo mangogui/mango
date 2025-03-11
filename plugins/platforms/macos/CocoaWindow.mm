@@ -44,9 +44,24 @@ void CocoaWindow::setTitle(const std::string &title) {
     [(NSWindow *)m_nativeObject setTitle:[NSString stringWithUTF8String:title.c_str()]];
 }
 
+// TODO
 void CocoaWindow::setBackgroundColor(const std::string &hexColor) {
     if (!m_nativeObject) return;
     Color color(hexColor);
+
+    CGFloat redFloat = color.red() / 255.0;
+    CGFloat greenFloat = color.green() / 255.0;
+    CGFloat blueFloat = color.blue() / 255.0;
+    CGFloat alphaFloat = color.alpha() / 255.0;
+
+    NSColor *nscolor = [NSColor colorWithCalibratedRed:redFloat green:greenFloat blue:blueFloat alpha:alphaFloat];
+
+    [[(NSWindow *)m_nativeObject contentView] setBackgroundColor:nscolor];
+}
+
+// TODO
+void CocoaWindow::setBackgroundColor(const Color &color) {
+    if (!m_nativeObject) return;
 
     CGFloat redFloat = color.red() / 255.0;
     CGFloat greenFloat = color.green() / 255.0;
@@ -107,3 +122,5 @@ void CocoaWindow::addSubView(PlatformView *subView) {
 void *CocoaWindow::nativeObject() {
     return m_nativeObject;
 }
+
+

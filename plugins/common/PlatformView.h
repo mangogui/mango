@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Object.h>
+#include <Color.h>
 
 class AbstractWidget;
 
@@ -12,6 +13,7 @@ public:
     virtual ~PlatformView() = default;
 
     virtual void setBackgroundColor(const std::string &hexColor) = 0;
+    virtual void setBackgroundColor(const Color& color) = 0;
 
     virtual void update() = 0;
     virtual void create() = 0;

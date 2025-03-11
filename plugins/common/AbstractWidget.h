@@ -32,6 +32,7 @@ public:
     // Setters
     virtual void setWindowTitle(const std::string& title) = 0;
     virtual void setBackgroundColor(const std::string &hexColor) = 0;
+    virtual void setBackgroundColor(const Color& color) = 0;
     virtual void setNativeContext(void* context) = 0;
 
     // Getters

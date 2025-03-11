@@ -1,8 +1,6 @@
 #include <Application.h>
 #include <Widget.h>
-#include <BoxLayout.h>
-
-#include "Switch.h"
+#include <GridLayout.h>
 
 
 int main(int argc, char* argv[]) {
@@ -14,22 +12,24 @@ int main(int argc, char* argv[]) {
     outerWidget->move(400, 400);
     outerWidget->setBackgroundColor("#ffffff");
 
-    auto *widget = new Widget(outerWidget);
-    widget->setObjectName("Switch");
-    widget->move(0, 0);
-    widget->resize(600, 300);
-    widget->setBackgroundColor("#333333");
+    auto *widget1 = new Widget(outerWidget);
+    widget1->setBackgroundColor(Color::Red);
 
     auto *widget2 = new Widget(outerWidget);
-    widget2->setObjectName("Switch");
-    widget2->move(0, 300);
-    widget2->resize(600, 300);
-    widget2->setBackgroundColor("#330011");
+    widget2->setBackgroundColor(Color::Green);
 
-    auto *layout = new BoxLayout(outerWidget, BoxLayout::Orientation::HORIZONTAL);
+    auto *widget3 = new Widget(outerWidget);
+    widget3->setBackgroundColor(Color::Blue);
+
+    auto *widget4 = new Widget(outerWidget);
+    widget4->setBackgroundColor(Color::Yellow);
+
+    auto *layout = new GridLayout(outerWidget, 2, 2);
     outerWidget->setLayout(layout);
-    layout->addWidget(widget);
+    layout->addWidget(widget1);
     layout->addWidget(widget2);
+    layout->addWidget(widget3);
+    layout->addWidget(widget4);
 
     outerWidget->display();
 

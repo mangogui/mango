@@ -9,6 +9,7 @@
 #include <PaintEvent.h>
 #include <MouseEvent.h>
 #include <GraphicsContext.h>
+#include <Color.h>
 
 class AbstractWidget;
 class PlatformView;
@@ -26,6 +27,7 @@ public:
     // Setters
     virtual void setTitle(const std::string &title) = 0;
     virtual void setBackgroundColor(const std::string &hexColor) = 0;
+    virtual void setBackgroundColor(const Color& color) = 0;
 
     virtual void* nativeObject() = 0;
 

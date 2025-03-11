@@ -13,6 +13,7 @@ public:
     // Setters
     void setTitle(const std::string &title) override;
     void setBackgroundColor(const std::string &hexColor) override;
+    void setBackgroundColor(const Color& color) override;
 
     void create() override;
     void show() override;

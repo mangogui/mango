@@ -45,6 +45,7 @@ public:
     // Setters
     void setWindowTitle(const std::string& title) override;
     void setBackgroundColor(const std::string &hexColor) override;
+    void setBackgroundColor(const Color& color) override;
     void setNativeContext(void* context) override;
 
     // Getters

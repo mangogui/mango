@@ -172,6 +172,7 @@ void Widget::setWindowTitle(const std::string& title) {
     m_window->setTitle(title);
 }
 
+// TODO
 void Widget::setBackgroundColor(const std::string &hexColor) {
     m_backgroundColor = Color(hexColor);
     if (!isCreated()) return;
@@ -179,6 +180,16 @@ void Widget::setBackgroundColor(const std::string &hexColor) {
         m_window->setBackgroundColor(hexColor);
     else
         m_view->setBackgroundColor(hexColor);
+}
+
+// TODO
+void Widget::setBackgroundColor(const Color &color) {
+    m_backgroundColor = color;
+    if (!isCreated()) return;
+    if (isTopLevel())
+        m_window->setBackgroundColor(color);
+    else
+        m_view->setBackgroundColor(color);
 }
 
 int Widget::x() const {
@@ -233,16 +244,24 @@ void Widget::handleEvent(Event *event) {
     }
 }
 
-void Widget::mousePressEvent(MouseEvent *event) {}
-void Widget::mouseReleaseEvent(MouseEvent *event) {}
+void Widget::mousePressEvent(MouseEvent *event) {
+
+}
+
+void Widget::mouseReleaseEvent(MouseEvent *event) {
+
+}
+
 void Widget::resizeEvent(ResizeEvent *event) {
     m_geometry.resize(event->width(), event->height());
     if (m_layout)
         m_layout->applyLayout();
 }
+
 void Widget::paintEvent(PaintEvent *event) {
 }
 
 void Widget::setNativeContext(void *context) {
     ((GraphicsContext*)m_graphicsContext)->setNativeContext(context);
 }
+

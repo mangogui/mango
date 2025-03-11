@@ -67,4 +67,10 @@ void CocoaView::setBackgroundColor(const std::string &hexColor) {
     [[(NSView*)view layer] setBackgroundColor:cgcolor];
 }
 
+void CocoaView::setBackgroundColor(const Color &color) {
+    if (!view) return;
+    CGColorRef cgcolor = CGColorCreateGenericRGB(color.red()/255.0, color.green()/255.0, color.blue()/255.0, color.alpha()/255.0);
+    [[(NSView*)view layer] setBackgroundColor:cgcolor];
+}
+
 

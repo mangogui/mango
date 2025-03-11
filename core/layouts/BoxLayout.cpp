@@ -39,5 +39,4 @@ void BoxLayout::applyLayout() {
             y += currentHeight;
         }
     }
-    m_parent->update();
 }
