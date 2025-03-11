@@ -66,12 +66,14 @@ set(LAYOUT_SOURCES
     layouts/Layout.cpp
     layouts/BoxLayout.cpp
     layouts/GridLayout.cpp
+    layouts/AnchorLayout.cpp
 )
 
 set(LAYOUT_HEADERS
     layouts/Layout.h
     layouts/BoxLayout.h
     layouts/GridLayout.h
+    layouts/AnchorLayout.h
 )
 
 if (BUILD_MACOS)
